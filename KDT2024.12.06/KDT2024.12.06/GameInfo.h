@@ -7,13 +7,26 @@
 /// </summary>
 enum class EClass : unsigned char
 {
-	None = 0,
+	None,
 	Knight,
 	Archer,
 	Magician,
 	Thief,
 	Back,
 	MAX
+};
+
+
+/// <summary>
+/// 게임의 난이도 State
+/// </summary>
+enum EMode
+{
+	None = 0,
+	Easy,
+	Normal,
+	Hard,
+	Back
 };
 
 struct FPlayer
@@ -29,4 +42,14 @@ struct FPlayer
 	int Level;
 	int Exp;
 	int Gold;
+};
+
+struct FMonster
+{
+	char Name[32];
+	int Attack;
+	int Defense;
+	int HP;
+	int HPMax;
+	int Gold;				// 가지고 있는 금액
 };

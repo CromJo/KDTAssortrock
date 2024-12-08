@@ -7,6 +7,7 @@ int main()
 
 	//OutputFunction();
 	//현재 게임을 초기화한다.
+
 	if (!Init(&Player))
 		return 0;
 	

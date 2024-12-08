@@ -1,9 +1,9 @@
 #include "GameManager.h"
 #include "Battle.h"
 
-enum EMainMenu : unsigned char
+enum EMainMenu
 {
-	None = 0,
+	Menu_None = 0,
 	Battle,
 	Store,
 	Inventory,
@@ -16,7 +16,6 @@ enum EMainMenu : unsigned char
 bool Init(FPlayer* Player)
 {
 	std::cout << "닉네임 : ";
-	std::cin >> Player->Name;
 	std::cin >> Player->Name;
 
 	while (true)
@@ -40,11 +39,7 @@ bool Init(FPlayer* Player)
 	if (!InitBattle())
 		return false;
 
-	// 성공시 배틀기능 초기화
-	InitBattle();
-
 	// 전투 초기화 실패시 게임 종료
-
 	return true;
 }
 
@@ -61,8 +56,8 @@ EMainMenu Menu()
 	
 	std::cin >> SelectMenu;
 	
-	if (SelectMenu <= EMainMenu::None || SelectMenu > EMainMenu::Exit)
-		return EMainMenu::None;
+	if (SelectMenu <= EMainMenu::Menu_None || SelectMenu > EMainMenu::Exit)
+		return EMainMenu::Menu_None;
 
 	// 정상적으로 선택을 했다면,
 	return (EMainMenu)SelectMenu;
