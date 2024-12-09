@@ -3,7 +3,7 @@
 
 enum EMainMenu
 {
-	Menu_None = 0,
+	None = 0,
 	Battle,
 	Store,
 	Inventory,
@@ -56,8 +56,8 @@ EMainMenu Menu()
 	
 	std::cin >> SelectMenu;
 	
-	if (SelectMenu <= EMainMenu::Menu_None || SelectMenu > EMainMenu::Exit)
-		return EMainMenu::Menu_None;
+	if (SelectMenu <= EMainMenu::None || SelectMenu > EMainMenu::Exit)
+		return EMainMenu::None;
 
 	// 정상적으로 선택을 했다면,
 	return (EMainMenu)SelectMenu;
