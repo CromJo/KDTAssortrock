@@ -8,6 +8,8 @@
 // 포인터 타입을 2차원 배열로 선언하였다.
 FItem* gStore[Item_End][3] = {};
 
+FItem gOriginItem[2][3];
+
 FItem* CreateItem(const char* Name, EItemType Type,
 	int Option, int Buy, int Sell)
 {
@@ -24,6 +26,24 @@ FItem* CreateItem(const char* Name, EItemType Type,
 
 bool InitStore()
 {
+	FILE* File = nullptr;
+
+	fopen_s(&File, "ItemList.lst", "rb");
+
+	if (!File)
+		return false;
+
+	fread(gOriginItem, sizeof(FItem), 6, File);
+
+	fclose(File);
+
+	for (int i = 0; i < 3; i++)
+	{
+		gStore[Item_Weapon][i] = &gOriginItem[Item_Weapon][i];
+		gStore[Item_Armor][i] = &gOriginItem[Item_Armor][i];
+	}
+
+	/*
 	gStore[Item_Weapon][0] = CreateItem("목검",
 		EItemType::Item_Weapon, 10, 1000, 500);
 	gStore[Item_Weapon][1] = CreateItem("강철검",
@@ -37,7 +57,7 @@ bool InitStore()
 		EItemType::Item_Armor, 25, 12000, 6000);
 	gStore[Item_Armor][2] = CreateItem("판금갑옷",
 		EItemType::Item_Armor, 50, 40000, 20000);
-
+	*/
 	return true;
 }
 
@@ -89,6 +109,19 @@ void RunStore(FPlayer* Player, EItemType Type)
 				gStore[Type][i]->Buy << std::endl;
 			std::cout << "판매금액 : " <<
 				gStore[Type][i]->Sell << std::endl;
+
+			/*
+			std::cout << i + 1 << ". " <<
+				gStore[Type][i]->Name << std::endl;
+			std::cout << "종류 : " << StoreName <<
+				std::endl;
+			std::cout << OptionName << " : " <<
+				gStore[Type][i]->Option << std::endl;
+			std::cout << "구매금액 : " <<
+				gStore[Type][i]->Buy << std::endl;
+			std::cout << "판매금액 : " <<
+				gStore[Type][i]->Sell << std::endl;
+			*/
 		}
 
 		std::cout << "4. 뒤로가기" << std::endl;

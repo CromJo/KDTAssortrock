@@ -37,9 +37,35 @@ enum class EBattleResult : unsigned char
 	MonsterDeath
 };
 
+FMonster gOriginMonster[3];
+
 bool InitBattle()
 {
 	// 전투 초기화에 관련된 코드를 작성한다.
+	FILE* File = nullptr;
+
+	fopen_s(&File, "MonsterList.lst", "rb");
+
+	if (!File)
+		return false;
+
+	fread(gOriginMonster, sizeof(FMonster), 3, File);
+	
+	// fgets(Line, 128, File);
+	//
+	// char* Context = nullptr;
+	// 
+	// strtok_s(Line, ", ", &Context);
+
+	//for (int i = 0; i < MaxLevel - 1; i++)
+	//{
+	//	fscanf_s(File, "%d, ", &gLevelupTable[i]);
+	//}
+
+	fscanf_s(File, "%d, %d, %d, %d, %d, %d, %d, %d,%d", File);
+
+	fclose(File);
+
 
 	return true;
 }
@@ -71,8 +97,9 @@ FMonster* CreateMonster(EMap Map)
 	// 몬스터를 동적할당하고 메모리 주소를 포인터변수에
 	// 넣어준다.
 	FMonster* Monster = new FMonster;
+	*Monster = gOriginMonster[Map - 1];
 
-	switch (Map)
+	/*switch (Map)
 	{
 	case Easy:
 		strcpy_s(Monster->Name, "고블린");
@@ -110,7 +137,7 @@ FMonster* CreateMonster(EMap Map)
 		Monster->Exp = 10000;
 		Monster->Gold = 10000;
 		break;
-	}
+	}*/
 
 	return Monster;
 }
