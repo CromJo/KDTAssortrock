@@ -1,4 +1,4 @@
-#include "BattleManager.h"
+﻿#include "BattleManager.h"
 #include "Battle.h"
 
 CBattleManager::CBattleManager()

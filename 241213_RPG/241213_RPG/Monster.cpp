@@ -1,4 +1,4 @@
-#include "Monster.h"
+﻿#include "Monster.h"
 
 CMonster::CMonster()
 {
@@ -24,21 +24,16 @@ bool CMonster::Init(FILE* File)
 	fread(&mExp, sizeof(int), 1, File);
 	fread(&mGold, sizeof(int), 1, File);
 
+	CCharacter::SetCharacterInfo(mAttack, mDefense, mHP, mMP);
+
 	return true;
 }
 
 void CMonster::Output()
 {
-	std::cout << "이름 : " << mName << std::endl;
-
-	std::cout << "레벨 : " << mLevel <<
-		"\t경험치 : " << mExp << std::endl;
-	std::cout << "공격력 : " << mAttack <<
-		"\t방어력 : " << mDefense << std::endl;
-	std::cout << "체력 : " << mHP << " / " <<
-		mHPMax << "\t마나 : " << mMP <<
-		" / " << mMPMax << std::endl;
-	std::cout << "Gold : " << mGold << std::endl;
+	std::cout << "------------------몬스터 정보------------------" << std::endl;
+	
+	CCharacter::Output();
 }
 
 CMonster* CMonster::Clone()

@@ -1,25 +1,17 @@
 #pragma once
 
 #include "GameInfo.h"
+#include "Character.h"
 
-class CPlayer
+
+class CPlayer : public CCharacter
 {
 public:
 	CPlayer();
 	~CPlayer();
 
 private:
-	char	mName[32] = {};
 	EJob	mJob = EJob::None;
-	int		mAttack = 0;
-	int		mDefense = 0;
-	int		mHP = 0;
-	int		mHPMax = 0;
-	int		mMP = 0;
-	int		mMPMax = 0;
-	int		mLevel = 0;
-	int		mExp = 0;
-	int		mGold = 10000;
 	class CItem* mEquip[EEquip::End] = {};
 
 public:
@@ -39,16 +31,6 @@ public:
 	void AddGold(int Gold)
 	{
 		mGold += Gold;
-	}
-
-	bool Damage(int Dmg)
-	{
-		mHP -= Dmg;
-
-		if (mHP <= 0)
-			return true;
-
-		return false;
 	}
 
 	void Resurrection()

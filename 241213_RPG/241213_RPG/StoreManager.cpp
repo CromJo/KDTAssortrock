@@ -1,4 +1,4 @@
-#include "StoreManager.h"
+﻿#include "StoreManager.h"
 #include "Store.h"
 
 CStoreManager::CStoreManager()

@@ -132,43 +132,31 @@ bool CPlayer::Init()
 
 void CPlayer::Output()
 {
-	std::cout << "이름 : " << mName << "\t" <<
-		"직업 : ";
+	std::cout << "------------------플레이어 정보------------------" << std::endl;
 
 	switch (mJob)
 	{
 	case EJob::Knight:
-		std::cout << "기사" << std::endl;
+		std::cout << "직업 : 기사" << std::endl;
 		break;
 	case EJob::Archer:
-		std::cout << "궁수" << std::endl;
+		std::cout << "직업 :궁수" << std::endl;
 		break;
 	case EJob::Magicion:
-		std::cout << "마법사" << std::endl;
+		std::cout << "직업 :마법사" << std::endl;
 		break;
 	}
 
-	std::cout << "레벨 : " << mLevel <<
-		"\t경험치 : " << mExp << " / " <<
-		gLevelUpTable[mLevel - 1] << std::endl;
+	CCharacter::SetCharacterInfo(mAttack, mDefense, mHP, mMP);
+	CCharacter::Output();
 
-
-	std::cout << "공격력 : " << mAttack;
-	
+	// 아이템 웨폰 옵션 불러오기
 	if (mEquip[EEquip::Weapon])
 		std::cout << " + " << mEquip[EEquip::Weapon]->GetOption();
 	
-	std::cout << "\t방어력 : " << mDefense;
-
 	if (mEquip[EEquip::Armor])
 		std::cout << " + " << mEquip[EEquip::Armor]->GetOption();
 
-	std::cout << std::endl;
-
-	std::cout << "체력 : " << mHP << " / " <<
-		mHPMax << "\t마나 : " << mMP <<
-		" / " << mMPMax << std::endl;
-	std::cout << "Gold : " << mGold << std::endl;
 	// 장착아이템 출력
 	std::cout << "장착무기 : ";
 
@@ -185,4 +173,6 @@ void CPlayer::Output()
 
 	else
 		std::cout << "없음" << std::endl;
+
+	
 }

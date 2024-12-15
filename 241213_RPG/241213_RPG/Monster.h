@@ -1,8 +1,9 @@
 #pragma once
 
 #include "GameInfo.h"
+#include "Character.h"
 
-class CMonster
+class CMonster : public CCharacter
 {
 	friend class CObjectManager;
 	friend class CBattle;
@@ -44,19 +45,9 @@ public:
 		return mGold;
 	}
 
-	bool Damage(int Dmg)
-	{
-		mHP -= Dmg;
-
-		if (mHP <= 0)
-			return true;
-
-		return false;
-	}
-
 public:
 	bool Init(FILE* File);
-	void Output();
+	virtual void Output();
 
 	// 자신을 복제한 새로운 몬스터를 만들어준다.
 	CMonster* Clone();
