@@ -12,9 +12,11 @@ private:
 
 private:
 	EBattleType	mType;
+	EBattleState mState;
 
 public:
 	void SetBattleType(EBattleType Type);
+	void SetBattleState(EBattleState State);
 	void Run();
 };
 

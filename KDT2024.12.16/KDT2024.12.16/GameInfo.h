@@ -20,9 +20,9 @@ public:\
 	static void DestroyInst()\
 	{\
 		SAFE_DELETE(mInst);\
-	}
-#define DEFINITION_SINGLE(Type) Type* Type::mInst = nullptr;
+	}\
 
+#define DEFINITION_SINGLE(Type) Type* Type::mInst = nullptr;
 
 enum class EJob
 {
@@ -39,14 +39,6 @@ enum class EBattleType : unsigned char
 	Normal,
 	Hard,
 	End
-};
-
-enum class EBattleState : unsigned char
-{
-	None,
-	Attack,
-	Skill,
-	Back
 };
 
 namespace EStoreType

@@ -13,24 +13,24 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\01. GameManager">
+      <UniqueIdentifier>{6829bd91-96ed-4457-82f0-39865750e695}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\02. Object">
+      <UniqueIdentifier>{bedca83a-780d-4764-8bf6-1fec144a68ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\03. Store">
+      <UniqueIdentifier>{89bd1f71-ca7b-4382-a793-d723249ed732}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. Skill">
+      <UniqueIdentifier>{48c0437a-2c95-4c48-b46b-3d222c00dac8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Player.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Store.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="StoreManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Battle.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="BattleManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="GameManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Item.cpp">
@@ -39,19 +39,37 @@
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Monster.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="ObjectManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Inventory.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>소스 파일\01. GameManager</Filter>
+    </ClCompile>
     <ClCompile Include="Character.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\02. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>소스 파일\02. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>소스 파일\02. Object</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
+      <Filter>소스 파일\02. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="StoreManager.cpp">
+      <Filter>소스 파일\03. Store</Filter>
+    </ClCompile>
+    <ClCompile Include="Store.cpp">
+      <Filter>소스 파일\03. Store</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill.cpp">
+      <Filter>소스 파일\04. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillDoubleAttack.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,25 +80,10 @@
     <ClInclude Include="BattleManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="GameManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Item.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Monster.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Store.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="StoreManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Inventory.h">
@@ -89,10 +92,31 @@
     <ClInclude Include="GameInfo.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>소스 파일\01. GameManager</Filter>
+    </ClInclude>
     <ClInclude Include="Character.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>소스 파일\02. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>소스 파일\02. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>소스 파일\02. Object</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
+      <Filter>소스 파일\02. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Store.h">
+      <Filter>소스 파일\03. Store</Filter>
+    </ClInclude>
+    <ClInclude Include="StoreManager.h">
+      <Filter>소스 파일\03. Store</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill.h">
+      <Filter>소스 파일\04. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillDoubleAttack.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="01. GameManager">
+      <UniqueIdentifier>{830892e0-c4e0-4c37-be53-da2973c6a8f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object">
+      <UniqueIdentifier>{e8119648-6f03-4c58-b08a-a503106af262}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Store">
+      <UniqueIdentifier>{2b65f3de-1543-4e9f-8174-1608d04cdbfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\01. Character">
+      <UniqueIdentifier>{d8c500cb-d2bf-418e-8c29-f88f23398eb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\02. Item">
+      <UniqueIdentifier>{dc656698-cee4-4ab4-a28d-5352b7696373}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\03. Skill">
+      <UniqueIdentifier>{ea0b13a3-aebc-4419-b2a1-e45d98d66749}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>01. GameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="StoreManager.cpp">
+      <Filter>03. Store</Filter>
+    </ClCompile>
+    <ClCompile Include="Store.cpp">
+      <Filter>03. Store</Filter>
+    </ClCompile>
+    <ClCompile Include="StoreWeapon.cpp">
+      <Filter>03. Store</Filter>
+    </ClCompile>
+    <ClCompile Include="StoreArmor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Character.cpp">
+      <Filter>02. Object\01. Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>02. Object\01. Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>02. Object\01. Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Object1.cpp">
+      <Filter>02. Object\01. Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>02. Object\01. Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>02. Object\02. Item</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemArmor.cpp">
+      <Filter>02. Object\02. Item</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemWeapon.cpp">
+      <Filter>02. Object\02. Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill.cpp">
+      <Filter>02. Object\03. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="Bash.cpp">
+      <Filter>02. Object\03. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillActive.cpp">
+      <Filter>02. Object\03. Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="BattleManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="BattleEasy.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Battle.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameInfo.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>01. GameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="StoreManager.h">
+      <Filter>03. Store</Filter>
+    </ClInclude>
+    <ClInclude Include="Store.h">
+      <Filter>03. Store</Filter>
+    </ClInclude>
+    <ClInclude Include="StoreWeapon.h">
+      <Filter>03. Store</Filter>
+    </ClInclude>
+    <ClInclude Include="StoreArmor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>02. Object\01. Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>02. Object\01. Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>02. Object\01. Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Object1.h">
+      <Filter>02. Object\01. Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>02. Object\01. Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>02. Object\02. Item</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemArmor.h">
+      <Filter>02. Object\02. Item</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemWeapon.h">
+      <Filter>02. Object\02. Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill.h">
+      <Filter>02. Object\03. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="Bash.h">
+      <Filter>02. Object\03. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillActive.h">
+      <Filter>02. Object\03. Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="BattleManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BattleEasy.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Battle.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="MonsterList.lst" />
+  </ItemGroup>
+</Project>

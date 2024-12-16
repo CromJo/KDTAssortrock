@@ -1,6 +1,7 @@
 ﻿#include "Battle.h"
 #include "ObjectManager.h"
 #include "Player.h"
+#include "Monster.h"
 
 CBattle::CBattle()
 {
@@ -13,6 +14,11 @@ CBattle::~CBattle()
 void CBattle::SetBattleType(EBattleType Type)
 {
 	mType = Type;
+}
+
+void CBattle::SetBattleState(EBattleState State)
+{
+	mState = State;
 }
 
 void CBattle::Run()
@@ -31,25 +37,35 @@ void CBattle::Run()
 		Monster->Output();
 
 		std::cout << "1. 공격" << std::endl;
-		std::cout << "2. 뒤로가기" << std::endl;
+		std::cout << "2. 스킬" << std::endl;
+		std::cout << "3. 뒤로가기" << std::endl;
 		std::cout << "메뉴를 선택하세요 : ";
 		int	Input;
 		std::cin >> Input;
 
-		if (Input < 1 || Input > 2)
+		if (Input < (int)EBattleState::None || Input > (int)EBattleState::Back)
 			continue;
 
-		else if (Input == 2)
+		int Damage = 0;
+
+		switch (Input)
 		{
-			SAFE_DELETE(Monster);
+		case (int)EBattleState::None:
 			break;
+		case (int)EBattleState::Attack:
+			// 전투
+			Damage = Player->GetAttack() - Monster->GetDefense();
+			Damage = Damage < 1 ? 1 : Damage;
+
+			break;
+		case (int)EBattleState::Skill:
+			Damage = 
+			break;
+		case (int)EBattleState::Back:
+			SAFE_DELETE(Monster);
+
+			return;
 		}
-
-		// 전투
-		int	Damage = Player->GetAttack() -
-			Monster->GetDefense();
-
-		Damage = Damage < 1 ? 1 : Damage;
 
 		// Monster의 Damage 함수는 죽었을 때 true
 		// 살아있을 때 false를 반환한다.

@@ -3,23 +3,22 @@
 #include "GameInfo.h"
 #include "Character.h"
 
+
 class CPlayer : public CCharacter
 {
 public:
 	CPlayer();
+	CPlayer(const CPlayer& Obj);
 	~CPlayer();
 
 private:
 	EJob	mJob = EJob::None;
 	class CItem* mEquip[EEquip::End] = {};
+	class CSkillActive* mSkillArray[2] = {};
 
 public:
 	int GetAttack();
 	int GetDefense();
-	int GetMP()
-	{
-		return mMP;
-	}
 
 	int GetGold()
 	{
@@ -52,6 +51,7 @@ public:
 
 public:
 	bool Init();
-	void Output();
+	virtual	void Output();
+	virtual CPlayer* Clone();
 };
 
