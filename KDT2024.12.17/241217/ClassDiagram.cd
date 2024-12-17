@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CGameManager" Collapsed="true">
+    <Position X="18.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAI=</HashCode>
+      <FileName>GameManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CObject" Collapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAACAAIAIAAAAAAACAAAEgCQAAAABQ=</HashCode>
+      <FileName>Object.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CObject1" Collapsed="true">
+    <Position X="8.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>Object1.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CObjectManager" Collapsed="true">
+    <Position X="17" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAIAAIAAAIAAAACAAAAQAAAAACAAABAAA=</HashCode>
+      <FileName>ObjectManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CCharacter" Collapsed="true">
+    <Position X="8.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAEAAgEAgEAAkAIAAAAAABCACEAAAACAAAAAFQ=</HashCode>
+      <FileName>Character.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CMonster" Collapsed="true">
+    <Position X="7.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAACAAIAABA=</HashCode>
+      <FileName>Monster.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPlayer" Collapsed="true">
+    <Position X="9.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIgAAAAAAAAAAAAAAAQIAAAAAAAgAAAAAAACAAAAABI=</HashCode>
+      <FileName>Player.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CItem" Collapsed="true">
+    <Position X="4.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAIAAEAAAAAAIABAAAABAACAABAACAQAAABA=</HashCode>
+      <FileName>Item.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CItemArmor" Collapsed="true">
+    <Position X="3" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAJAAAAAAAAAAAAAAACAAAAAJA=</HashCode>
+      <FileName>ItemArmor.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CItemWeapon" Collapsed="true">
+    <Position X="5.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAIAACIAAAAAAAAAAACAAAAABA=</HashCode>
+      <FileName>ItemWeapon.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CBash" Collapsed="true">
+    <Position X="12" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAIAAAAACAAAAAAAAACAAAAABA=</HashCode>
+      <FileName>Bash.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSkill" Collapsed="true">
+    <Position X="12" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAIAAAAAAAAACAAAAACAIAAABA=</HashCode>
+      <FileName>Skill.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSkillActive" Collapsed="true">
+    <Position X="12" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAQAAAAEAAAAIAAAAAAAAAAEAAgACACAAABA=</HashCode>
+      <FileName>SkillActive.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStore" Collapsed="true">
+    <Position X="1.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAQAgAAAAAAAAAACAAAAAAI=</HashCode>
+      <FileName>Store.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStoreArmor" Collapsed="true">
+    <Position X="0.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAACCAAAAAA=</HashCode>
+      <FileName>StoreArmor.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStoreManager" Collapsed="true">
+    <Position X="18.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAEAAAI=</HashCode>
+      <FileName>StoreManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStoreWeapon" Collapsed="true">
+    <Position X="2.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAABACAAAAAAA=</HashCode>
+      <FileName>StoreWeapon.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CBattle" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Battle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CBattleEasy" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BattleEasy.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CBattleManager" Collapsed="true">
+    <Position X="17" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAM=</HashCode>
+      <FileName>BattleManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="EItemType" Collapsed="true">
+    <Position X="17" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAEAAAAAAAAAA=</HashCode>
+      <FileName>GameInfo.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EObjectType" Collapsed="true">
+    <Position X="17" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Object.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EJob" Collapsed="true">
+    <Position X="18.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAEAAAAAAAAAAAAAAAAAAAAAIAAAAAEAAAA=</HashCode>
+      <FileName>Player.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>
