@@ -1,4 +1,4 @@
-#include "Item.h"
+﻿#include "Item.h"
 
 CItem::CItem()
 {
@@ -40,6 +40,16 @@ bool CItem::Init(FILE* File)
     fread(&mSell, sizeof(int), 1, File);
 
     return true;
+}
+
+void CItem::Save(FILE* File)
+{
+    CObject::Save(File);
+
+    fwrite(&mType, sizeof(EItemType), 1, File);
+    fwrite(&mOption, sizeof(int), 1, File);
+    fwrite(&mBuy, sizeof(int), 1, File);
+    fwrite(&mSell, sizeof(int), 1, File);
 }
 
 void CItem::Output()

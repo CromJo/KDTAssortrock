@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "GameInfo.h"
 
@@ -29,6 +29,7 @@ public:
 public:
 	virtual bool Init();
 	virtual bool Init(FILE* File);
+	virtual void Save(FILE* File);
 	virtual void Output();
 	virtual CObject* Clone() = 0;
 };

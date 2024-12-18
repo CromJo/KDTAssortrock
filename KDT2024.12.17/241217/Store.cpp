@@ -45,6 +45,8 @@ bool CStore::LoadFromFile(const char* FileName)
 	{
 		mItemList[i] = CreateItem();
 		mItemList[i]->Init(File);
+
+		mItemList[i]->Clone();
 	}
 
 	fclose(File);
@@ -54,4 +56,23 @@ bool CStore::LoadFromFile(const char* FileName)
 
 void CStore::Run()
 {
+	while (true)
+	{
+		system("cls");
+
+		for (int i = 0; i < mItemCount; ++i)
+		{
+			std::cout << i + 1 << ". ";
+			mItemList[i]->Output();
+		}
+
+		std::cout << mItemCount + 1 << ". 뒤로가기" <<
+			std::endl;
+		std::cout << "구매할 아이템을 선택하세요 : ";
+		int	Input;
+		std::cin >> Input;
+
+		if (Input == mItemCount + 1)
+			break;
+	}
 }

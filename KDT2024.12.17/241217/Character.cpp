@@ -1,4 +1,5 @@
 #include "Character.h"
+#include "Player.h"
 
 CCharacter::CCharacter()
 {
@@ -21,11 +22,27 @@ bool CCharacter::Init()
 	return true;
 }
 
+bool CCharacter::Init(FILE* File)
+{
+	CObject::Init(File);
+
+	fread(&mAttack, sizeof(int), 1, File);
+	fread(&mDefense, sizeof(int), 1, File);
+	fread(&mHP, sizeof(int), 1, File);
+	fread(&mHPMax, sizeof(int), 1, File);
+	fread(&mMP, sizeof(int), 1, File);
+	fread(&mMPMax, sizeof(int), 1, File);
+	fread(&mLevel, sizeof(int), 1, File);
+	fread(&mExp, sizeof(int), 1, File);
+	fread(&mGold, sizeof(int), 1, File);
+
+	return true;
+}
+
 void CCharacter::Output()
 {
 	// 부모클래스의 Output함수를 호출한다.
 	CObject::Output();
-
 
 	//std::cout << "이름 : " << mName << std::endl;
 	std::cout << "공격력 : " << mAttack <<

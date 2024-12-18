@@ -18,6 +18,7 @@ public:
 public:
 	bool Init();
 	void Output();
+	CObject* FindMonster(EBattleType Type);
 
 private:
 	void CreateMonsterList();

@@ -43,9 +43,54 @@ void CObjectManager::Output()
 	}
 }
 
+CObject* CObjectManager::FindMonster(
+	EBattleType Type)
+{
+	for (int i = 0; i < mObjectCount; ++i)
+	{
+		// 몬스터 클래스를 이용하여 생성된 객체가
+		// 맞는지 확인하기 위해 dynamic_cast 를 
+		// 이용하여 형변환을 진행한다.
+		CMonster* Monster = 
+			dynamic_cast<CMonster*>(mObjectList[i]);
+
+		if (nullptr != Monster)
+		{
+			if (Monster->GetBattleType() == Type)
+				return mObjectList[i];
+		}
+	}
+
+	return nullptr;
+}
+
 void CObjectManager::CreateMonsterList()
 {
-	mObjectList[mObjectCount] = new CMonster;
+	FILE* File = nullptr;
+
+	fopen_s(&File, "MonsterList.mls", "rb");
+
+	if (!File)
+		return;
+
+	int	MonsterCount = 0;
+	fread(&MonsterCount, sizeof(int), 1, File);
+
+	for (int i = 0; i < MonsterCount; ++i)
+	{
+		EBattleType	Type;
+		fread(&Type, sizeof(EBattleType), 1,
+			File);
+
+		mObjectList[mObjectCount] = new CMonster;
+		((CMonster*)mObjectList[mObjectCount])->SetBattleType(Type);
+		mObjectList[mObjectCount]->Init(File);
+		++mObjectCount;
+	}
+
+	fclose(File);
+
+	/*mObjectList[mObjectCount] = new CMonster;
 	mObjectList[mObjectCount]->Init();
 	++mObjectCount;
 
@@ -55,12 +100,12 @@ void CObjectManager::CreateMonsterList()
 
 	mObjectList[mObjectCount] = new CMonster;
 	mObjectList[mObjectCount]->Init();
-	++mObjectCount;
+	++mObjectCount;*/
 }
 
 void CObjectManager::CreateItemList()
 {
-	FILE* File = nullptr;
+	/*FILE* File = nullptr;
 
 	fopen_s(&File, "WeaponStore.sto", "rb");
 
@@ -94,5 +139,5 @@ void CObjectManager::CreateItemList()
 		++mObjectCount;
 	}
 
-	fclose(File);
+	fclose(File);*/
 }

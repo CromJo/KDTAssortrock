@@ -5,5 +5,9 @@
 class CBattleEasy :
     public CBattle
 {
+public:
+	CBattleEasy();
+	virtual ~CBattleEasy();
+
 };
 

@@ -19,6 +19,9 @@
     <Filter Include="01. Object\01. Item">
       <UniqueIdentifier>{a8f9e1ab-f849-491b-8d7e-8eda935fc7a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Object\02. Character">
+      <UniqueIdentifier>{e43083c9-cdaf-4f2e-bba0-b95719c38ffa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -36,6 +39,15 @@
     <ClCompile Include="ItemWeapon.cpp">
       <Filter>01. Object\01. Item</Filter>
     </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>01. Object\02. Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Character.cpp">
+      <Filter>01. Object\02. Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>01. Object\02. Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Object.h">
@@ -52,6 +64,15 @@
     </ClInclude>
     <ClInclude Include="GameInfo.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>01. Object\02. Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>01. Object\02. Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>01. Object\02. Character</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

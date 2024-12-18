@@ -20,6 +20,13 @@ bool CMonster::Init()
     return true;
 }
 
+bool CMonster::Init(FILE* File)
+{
+    CCharacter::Init(File);
+
+    return true;
+}
+
 CMonster* CMonster::Clone()
 {
     return new CMonster(*this);

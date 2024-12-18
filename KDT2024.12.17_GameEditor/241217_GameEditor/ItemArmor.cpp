@@ -1,4 +1,4 @@
-#include "ItemArmor.h"
+﻿#include "ItemArmor.h"
 
 CItemArmor::CItemArmor()//    :
     //mType(EItemType::Armor)

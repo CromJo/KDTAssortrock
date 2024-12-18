@@ -1,4 +1,4 @@
-#include "Object.h"
+﻿#include "Object.h"
 
 CObject::CObject()
 {
@@ -31,6 +31,11 @@ bool CObject::Init(FILE* File)
 	fread(mName, sizeof(char), 32, File);
 
 	return true;
+}
+
+void CObject::Save(FILE* File)
+{
+	fwrite(mName, sizeof(char), 32, File);
 }
 
 void CObject::Output()

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Object.h"
 
@@ -17,8 +17,15 @@ protected:
 	int			mSell = 0;
 
 public:
+	EItemType GetItemType()
+	{
+		return mType;
+	}
+
+public:
 	virtual bool Init();
 	virtual bool Init(FILE* File);
+	virtual void Save(FILE* File);
 	virtual void Output();
 	virtual CItem* Clone();
 };

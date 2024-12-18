@@ -2,7 +2,7 @@
 #include "Object.h"
 #include "Object1.h"
 class CCharacter abstract :
-    public CObject, public CObject1
+    public CObject
 {
 public:
 	CCharacter();
@@ -34,6 +34,7 @@ public:
 
 public:
 	bool Init();
+	virtual bool Init(FILE* File);
 	virtual void Output();
 	// final 키워드는 이 클래스를 상속받는 자식
 	// 클래스에서 이 키워드가 붙은 함수를
