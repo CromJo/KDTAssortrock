@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <Windows.h>
+#include <conio.h>
+#include <time.h>
 
 #define	SAFE_DELETE(p)	if(p)	{ delete p; p = nullptr;}
 
@@ -30,5 +32,18 @@ enum class ETileType : unsigned char
 	Road,
 	Wall,
 	Start,
-	Goal
+	Goal,
+	Item,
 };
+
+namespace EKey
+{
+	enum type
+	{
+		MoveKey = 224,
+		Up = 72,
+		Down = 80,
+		Left = 75,
+		Right = 77
+	};
+}

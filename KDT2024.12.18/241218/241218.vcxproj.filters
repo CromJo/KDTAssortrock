@@ -19,6 +19,9 @@
     <Filter Include="02. Maze">
       <UniqueIdentifier>{ea409293-8169-4643-ad7a-a7cd6ca04dcc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Object">
+      <UniqueIdentifier>{4a367507-1f68-4fc8-a0c2-1e0e7913e643}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -39,6 +42,15 @@
     <ClCompile Include="MazeManager.cpp">
       <Filter>02. Maze</Filter>
     </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>03. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>03. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>03. Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -52,6 +64,15 @@
     </ClInclude>
     <ClInclude Include="MazeManager.h">
       <Filter>02. Maze</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>03. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>03. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>03. Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
