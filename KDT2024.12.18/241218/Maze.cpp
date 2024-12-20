@@ -1,6 +1,8 @@
 ﻿#include "Maze.h"
 #include "Player.h"
-#include "Item.h"
+#include "ItemScore.h"
+#include "ItemHP.h"
+#include "Trap.h"
 
 CMaze::CMaze()
 {
@@ -68,64 +70,11 @@ bool CMaze::Init(const char* FileName)
 		{
 			char Number[2] = {};
 			Number[0] = Line[j];
-			//이거는 atoi(const char* c)
-			//-->const char* 
-			//Line[j]주소 -----> Line[xCountX -1]
-			//이거를 --> 숫자로 형변환 한거에요.
 			mMazeArray[i][j] = (ETileType)atoi(Number);
-
-			int OutIndex = i * (mCountX + 1) + j;
-
-			switch (mMazeArray[i][j])
-			{
-			case ETileType::Road:
-				mOutputBuffer[OutIndex] = ' ';
-				break;
-			case ETileType::Wall:
-				mOutputBuffer[OutIndex] = 'O';
-				break;
-			case ETileType::Start:
-				mStartPos.X = j;
-				mStartPos.Y = i;
-				mOutputBuffer[OutIndex] = 'S';
-				break;
-			case ETileType::Goal:
-				mGoalPos.X = j;
-				mGoalPos.Y = i;
-				mOutputBuffer[OutIndex] = 'F';
-				break;
-			case ETileType::Item:
-				CItem* Item = new CItem;
-				
-				Item->Init();
-				Item->SetPos(j, i);
-
-				if (mObjectCount == mObjectCapacity)
-				{
-					mObjectCapacity *= 2;
-
-					CObject** Array = new CObject * [mObjectCapacity];
-					
-					memcpy(Array, mObjectList, sizeof(CObject*) * mObjectCount);
-				
-					delete[] mObjectList;
-
-					mObjectList = Array;
-				}
-
-				mObjectList[mObjectCount] = Item;
-				mObjectCount++;
-
-				mOutputBuffer[OutIndex] = ' ';
-				break;
-			}
 		}
-
 		// 한줄이 끝나면 개행문자를 넣어둔다.
 		// 가로의 끝 인덱스는 (mCountX + 1) 개만큼 이기
 		// 때문에 mCountX가 가로의 끝 인덱스가 된다.
-		int OutIndex = i * (mCountX + 1) + mCountX;
-		mOutputBuffer[OutIndex] = '\n';
 	}
 
 	fclose(File);
@@ -135,6 +84,8 @@ bool CMaze::Init(const char* FileName)
 
 void CMaze::Run()
 {
+	Reset();
+
 	system("cls");
 
 	__int64 TimeStart = time(0);
@@ -164,42 +115,76 @@ void CMaze::Run()
 		COORD PlayerPos = Player->GetPos();
 		int PlayerIndex = PlayerPos.Y * (mCountX + 1) + PlayerPos.X;
 
-		for (int i = 0; i < mObjectCount; i++)
+
+		for (int i = 0; i < mObjectCount; ++i)
 		{
-			// 아이템인지를 판단
-			// 1. 오브젝트 종류를 열거형으로 체크
-			// 2. 동적할당을 이용해서 판단
-
-			// 동적할당 판단 기능
-			CItem* Item = dynamic_cast<CItem*>(mObjectList[i]);
-			
-			if (nullptr != Item)
+			if (PlayerPos.X == mObjectList[i]->GetPos().X &&
+				PlayerPos.Y == mObjectList[i]->GetPos().Y)
 			{
-				if (PlayerPos.X == Item->GetPos().X && PlayerPos.Y == Item->GetPos().Y)
+				// 이 오브젝트가 아이템인지 판단한다.
+				if (nullptr != dynamic_cast<CItem*>(mObjectList[i]))
 				{
-					mScore++;
+					if (dynamic_cast<CItemScore*>(mObjectList[i]))
+					{
+						// 점수인지 체력인지 판단한다.
+						mScore += 10;
+					}
 
-					// 아이템을 먹게 되면 이전 출력은
-					// 아이템이 아닌 길로 변경해야한다.
+					else
+					{
+						Player->AddHP(1);
+					}
+
+					// 아이템을 먹게되면 버퍼의 이 위치를
+					// 길로 바꿔준다.
 					mOutputBuffer[PlayerIndex] = ' ';
 
+					// 가장 마지막 인덱스보다 작을 경우
 					if (i < mObjectCount - 1)
 					{
-						// 현재 위치의 아이템과 배열의 가장 마지막 오브젝트의 위치를 바꿔준다.
+						// 현재 위치의 아이템과 배열의 가장
+						// 마지막 오브젝트와 위치를 바꿔준다.
 						CObject* Temp = mObjectList[i];
 						mObjectList[i] = mObjectList[mObjectCount - 1];
 						mObjectList[mObjectCount - 1] = Temp;
 					}
 
-					// 마지막 인덱스를 제거
+					// 마지막 인덱스를 제거한다.
 					delete mObjectList[mObjectCount - 1];
 					mObjectList[mObjectCount - 1] = nullptr;
-					mObjectCount--;
+					--mObjectCount;
+					break;
+				}
+
+				else if (nullptr != dynamic_cast<CTrap*>(mObjectList[i]))
+				{
+					mOutputBuffer[PlayerIndex] = ' ';
+					if (Player->AddHP(-1))
+					{
+						SAFE_DELETE(Player);
+						return;
+					}
+
+					// 가장 마지막 인덱스보다 작을 경우
+					if (i < mObjectCount - 1)
+					{
+						// 현재 위치의 아이템과 배열의 가장
+						// 마지막 오브젝트와 위치를 바꿔준다.
+						CObject* Temp = mObjectList[i];
+						mObjectList[i] = mObjectList[mObjectCount - 1];
+						mObjectList[mObjectCount - 1] = Temp;
+					}
+
+					// 마지막 인덱스를 제거한다.
+					delete mObjectList[mObjectCount - 1];
+					mObjectList[mObjectCount - 1] = nullptr;
+					--mObjectCount;
+					break;
 				}
 			}
 		}
 
-		mOutputBuffer[StartIndex] = '#';
+		mOutputBuffer[StartIndex] = '#';		
 		mOutputBuffer[GoalIndex] = '%';
 
 		// 아이템 출력 기능
@@ -238,8 +223,8 @@ void CMaze::Run()
 
 		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), TimePos);
 
-		int Minute = mTime / 60;
-		int Second = mTime % 60;
+		__int64 Minute = mTime / 60;
+		__int64 Second = mTime % 60;
 
 		std::cout << Minute << " : " << Second << std::endl;
 
@@ -249,10 +234,160 @@ void CMaze::Run()
 
 		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), ScorePos);
 		std::cout << "Score : " << mScore;
+
+		COORD HPPos;
+		HPPos.X = mCountX + 2;
+		HPPos.Y = 5;
+
+		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), HPPos);
+		std::cout << "HP : ";
+
+		int HP = Player->GetHP();
+
+		for (int i = 0; i < HP; i++)
+		{
+			if (i < HP)
+			{
+				std::cout << "♥";
+			}
+			else
+			{
+				std::cout << " ";
+			}
+		}
 		//Player->Output();
 	}
 
 	SAFE_DELETE(Player);
+}
+
+void CMaze::Reset()
+{
+	// 이전 플레이에 남아있던 오브젝트들을 제거.
+	for (int i = 0; i < mObjectCount; i++)
+	{
+		SAFE_DELETE(mObjectList[i]);
+	}
+
+	mObjectCount = 0;
+
+	mTime = 0;
+	mScore = 0;
+
+	memset(mOutputBuffer, 0, sizeof(char) * ((mCountX + 1) * mCountY + 1));
+
+	for (int i = 0; i < mCountY; i++)
+	{
+		for (int j = 0; j < mCountX; j++)
+		{
+			int OutIndex = i * (mCountX + 1) + j;
+
+			switch (mMazeArray[i][j])
+			{
+			case ETileType::Road:
+				mOutputBuffer[OutIndex] = ' ';
+				break;
+			case ETileType::Wall:
+				mOutputBuffer[OutIndex] = 'O';
+				break;
+			case ETileType::Start:
+				mStartPos.X = j;
+				mStartPos.Y = i;
+				mOutputBuffer[OutIndex] = 'S';
+				break;
+			case ETileType::Goal:
+				mGoalPos.X = j;
+				mGoalPos.Y = i;
+				mOutputBuffer[OutIndex] = 'F';
+				break;
+			case ETileType::Item:
+			{
+				CItem* Item = new CItemScore;
+
+				Item->Init();
+				Item->SetPos(j, i);
+
+				if (mObjectCount == mObjectCapacity)
+				{
+					mObjectCapacity *= 2;
+
+					CObject** Array = new CObject * [mObjectCapacity];
+
+					memcpy(Array, mObjectList, sizeof(CObject*) * mObjectCount);
+
+					delete[] mObjectList;
+
+					mObjectList = Array;
+				}
+
+				mObjectList[mObjectCount] = Item;
+				mObjectCount++;
+
+				mOutputBuffer[OutIndex] = ' ';
+			}
+				break;
+			case ETileType::Trap:
+			{
+				CTrap* Trap = new CTrap;
+
+				Trap->Init();
+				Trap->SetPos(j, i);
+
+				if (mObjectCount == mObjectCapacity)
+				{
+					mObjectCapacity *= 2;
+
+					CObject** Array = new CObject * [mObjectCapacity];
+
+					memcpy(Array, mObjectList, sizeof(CObject*) * mObjectCount);
+
+					delete[] mObjectList;
+
+					mObjectList = Array;
+				}
+
+				mObjectList[mObjectCount] = Trap;
+				mObjectCount++;
+
+				mOutputBuffer[OutIndex] = 'X';
+
+			}
+				break;
+			case ETileType::HP:
+			{
+				CItem* Item = new CItemHP;
+
+				Item->Init();
+				Item->SetPos(j, i);
+
+				if (mObjectCount == mObjectCapacity)
+				{
+					mObjectCapacity *= 2;
+
+					CObject** Array = new CObject * [mObjectCapacity];
+
+					memcpy(Array, mObjectList, sizeof(CObject*) * mObjectCount);
+
+					delete[] mObjectList;
+
+					mObjectList = Array;
+				}
+
+				mObjectList[mObjectCount] = Item;
+				mObjectCount++;
+
+				mOutputBuffer[OutIndex] = ' ';
+			}
+				break;
+			}
+		}
+
+		// 한줄이 끝나면 개행문자를 넣어둔다.
+		// 가로의 끝 인덱스는 (mCountX + 1) 개만큼 이기
+		// 때문에 mCountX가 가로의 끝 인덱스가 된다.
+		int OutIndex = i * (mCountX + 1) + mCountX;
+		mOutputBuffer[OutIndex] = '\n';
+	}
 }
 
 void CMaze::Output()
@@ -270,7 +405,7 @@ void CMaze::Output()
 				break;
 			case ETileType::Wall:
 				std::cout << "●";
-				break;
+				break;\
 			case ETileType::Start:
 				std::cout << "◇";
 			case ETileType::Goal:

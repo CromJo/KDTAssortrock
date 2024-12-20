@@ -1,27 +1,24 @@
 #pragma once
+
 #include "Object.h"
 
-class CPlayer : public CObject
+class CPlayer :
+	public CObject
 {
 public:
 	CPlayer();
 	virtual ~CPlayer();
 
 private:
-	int mHP = 5;
-
-private:
 	class CMaze* mMaze = nullptr;
+	int			mHP = 5;
 
 public:
-	void SetMaze(class CMaze* Maze)
-	{
-		mMaze = Maze;
-	}
-	int GetHP() const
+	int GetHP()	const
 	{
 		return mHP;
 	}
+
 	bool AddHP(int Damage)
 	{
 		mHP += Damage;
@@ -32,10 +29,15 @@ public:
 		return mHP <= 0;
 	}
 
+	void SetMaze(class CMaze* Maze)
+	{
+		mMaze = Maze;
+	}
 
-public :
+public:
 	virtual bool Init();
 	virtual void Update();
 	virtual void Output(char* OutBuffer, int CountX);
+	virtual void OutputHP();
 };
 

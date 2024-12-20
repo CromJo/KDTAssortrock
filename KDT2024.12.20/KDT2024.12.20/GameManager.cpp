@@ -1,13 +1,7 @@
-ï»¿#include "GameManager.h"
+#include "GameManager.h"
 #include "MazeManager.h"
 
 DEFINITION_SINGLE(CGameManager)
-/*
-	0 : ê¸¸
-	1 : ë²½
-	2 : ì‹œì‘ì 
-	3 : ë„ì°©ì 
-*/
 
 CGameManager::CGameManager()
 {
@@ -20,15 +14,15 @@ CGameManager::~CGameManager()
 EMainMenu CGameManager::Menu()
 {
 	system("cls");
-	std::cout << "1. ë¯¸ë¡œ" << std::endl;
-	std::cout << "2. ì ìˆ˜" << std::endl;
-	std::cout << "3. ì¢…ë£Œ" << std::endl;
-	std::cout << "ë©”ë‰´ë¥¼ ì„ íƒí•˜ì„¸ìš” : ";
-
-	int Input;
+	std::cout << "1. ¹Ì·Î" << std::endl;
+	std::cout << "2. Á¡¼ö" << std::endl;
+	std::cout << "3. Á¾·á" << std::endl;
+	std::cout << "¸Ş´º¸¦ ¼±ÅÃÇÏ¼¼¿ä : ";
+	int	Input;
 	std::cin >> Input;
 
-	if (Input < (int)EMainMenu::None || Input >(int)EMainMenu::Exit)
+	if (Input < (int)EMainMenu::None ||
+		Input >(int)EMainMenu::Exit)
 		return EMainMenu::None;
 
 	return (EMainMenu)Input;
@@ -50,13 +44,11 @@ void CGameManager::Run()
 		case EMainMenu::Maze:
 			CMazeManager::GetInst()->Run();
 			break;
-
 		case EMainMenu::Score:
 			CMazeManager::GetInst()->RunScore();
 			break;
-
 		case EMainMenu::Exit:
-			break;
+			return;
 		}
 	}
 }

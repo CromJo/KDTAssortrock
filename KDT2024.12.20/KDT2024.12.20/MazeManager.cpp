@@ -1,4 +1,4 @@
-ï»¿#include "MazeManager.h"
+#include "MazeManager.h"
 #include "Maze.h"
 
 DEFINITION_SINGLE(CMazeManager)
@@ -9,13 +9,13 @@ CMazeManager::CMazeManager()
 
 CMazeManager::~CMazeManager()
 {
-	// ë™ì  ë°°ì—´í• ë‹¹ì„ í–ˆìœ¼ë‹ˆ í•„ìš”ì—†ëŠ” ì†Œë©¸ìëŠ” ë”œë¦¬íŠ¸ë¶€í„° í•˜ê³  ì‹œì‘í•˜ëŠ”ê²¨
 	if (nullptr != mMazeArray)
 	{
-		for (int i = 0; i < mMazeCount; i++)
+		for (int i = 0; i < mMazeCount; ++i)
 		{
 			SAFE_DELETE(mMazeArray[i]);
 		}
+
 		delete[] mMazeArray;
 	}
 }
@@ -24,15 +24,15 @@ int CMazeManager::Menu()
 {
 	system("cls");
 
-	for (int i = 0; i < mMazeCount; i++)
+	for (int i = 0; i < mMazeCount; ++i)
 	{
-		std::cout << i + 1 << ". " << mMazeArray[i]->GetName() << std::endl;
+		std::cout << i + 1 << ". " <<
+			mMazeArray[i]->GetName() << std::endl;
 	}
 
-	std::cout << mMazeCount + 1 << ". ë’¤ë¡œê°€ê¸°" << std::endl;
-	std::cout << "ë¯¸ë¡œë¥¼ ì„ íƒí•˜ì„¸ìš”. : ";
-
-	int Input;
+	std::cout << mMazeCount + 1 << ". µÚ·Î°¡±â" << std::endl;
+	std::cout << "¹Ì·Î¸¦ ¼±ÅÃÇÏ¼¼¿ä : ";
+	int	Input;
 	std::cin >> Input;
 
 	if (Input < 1 || Input > mMazeCount + 1)
@@ -43,7 +43,7 @@ int CMazeManager::Menu()
 
 bool CMazeManager::Init()
 {
-	// ë¯¸ë¡œ ëª©ë¡ íŒŒì¼ì„ ì½ì–´ì˜¨ë‹¤.
+	// ¹Ì·Î ¸ñ·Ï ÆÄÀÏÀ» ÀĞ¾î¿Â´Ù.
 	FILE* File = nullptr;
 
 	fopen_s(&File, "MazeList.txt", "rt");
@@ -51,30 +51,30 @@ bool CMazeManager::Init()
 	if (!File)
 		return false;
 
-	char Line[128] = {};
+	char	Line[128] = {};
 
 	fgets(Line, 128, File);
 
 	mMazeCount = atoi(Line);
+
 	mMazeArray = new CMaze * [mMazeCount];
 
-	for (int i = 0; i < mMazeCount; i++)
+	for (int i = 0; i < mMazeCount; ++i)
 	{
 		fgets(Line, 128, File);
-		// ë¬¸ìì—´ì˜ ê¸¸ì´ë¥¼ êµ¬í•˜ëŠ” í•¨ìˆ˜
-		int Length = strlen(Line);
+
+		int	Length = strlen(Line);
 
 		if (Line[Length - 1] == '\n')
-		{
 			Line[Length - 1] = 0;
-		}
 
 		mMazeArray[i] = new CMaze;
+
 		mMazeArray[i]->Init(Line);
 	}
 
 	fclose(File);
-	
+
 	return true;
 }
 
@@ -82,32 +82,33 @@ void CMazeManager::Run()
 {
 	while (true)
 	{
-		int Input = Menu();
+		int	Input = Menu();
 
 		if (Input == 0)
 			continue;
+
 		else if (Input == mMazeCount + 1)
 			break;
 
-		int Index = Input - 1;
+		int	Index = Input - 1;
 
 		mMazeArray[Index]->Run();
 
-		__int64 Time = mMazeArray[Index]->GetTime();
-		int Score = mMazeArray[Index]->GetScore();
+		// ¹Ì·Î ¿Ï·áÇÏ´Âµ¥ °É¸° ½Ã°£À» ¾ò¾î¿Â´Ù.
+		__int64	Time = mMazeArray[Index]->GetTime();
+		int	Score = mMazeArray[Index]->GetScore();
 
-		int ScoreIndex = -1;
+		int	ScoreIndex = -1;
 
 		if (mScoreCount == 0)
-		{
 			ScoreIndex = 0;
-		}
+
 		else
 		{
-			for (int i = 0; i < mScoreCount; i++)
+			for (int i = 0; i < mScoreCount; ++i)
 			{
-				// Timeë³´ë‹¤ í°ê°’ì´ ì—†ì„ê²½ìš°
-				// ëŒì•„ê°€ì§€ ëª»í•˜ë„ë¡
+				// Timeº¸´Ù Å«°ªÀÌ ¾øÀ» °æ¿ì
+				// ScoreIndex´Â -1À» À¯ÁöÇÒ °ÍÀÌ´Ù.
 				if (mScoreArray[i].Time > Time)
 				{
 					ScoreIndex = i;
@@ -115,56 +116,52 @@ void CMazeManager::Run()
 				}
 			}
 
+			// for¿¡¼­ Å« ½Ã°£ÀÌ ¾ø´Ù¸é
 			if (ScoreIndex == -1)
 			{
 				ScoreIndex = mScoreCount;
 
 				if (ScoreIndex >= 5)
-				{
 					ScoreIndex = -1;
-				}
 			}
-
 		}
 
 		if (ScoreIndex != -1)
 		{
-			// í˜„ì¬ ì ìˆ˜ê°€ ë“¤ì–´ê°ˆ ì¸ë±ìŠ¤ë¶€í„° 
-			// ë’¤ì˜ ì ìˆ˜ë“¤ì„ 1ì¹¸ì”© ë°€ì–´ì¤€ë‹¤.
-			for (int i = mScoreCount - 1; i >= ScoreIndex ; i--)
+			// ÇöÀç Á¡¼ö°¡ µé¾î°¥ ÀÎµ¦½ººÎÅÍ
+			// µÚÀÇ Á¡¼öµéÀ» 1Ä­¾¿ ¹Ğ¾îÁØ´Ù.
+			for (int i = mScoreCount - 1; i >= ScoreIndex; --i)
 			{
 				if (i == 4)
 					break;
 
 				mScoreArray[i + 1] = mScoreArray[i];
 			}
-			
+
 			mScoreArray[ScoreIndex].Time = Time;
 			mScoreArray[ScoreIndex].Score = Score;
-			mScoreCount++;
+			++mScoreCount;
 
 			if (mScoreCount > 5)
-			{
 				mScoreCount = 5;
-			}
 		}
 	}
 }
 
 void CMazeManager::RunScore()
 {
-	// 2. ì ìˆ˜
-	std::cout << "ì‹œê°„\tì ìˆ˜" << std::endl;
+	// Á¡¼ö¸¦ º¸¿©ÁØ´Ù.
+	system("cls");
+	std::cout << "½Ã°£\tÁ¡¼ö" << std::endl;
 
-	for (int i = 0; i < mScoreCount; i++)
+	for (int i = 0; i < mScoreCount; ++i)
 	{
 		__int64 Minute = mScoreArray[i].Time / 60;
 		__int64 Second = mScoreArray[i].Time % 60;
 
-		std::cout << Minute << " : " << Second << std::endl;
+		std::cout << Minute << ":" << Second << "\t" <<
+			mScoreArray[i].Score << std::endl;
 	}
-	
-
 
 	system("pause");
 }

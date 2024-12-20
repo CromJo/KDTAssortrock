@@ -30,6 +30,11 @@ private:
 	__int64 mTime = 0;
 
 public:
+	int GetScore() const
+	{
+		return mScore;
+	}
+
 	__int64 GetTime() const
 	{
 		return mTime;
@@ -51,6 +56,7 @@ public:
 public:
 	bool Init(const char* FileName);
 	void Run();
+	void Reset();
 	void Output();
 };
 

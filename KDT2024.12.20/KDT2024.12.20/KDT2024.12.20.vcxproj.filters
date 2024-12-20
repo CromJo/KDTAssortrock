@@ -14,33 +14,33 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="01. GameManager">
-      <UniqueIdentifier>{10c815b1-f673-4651-bcc6-e01a5b5ced22}</UniqueIdentifier>
+      <UniqueIdentifier>{dec9ca63-0b8d-4ecb-854c-2c7dcfac503f}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. Maze">
-      <UniqueIdentifier>{ea409293-8169-4643-ad7a-a7cd6ca04dcc}</UniqueIdentifier>
+      <UniqueIdentifier>{88cdb8f4-cc93-48a3-bd54-109f0b65377a}</UniqueIdentifier>
     </Filter>
     <Filter Include="03. Object">
-      <UniqueIdentifier>{4a367507-1f68-4fc8-a0c2-1e0e7913e643}</UniqueIdentifier>
+      <UniqueIdentifier>{1bd10121-856c-456e-9664-e5d87a3a97e8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="main1.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="main2.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="GameManager.cpp">
       <Filter>01. GameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="MazeManager.cpp">
+      <Filter>02. Maze</Filter>
     </ClCompile>
     <ClCompile Include="Maze.cpp">
       <Filter>02. Maze</Filter>
     </ClCompile>
-    <ClCompile Include="MazeManager.cpp">
-      <Filter>02. Maze</Filter>
+    <ClCompile Include="Player.cpp">
+      <Filter>03. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Trap.cpp">
+      <Filter>03. Object</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>03. Object</Filter>
@@ -48,17 +48,11 @@
     <ClCompile Include="Item.cpp">
       <Filter>03. Object</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>03. Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Trap.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ItemScore.cpp">
-      <Filter>03. Object</Filter>
-    </ClCompile>
     <ClCompile Include="ItemHP.cpp">
       <Filter>03. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemScore.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -68,29 +62,29 @@
     <ClInclude Include="GameInfo.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Maze.h">
-      <Filter>02. Maze</Filter>
-    </ClInclude>
     <ClInclude Include="MazeManager.h">
       <Filter>02. Maze</Filter>
     </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>03. Object</Filter>
+    <ClInclude Include="Maze.h">
+      <Filter>02. Maze</Filter>
     </ClInclude>
-    <ClInclude Include="Item.h">
+    <ClInclude Include="Object.h">
       <Filter>03. Object</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>03. Object</Filter>
     </ClInclude>
     <ClInclude Include="Trap.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>03. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>03. Object</Filter>
     </ClInclude>
     <ClInclude Include="ItemHP.h">
       <Filter>03. Object</Filter>
     </ClInclude>
     <ClInclude Include="ItemScore.h">
-      <Filter>03. Object</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

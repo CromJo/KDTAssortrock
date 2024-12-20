@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <iostream>
 #include <Windows.h>
@@ -27,6 +27,7 @@ public:\
 
 #define	DEFINITION_SINGLE(Type) Type* Type::mInst = nullptr;
 
+
 enum class ETileType : unsigned char
 {
 	Road,
@@ -40,7 +41,7 @@ enum class ETileType : unsigned char
 
 namespace EKey
 {
-	enum type
+	enum Type
 	{
 		MoveKey = 224,
 		Up = 72,
@@ -52,7 +53,6 @@ namespace EKey
 
 struct FScore
 {
-	int Score;	// 상위 5위권 점수판
-	__int64 Time;		// 상위 5위권 점수판
-
+	int		Score;
+	__int64	Time;
 };
