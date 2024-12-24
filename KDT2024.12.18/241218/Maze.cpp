@@ -10,7 +10,7 @@ CMaze::CMaze()
 
 CMaze::~CMaze()
 {
-	if (nullptr != mMazeArray)
+	/*if (nullptr != mMazeArray)
 	{
 		for (int i = 0; i < mCountY; i++)
 		{
@@ -18,8 +18,16 @@ CMaze::~CMaze()
 		}
 
 		delete[] mMazeArray;
-	}
+	}*/
 
+	// clear함수가 불필요한 이유.
+	// RAII패턴과 소멸자의 동작에 기반하기 때문.
+	// RAII패턴 : 리소스의 수명을 객체의 수명과 연결.
+	//	Vector의 경우 :
+	//		1. 생성자 : 벡터 객체가 생성될 때 메모리를 할당합니다.
+	//		2. 소멸자 : 벡터 객체가 소멸될 때 자동으로 호출되어 할당된 메모리를 해제.
+	//mMazeVector.clear();
+	
 	if (nullptr != mOutputBuffer)
 	{
 		delete[] mOutputBuffer;
@@ -29,7 +37,8 @@ CMaze::~CMaze()
 bool CMaze::Init(const char* FileName)
 {
 	// 생성된 아이템, 함정등을 저장하기 위한 오브젝트 배열을 만들어준다.
-	mObjectList = new CObject * [mObjectCapacity];
+	//mObjectList = new CObject * [mObjectCapacity];
+	mObjectVectorList.resize(mObjectCapacity);		// 1차원 크기 설정.
 
 	FILE* File = nullptr;
 
@@ -51,21 +60,25 @@ bool CMaze::Init(const char* FileName)
 
 	Result = strtok_s(Line, ", ", &Context);
 
+	// vector.resize로 하면되니 필요없어질 듯?
 	mCountX = atoi(Result);
 	mCountY = atoi(Context);
+	//mMazeArray = new ETileType* [mCountY];
 
-	mMazeArray = new ETileType* [mCountY];
+	// 2차원 벡터 자동으로 원하는 크기 초기화.
+	mMazeVector.resize(mCountY, std::vector<ETileType>(mCountX));	// 2차원 크기 설정
+	
 	// 마지막에는 Null문자가 들어와야 하기 때문에 1개를 더 생성해줘야 한다.
 	mOutputBuffer = new char[(mCountX + 1) * mCountY + 1];
 
 	memset(mOutputBuffer, 0, sizeof(char) * ((mCountX + 1) * mCountY + 1));
 
-	for (int i = 0; i < mCountY; i++)
+	/*for (int i = 0; i < mCountY; i++)
 	{
 		mMazeArray[i] = new ETileType[mCountX];
-
+	
 		fgets(Line, 128, File);
-
+	
 		for (int j = 0; j < mCountX; j++)
 		{
 			char Number[2] = {};
@@ -75,6 +88,25 @@ bool CMaze::Init(const char* FileName)
 		// 한줄이 끝나면 개행문자를 넣어둔다.
 		// 가로의 끝 인덱스는 (mCountX + 1) 개만큼 이기
 		// 때문에 mCountX가 가로의 끝 인덱스가 된다.
+	}*/
+	
+	int Size = mMazeVector.size();
+
+	for (int i = 0; i < Size; i++)
+	{
+		//mMazeArray[i] = new ETileType[mCountX];
+		
+		// 여기서 mMazeVector[i]의 resize를 추가 해줄 필요는 없다.
+		// 왜냐하면 첫 resize일때 2차원적으로 재설정을 해주었기 때문.
+
+		fgets(Line, 128, File);
+		int Size2Vector = mMazeVector[i].size();	// 2차원 벡터의 사이즈
+		for (int j = 0; j < Size2Vector; j++)
+		{
+			char Number[2] = {};
+			Number[0] = Line[j];
+			mMazeVector[i][j] = (ETileType)atoi(Number);
+		}
 	}
 
 	fclose(File);
@@ -107,10 +139,22 @@ void CMaze::Run()
 	{
 		Player->Update();
 
-		for (int i = 0; i < mObjectCount; i++)
+		/*for (int i = 0; i < mObjectCount; i++)
 		{
 			mObjectList[i]->Update();
+		}*/
+
+		int mObjectVectorCount = mObjectVectorList.size();
+		for (int i = 0; i < mObjectVectorCount; i++)
+		{
+			int mObjectVector2Count = mObjectVectorList[i].size();
+
+			for (int j = 0; j < mObjectVector2Count; j++)
+			{
+				mObjectVectorList[i][j].Update();
+			}
 		}
+
 
 		COORD PlayerPos = Player->GetPos();
 		int PlayerIndex = PlayerPos.Y * (mCountX + 1) + PlayerPos.X;

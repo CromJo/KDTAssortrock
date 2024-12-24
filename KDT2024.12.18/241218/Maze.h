@@ -12,6 +12,7 @@ private:
 	char* mOutputBuffer;
 	ETileType** mMazeArray = nullptr;
 	
+	std::vector<std::vector<ETileType>> mMazeVector;
 	COORD mStartPos;
 	COORD mGoalPos;
 	int mCountX = 0;
@@ -24,6 +25,8 @@ private:
 
 	// 오브젝트 주소를 저장하는 포인터 가변 배열을 만들어준다.
 	class CObject** mObjectList = nullptr;
+	std::vector<std::vector<CObject>> mObjectVectorList;
+	
 	int mObjectCount = 0;
 	int mObjectCapacity = 4;
 
