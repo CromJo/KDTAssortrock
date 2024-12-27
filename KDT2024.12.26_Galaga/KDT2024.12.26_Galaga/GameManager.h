@@ -15,6 +15,7 @@ class CGameManager
 private:
 	EMainMenu Menu();
 
+
 public:
 	bool Init();
 	void Run();

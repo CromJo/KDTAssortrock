@@ -22,6 +22,12 @@
     <Filter Include="03. Stage">
       <UniqueIdentifier>{9838b4d0-4f82-4234-b183-4fc14467e70d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. Object\01. Character">
+      <UniqueIdentifier>{d2b04281-4e07-4065-8514-07a031238bdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Object\02. Item">
+      <UniqueIdentifier>{b4d9702f-5556-420b-8d51-ff7fd8f71c06}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -36,17 +42,26 @@
     <ClCompile Include="ObjectManager.cpp">
       <Filter>02. Object</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>02. Object</Filter>
-    </ClCompile>
     <ClCompile Include="Stage.cpp">
       <Filter>03. Stage</Filter>
     </ClCompile>
     <ClCompile Include="StageManager.cpp">
       <Filter>03. Stage</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
+    <ClCompile Include="Bullet.cpp">
       <Filter>02. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>02. Object\01. Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>02. Object\01. Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>02. Object\02. Item</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemScore.cpp">
+      <Filter>02. Object\02. Item</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -59,9 +74,6 @@
     <ClInclude Include="ObjectManager.h">
       <Filter>02. Object</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>02. Object</Filter>
-    </ClInclude>
     <ClInclude Include="GameManager.h">
       <Filter>01. GameManager</Filter>
     </ClInclude>
@@ -71,8 +83,20 @@
     <ClInclude Include="StageManager.h">
       <Filter>03. Stage</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
+    <ClInclude Include="Bullet.h">
       <Filter>02. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>02. Object\01. Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>02. Object\01. Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>02. Object\02. Item</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemScore.h">
+      <Filter>02. Object\02. Item</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,7 +1,13 @@
 #include "Player.h"
+#include "StageManager.h"
+#include "Stage.h"
+#include "Bullet.h"
+#include "ObjectManager.h"
+#include "Item.h"
 
 CPlayer::CPlayer()
 {
+    mType = EObjectType::Player;
 }
 
 CPlayer::~CPlayer()
@@ -44,7 +50,7 @@ void CPlayer::Update(float DeltaTime)
                 break;
             case EKey::Right:
                 mPos.X++;
-                
+
                 if (mPos.X > 13)
                 {
                     mPos.X = 13;
@@ -52,12 +58,48 @@ void CPlayer::Update(float DeltaTime)
                 break;
             }
         }
+        else if (Key == EKey::Fire)
+        {
+            // 플레이어 총알 생성
+            CBullet* Bullet = CObjectManager::GetInst()->CreateObj<CBullet>();
+
+            Bullet->SetPos(mPos.X, mPos.Y - 1);
+            Bullet->SetMoveDir(0.f, -1.f);
+            Bullet->SetType(EObjectType::PlayerBullet);
+        }
     }
 }
 
-void CPlayer::Output()
+void CPlayer::Output(char* OutputBuffer)
 {
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), mPos);
+	//SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), mPos);
+    //std::cout << "★";
+
+    int CountX = CStageManager::GetInst()->GetStage()->GetStageCountX();
+    OutputBuffer[mPos.Y * (CountX + 1) + mPos.X] = '^';
+}
+
+ECollisionType CPlayer::CollisionEnable(CObject* Dest)
+{
+    switch (Dest->GetType())
+    {
+    case EObjectType::Enemy:
+    case EObjectType::EnemyBullet:
+        return ECollisionType::Damage;
+    case EObjectType::Item:
+        return ((CItem*)Dest)->GetCollisionType();
     
-    std::cout << "★";
+}
+
+    return ECollisionType::None;
+}
+
+bool CPlayer::Damage(int Damage)
+{
+    mHP -= Damage;
+
+    if (mHP <= 0)
+        return true;
+
+    return false;
 }

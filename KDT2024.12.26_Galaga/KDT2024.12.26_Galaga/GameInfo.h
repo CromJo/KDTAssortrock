@@ -32,12 +32,45 @@ public:\
 
 #define   DEFINITION_SINGLE(Type) Type* Type::mInst = nullptr;
 
-enum class EObjectType
+enum class ESpawnType
 {
     EnemyEasy,
     EnemyNormal,
     EnemyHard,
-    Boss
+    Boss,
+    ItemScore,
+    ItemHeal,
+    ItemPower,
+    
+};
+
+enum class EObjectType
+{
+    Enemy,
+    Player,
+    PlayerBullet,
+    EnemyBullet,
+    Item
+};
+
+namespace EItemType
+{
+    enum Type
+    {
+        Score,
+        Heal,
+        Power,
+        End
+    };
+}
+
+enum class ECollisionType
+{
+    None,       // 충돌없음
+    Damage,     // 피격판정
+    Heal,       // 치유판정
+    Power,       // 파워우업
+    Score
 };
 
 namespace EKey
@@ -48,6 +81,7 @@ namespace EKey
         Up = 72,
         Down = 80,
         Left = 75,
-        Right = 77
+        Right = 77,
+        Fire = 32
     };
 }

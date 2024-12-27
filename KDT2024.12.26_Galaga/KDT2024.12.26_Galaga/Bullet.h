@@ -1,20 +1,26 @@
 #pragma once
+
 #include "Object.h"
 
-class CEnemy : public CObject
+class CBullet :
+	public CObject
 {
 public:
-	CEnemy();
-	virtual ~CEnemy();
-
-private:
-	int mHP = 2;
-	int mHPMax = mHP;
+	CBullet();
+	virtual ~CBullet();
 
 protected:
-	float mMoveX = 0.f;
-	float mMoveY = 0.f;
-	float mFireTime = 0.f;
+	float	mMoveX = 0.f;
+	float	mMoveY = 0.f;
+	float	mMoveDirX = 0.f;
+	float	mMoveDirY = 0.f;
+
+public:
+	void SetMoveDir(float x, float y)
+	{
+		mMoveDirX = x;
+		mMoveDirY = y;
+	}
 
 public:
 	virtual bool Init();

@@ -11,6 +11,12 @@ private:
 	int mCount = 0;
 
 public:
+	CStage* GetStage()
+	{
+		return mStage;
+	}
+
+public:
 	bool Init();
 	void Run();
 

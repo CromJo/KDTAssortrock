@@ -9,10 +9,31 @@ public :
 	virtual ~CObject();
 
 protected:
-	char mName[32] = {};
+	EObjectType mType;
 	COORD mPos = {};
+	bool mActive = true;		// 오브젝트 제거용 변수
 
 public:
+	void SetType(EObjectType Type)
+	{
+		mType = Type;
+	}
+
+	EObjectType GetType()
+	{
+		return mType;
+	}
+
+	bool GetActive()
+	{
+		return mActive;
+	}
+
+	const COORD& GetPos()
+	{
+		return mPos;
+	}
+
 	void SetPos(short x, short y)
 	{
 		mPos.X = x;
@@ -24,6 +45,10 @@ public:
 	// 순수가상함수로 만들 것.
 	virtual bool Init() = 0;
 	virtual void Update(float DeltaTime) = 0;
-	virtual void Output() = 0;
+	virtual void Output(char* OutputBuffer) = 0;
+	virtual ECollisionType CollisionEnable(CObject* Dest) = 0;
+	virtual bool Damage(int Damage);
+	virtual int GetDamage();
+
 };
 

@@ -2,6 +2,9 @@
 
 int main()
 {
+	srand(time(0));
+	rand();
+
 	if (!CGameManager::GetInst()->Init())
 	{
 		CGameManager::DestroyInst();

@@ -1,5 +1,4 @@
 #include "Object.h"
-#include "GameInfo.h"
 
 CObject::CObject()
 {
@@ -7,4 +6,14 @@ CObject::CObject()
 
 CObject::~CObject()
 {
+}
+
+bool CObject::Damage(int Damage)
+{
+	return false;
+}
+
+int CObject::GetDamage()
+{
+	return 0;
 }

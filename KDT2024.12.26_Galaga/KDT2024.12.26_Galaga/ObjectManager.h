@@ -9,7 +9,7 @@ private:
 public:
 	bool Init();
 	void Update(float DeltaTime);
-	void Output();
+	void Output(char* OutputBuffer);
 
 	template <typename T>
 	T* CreateObj()

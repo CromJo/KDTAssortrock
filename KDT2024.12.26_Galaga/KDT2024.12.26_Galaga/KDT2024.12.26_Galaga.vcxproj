@@ -127,8 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="ItemScore.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
@@ -137,9 +140,12 @@
     <ClCompile Include="StageManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="GameInfo.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="ItemScore.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="Player.h" />
