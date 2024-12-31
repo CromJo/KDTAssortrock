@@ -346,14 +346,6 @@ public:
 
 	iterator erase(const iterator& first, const iterator& second)
 	{
-		int* a;		// 포인터
-		int b = 0;		// 값
-		a = &b;
-
-		int& c = b;
-		a = &c;
-
-
 		assert(first.mNode);
 		assert(second.mNode);
 
