@@ -78,7 +78,7 @@ void CStage::Run()
 		mDeltaTime = (Time.QuadPart - mTime.QuadPart) / (float)mSecond.QuadPart;
 		mStageTime += mDeltaTime;
 
-		mTime = Time;
+		mTime = Time;	
 
 		ComputeStageInfo();
 

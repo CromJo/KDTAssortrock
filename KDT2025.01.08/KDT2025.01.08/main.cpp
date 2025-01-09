@@ -1,6 +1,8 @@
 #include <iostream>
 #include "GameManager.h"
 
+#include "Board.h"
+
 /*
 	-------------------------- 테트리스 만들기 ----------------------------
 	1. 블록들의 모양이 있어야한다.
@@ -33,9 +35,6 @@
 int main()
 {
 
-
-
-
-	CGameManager::DestroyInstance();
+	//CGameManager::DestroyInstance();
 	return 0;
 }

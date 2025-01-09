@@ -55,10 +55,11 @@ bool CMazeManager::Init()
 
 	fgets(Line, 128, File);
 
+	// 맵이 총 몇개가 있는지 txt에 있는 숫자로 확인.
 	mMazeCount = atoi(Line);
-
 	mMazeArray = new CMaze * [mMazeCount];
 
+	// 맵 총 갯수만큼 반복
 	for (int i = 0; i < mMazeCount; ++i)
 	{
 		fgets(Line, 128, File);

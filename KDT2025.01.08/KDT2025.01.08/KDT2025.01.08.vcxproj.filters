@@ -37,7 +37,13 @@
       <Filter>소스 파일\00. Editor</Filter>
     </ClCompile>
     <ClCompile Include="Board.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\02. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>소스 파일\02. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>소스 파일\02. Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -54,7 +60,13 @@
       <Filter>소스 파일\00. Editor</Filter>
     </ClInclude>
     <ClInclude Include="Board.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>소스 파일\02. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>소스 파일\02. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>소스 파일\02. Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

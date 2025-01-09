@@ -1,5 +1,9 @@
 #include "BlockEditor.h"
 
+CBlockEditor::CBlockEditor()
+{
+}
+
 void CBlockEditor::CustomBlockAdd()
 {
 	// null이면 종료

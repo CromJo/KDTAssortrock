@@ -1,6 +1,4 @@
 #pragma once
-#include <vector>
-#include "BlockEditor.h"
 #include "GameInfo.h"
 using Block = std::vector<std::vector<int>>;	// 추가하기 쉽도록 벡터로 구현.
 

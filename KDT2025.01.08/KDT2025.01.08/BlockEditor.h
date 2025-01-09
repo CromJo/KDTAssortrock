@@ -1,6 +1,4 @@
 #pragma once
-#include "Block.h"
-#include <vector>
 #include "GameInfo.h"
 
 enum class EBlockMenu
@@ -18,8 +16,8 @@ enum class EBlockMenu
 class CBlockEditor
 {
 public:
-	CBlockEditor() : mBlockEditorList(nullptr) {}
-	CBlockEditor(CBlock* mBlock) : mBlockEditorList(mBlock) {}
+	CBlockEditor();
+	CBlockEditor(class CBlock* mBlock) : mBlockEditorList(mBlock) {}
 	~CBlockEditor() {}
 
 private:
