@@ -4,6 +4,9 @@
 #include <vector>
 #include "BlockEditor.h"
 #include "Block.h"
+#include "time.h"
+
+#define SAFE_DELETE(p) if(p) { delete (p); (p) = NULL; }
 
 // 블록이라는 주체 1개로만 하면 필요없지만,
 // 블록의 상세 크기 설정이면 총 7개가 필요함
@@ -27,6 +30,7 @@ enum class EBlockType
 
 enum class ECollisionType
 {
-	None,
+	Road,
+	Wall,
 	Block,
 };

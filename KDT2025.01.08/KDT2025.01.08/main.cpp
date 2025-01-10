@@ -1,7 +1,7 @@
 #include <iostream>
 #include "GameManager.h"
+#include "BoardManager.h"
 
-#include "Board.h"
 
 /*
 	-------------------------- 테트리스 만들기 ----------------------------
@@ -34,7 +34,14 @@
 
 int main()
 {
+	if (!CGameManager::GetInstance()->Init())
+	{
+		CGameManager::DestroyInstance();
 
-	//CGameManager::DestroyInstance();
+		return 0;
+	}
+
+	CGameManager::GetInstance()->Run();
+	CGameManager::DestroyInstance();
 	return 0;
 }

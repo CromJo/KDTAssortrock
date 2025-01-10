@@ -1,5 +1,13 @@
 #include "Object.h"
 
+CObject::CObject()
+{
+}
+
+CObject::~CObject()
+{
+}
+
 bool CObject::GameOver(bool isTrigger)
 {
     // Y가 0이면 판자체가 없음을 의미함

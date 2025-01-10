@@ -1,5 +1,8 @@
 #include "GameManager.h"
-#include "Board.h"
+#include "BoardManager.h"
+
+CGameManager* CGameManager::Instance = nullptr;
+
 
 CGameManager::CGameManager()
 {
@@ -7,8 +10,8 @@ CGameManager::CGameManager()
 
 CGameManager::~CGameManager()
 {
-	// ¸ğµç ½Ì±ÛÅæ °´Ã¼´Â ¿©±â¼­ ÇØÁ¦
-
+	// ¸ğµç ½Ì±ÛÅæ °´Ã¼´Â ¿©±â¼­ ÇØÁ¦x
+	CBoardManager::DestroyInstance();
 }
 
 /// <summary>
@@ -46,12 +49,30 @@ bool CGameManager::Init()
 	char Line[128] = {};
 	fgets(Line, 128, File);
 
-	CBoard::GetInstance()->Init(Line);
+	CBoardManager::GetInstance()->Init(Line);
+
+	fclose(File);
 
 	return true;
 }
 
 void CGameManager::Run()
 {
+	while (true)
+	{
+		switch (MainMenu())
+		{
+			case EMenuButton::Tetris:
+				CBoardManager::GetInstance()->Run();
+				break;
+			case EMenuButton::Score:
+				break;
 
+			case EMenuButton::Setting:
+				break;
+
+			case EMenuButton::Exit:
+				break;
+		}
+	}
 }

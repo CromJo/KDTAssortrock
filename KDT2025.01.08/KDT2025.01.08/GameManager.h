@@ -10,7 +10,7 @@ enum class EMenuButton
 	Exit		// 게임 종료
 };
 
-static class CGameManager
+ class CGameManager
 {
 private:
 	CGameManager();
@@ -35,11 +35,7 @@ public:
 
 	static void DestroyInstance()
 	{
-		if (Instance)
-		{
-			delete Instance;
-			Instance = nullptr;
-		}
+		SAFE_DELETE(Instance);
 	}
 
 public:

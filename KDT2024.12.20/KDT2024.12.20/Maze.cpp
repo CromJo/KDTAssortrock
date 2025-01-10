@@ -243,7 +243,7 @@ void CMaze::Run()
         std::cout << mOutputBuffer;
 
 
-        if (GetTile(PlayerPos.X, PlayerPos.Y) ==
+        if (GetTile(Player->GetPos().X, Player->GetPos().Y) ==
             ETileType::Goal)
             break;
 
