@@ -2,6 +2,10 @@
 #include <Windows.h>
 #include <list>
 #include <time.h>
+#include <math.h>
+#include "Vector2D.h"
+#include "Vector3D.h"
+#include "Vector4D.h"
 
 #define   SAFE_DELETE(p)   if(p)   { delete p; p = nullptr;}
 
@@ -31,4 +35,20 @@ struct FRect
 	float Top = 0.f;
 	float Right = 0.f;
 	float Bottom = 0.f;
+};
+
+enum class EBulletOption
+{
+	Normal,
+	Bounce
+};
+
+struct FBullet
+{
+	FVector2D Pos;
+	FVector2D Size;
+	FVector2D MoveDirect;
+
+	float Distance = 500.f;
+	EBulletOption Option = EBulletOption::Normal;
 };

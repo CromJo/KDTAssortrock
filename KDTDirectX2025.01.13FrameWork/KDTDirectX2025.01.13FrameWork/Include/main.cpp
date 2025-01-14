@@ -1,4 +1,5 @@
 #include "GameManager.h"
+#include "Vector2D.h"
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
@@ -11,6 +12,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         return 0;
     }
+
+
 
     int Ret = CGameManager::GetInstance()->Run();
 

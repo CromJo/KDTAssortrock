@@ -8,13 +8,23 @@ private:
 	HINSTANCE mHandleInstance = 0;
 	HWND mHandleWindow = 0;
 	HDC mHandleDC = 0;
+	
 	TCHAR mClassName[256] = {};
 	TCHAR mTitleName[256] = {};
 
-	std::list<FRect> mBulletList;
-	//RECT mRect = { 100, 100, 200, 300 };
-	FRect mRect = { 100, 100, 200, 200 };
-	
+	// FRect (±¸) | FVector2D (½Å)
+	//FRect mRect = { 100, 100, 200, 200 };
+	FVector2D mPlayerPos = { 150.f, 150.f };
+	FVector2D mPlayerSize = { 100.f, 100.f };
+	std::list<FBullet> mPlayerBulletList;
+
+	std::list<FBullet> mEnemyBulletList;
+	FVector2D mEnemyPos = { 1050.f, 100.f };
+	FVector2D mEnemySize = { 100.f, 100.f };
+	bool isTopCollision = true;
+	float mAttackSpeed = 0.f;
+	float mEnemyDirect = 1.f;
+
 
 
 public:
@@ -30,6 +40,13 @@ private:
 	void PostCollisionUpdate(float deltaTime);
 	void Render(float deltaTime);
 	
+private:
+	void PlayerMoveUpdate(float deltaTime);
+	void PlayerAttackUpdate(float deltaTime);
+
+	void EnemyMoveUpdate(float deltaTime);
+	void EnemyAttackUpdate(std::list<FBullet>& BulletList, float deltaTime);
+	void EnemyBulletUpdate(std::list<FBullet>& BulletList, float deltaTime);
 
 private:
 	void RegisterWindowClass();

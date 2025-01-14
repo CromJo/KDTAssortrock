@@ -107,7 +107,7 @@ LRESULT CALLBACK WindowProcess(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 		break;
 	case WM_PAINT:
 		{
-		PAINTSTRUCT paintStruct;
+			PAINTSTRUCT paintStruct;
 		}
 	}
 }
