@@ -22,6 +22,21 @@
     <Filter Include="02. Share\01. Timer">
       <UniqueIdentifier>{477e9a0b-c0a2-47d5-80fa-956e55337d50}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. GameManager\01. Device">
+      <UniqueIdentifier>{4abab7c9-0329-4def-97cb-70a42cf4f193}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Asset">
+      <UniqueIdentifier>{283889f1-46c7-4197-9b72-295adb83ece7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Asset\01. Mesh">
+      <UniqueIdentifier>{da90980d-8199-4f67-900d-e34d6d4c2308}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Share\02. Object">
+      <UniqueIdentifier>{847c2358-be15-44c2-b55b-ab445095f54f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Share\03. SharedPointer">
+      <UniqueIdentifier>{52a352b5-40a4-4cf2-b39c-c59392c740c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -35,6 +50,30 @@
     </ClCompile>
     <ClCompile Include="Vector4D.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Device.cpp">
+      <Filter>01. GameManager\01. Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Asset.cpp">
+      <Filter>03. Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\AssetManager.cpp">
+      <Filter>03. Asset\01. Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Mesh\Mesh.cpp">
+      <Filter>03. Asset\01. Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Mesh\StaticMesh.cpp">
+      <Filter>03. Asset\01. Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Share\Object.cpp">
+      <Filter>02. Share\02. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Share\SharedPointer.cpp">
+      <Filter>02. Share\03. SharedPointer</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Mesh\MeshManager.cpp">
+      <Filter>03. Asset\01. Mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +97,30 @@
     </ClInclude>
     <ClInclude Include="Vector4D.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Device.h">
+      <Filter>01. GameManager\01. Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\AssetManager.h">
+      <Filter>03. Asset\01. Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Asset.h">
+      <Filter>03. Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Mesh\StaticMesh.h">
+      <Filter>03. Asset\01. Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Mesh\Mesh.h">
+      <Filter>03. Asset\01. Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Share\Object.h">
+      <Filter>02. Share\02. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Share\SharedPointer.h">
+      <Filter>02. Share\03. SharedPointer</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Mesh\MeshManager.h">
+      <Filter>03. Asset\01. Mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 #include "GameManager.h"
 #include "resource.h"
 #include "Share/Timer.h"
+#include "Device.h"
 
 DEFINITION_SINGLE(CGameManager)
 
@@ -13,6 +14,8 @@ CGameManager::CGameManager()
 
 CGameManager::~CGameManager()
 {
+    CDevice::DestroyInstance();
+
     // Device Context 해제
     ReleaseDC(mHandleWindow, mHandleDC);
 }
@@ -34,6 +37,9 @@ bool CGameManager::Init(HINSTANCE hInst)
 
     // 인자로 들어간 윈도우에 출력할 수 있는 DC가 만들어진다.
     mHandleDC = GetDC(mHandleWindow);
+
+    if (!CDevice::GetInstance()->Init(mHandleWindow, 1280, 720, true))
+        return false;
 
     // 타이머 초기화
     CTimer::Init();
@@ -446,7 +452,7 @@ void CGameManager::RegisterWindowClass()
     wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
     // 클라이언트 영역의 색상을 지정한다.
     // 1 : 횐색 | 2 : 회색 | 3 : 검은색
-    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 3);
+    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 2);
     // MenuName : 윈도우 메뉴를 지정한다.
     // 0을 넣어줄 시 메뉴창이 사라진다.
     wcex.lpszMenuName = 0;
