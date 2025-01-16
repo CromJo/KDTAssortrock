@@ -35,6 +35,8 @@ bool CMesh::CreateMesh(void* VertexData, int Size, int Count, D3D11_USAGE Vertex
 		Slot->IndexBuffer.Size = IndexSize;
 		Slot->IndexBuffer.Count = IndexCount;
 		Slot->IndexBuffer.Data = new char[IndexSize * IndexCount];
+		Slot->IndexBuffer.Format = Format;
+
 		memcpy(Slot->IndexBuffer.Data, IndexData, IndexSize * IndexCount);
 
 		if (!CreateBuffer(&Slot->IndexBuffer.Buffer, D3D11_BIND_INDEX_BUFFER,
@@ -80,4 +82,40 @@ bool CMesh::CreateBuffer(ID3D11Buffer** Buffer, D3D11_BIND_FLAG Flag, void* Data
 		return false;
 
 	return true;
+}
+
+void CMesh::Render()
+{
+	unsigned int Stride = mVertexBuffer.Size;
+	unsigned int Offset = 0;
+
+	// 그려줄 도형 타입을 지정.
+	CDevice::GetInstance()->GetContext()->IASetPrimitiveTopology(mPrimitive);
+	// Vertex Buffer를 지정.
+	CDevice::GetInstance()->GetContext()->IASetVertexBuffers(0, 1, 
+		&mVertexBuffer.Buffer, &Stride, &Offset);
+
+	size_t SlotCount = mMeshSlot.size();
+	
+	// 인덱스가 있을 경우
+	if (SlotCount > 0)
+	{
+		for (size_t i = 0; i < SlotCount; i++)
+		{
+			// 출력에 사용하는 Index Buffer를 지정.
+			CDevice::GetInstance()->GetContext()->IASetIndexBuffer(
+				mMeshSlot[i]->IndexBuffer.Buffer, mMeshSlot[i]->IndexBuffer.Format, 0);
+			
+			// Index를 참고하여 화면에 도형을 그린다.
+			CDevice::GetInstance()->GetContext()->DrawIndexed(mMeshSlot[i]->IndexBuffer.Buffer, 0, 0);
+		}
+	}
+	// 인덱스가 없을 경우
+	else
+	{
+		CDevice::GetInstance()->GetContext()->IASetIndexBuffer(nullptr,
+			DXGI_FORMAT_UNKNOWN, 0);
+		CDevice::GetInstance()->GetContext()->IASetIndexBuffer(nullptr,
+			DXGI_FORMAT_UNKNOWN, 0);
+	}
 }

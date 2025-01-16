@@ -2,6 +2,11 @@
 #include "resource.h"
 #include "Share/Timer.h"
 #include "Device.h"
+#include "Asset/AssetManager.h"
+#include "Shader/ShaderManager.h"
+#include "Asset/Mesh/MeshManager.h"
+#include "Asset/Mesh/Mesh.h"
+#include "Shader/Shader.h"
 
 DEFINITION_SINGLE(CGameManager)
 
@@ -14,6 +19,11 @@ CGameManager::CGameManager()
 
 CGameManager::~CGameManager()
 {
+    // Asset Manager먼저 제거
+    CAssetManager::DestroyInstance();
+    
+    CShaderManager::DestroyInstance();
+
     CDevice::DestroyInstance();
 
     // Device Context 해제
@@ -38,7 +48,15 @@ bool CGameManager::Init(HINSTANCE hInst)
     // 인자로 들어간 윈도우에 출력할 수 있는 DC가 만들어진다.
     mHandleDC = GetDC(mHandleWindow);
 
+    // 디바이스 초기화
     if (!CDevice::GetInstance()->Init(mHandleWindow, 1280, 720, true))
+        return false;
+
+    if (!CShaderManager::GetInstance()->Init())
+        return false;
+
+    // 에셋 관리자 초기화
+    if (!CAssetManager::GetInstance()->Init())
         return false;
 
     // 타이머 초기화
@@ -425,6 +443,9 @@ void CGameManager::Render(float deltaTime)
         (int)(mEnemyPos.y + mEnemySize.y / 2.f));
 
     BulletRender(mEnemyBulletList, mHandleDC, deltaTime);
+
+    // 출력
+    CSharedPointer<CShader> Shader = 
 }
 
 void CGameManager::RegisterWindowClass()

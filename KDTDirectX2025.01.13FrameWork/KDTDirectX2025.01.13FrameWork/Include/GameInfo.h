@@ -157,3 +157,27 @@ struct FIndexBuffer
 	}
 
 };
+
+// 정점 정보 (색상 정보)
+struct FVertexColor
+{
+	FVector3D Pos;
+	// 색상은 RGB 정보를 가지고 있음
+	// 0 ~ 1 Float타입을 할지
+	// 0 ~ 255 Int타입을 할지 택1
+	// 4DVector로 한 이유는 RGB 및 A(알파)값을 가지기 위함.
+	FVector4D Color;
+
+	FVertexColor() {}
+	FVertexColor(const FVector3D& _Pos, const FVector4D& _Color) :
+		Pos(_Pos),
+		Color(_Color)
+	{ 
+	}
+
+	FVertexColor(float x, float y, float z, float r, float g, float b, float a) :
+		Pos(x, y, z),
+		Color(r, g, b, a)
+	{
+	}
+};

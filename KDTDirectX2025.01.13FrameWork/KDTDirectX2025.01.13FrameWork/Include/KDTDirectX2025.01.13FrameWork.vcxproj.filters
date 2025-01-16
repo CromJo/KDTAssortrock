@@ -37,6 +37,15 @@
     <Filter Include="02. Share\03. SharedPointer">
       <UniqueIdentifier>{52a352b5-40a4-4cf2-b39c-c59392c740c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Shader">
+      <UniqueIdentifier>{076d2759-d48d-4a2b-b6a0-d94a753c343a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Shader\01. HLSL">
+      <UniqueIdentifier>{08a2aa0a-65f4-4bed-aa22-91094bd21d83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Shader\02. Shader Class">
+      <UniqueIdentifier>{2eafefe7-71f4-4cad-99df-f4d5350db853}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -69,11 +78,23 @@
     <ClCompile Include="Share\Object.cpp">
       <Filter>02. Share\02. Object</Filter>
     </ClCompile>
-    <ClCompile Include="Share\SharedPointer.cpp">
-      <Filter>02. Share\03. SharedPointer</Filter>
-    </ClCompile>
     <ClCompile Include="Asset\Mesh\MeshManager.cpp">
       <Filter>03. Asset\01. Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\Shader.cpp">
+      <Filter>04. Shader\02. Shader Class</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\ShaderManager.cpp">
+      <Filter>04. Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\GraphicShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\ComputeShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\ColorMeshShader.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -122,6 +143,21 @@
     <ClInclude Include="Asset\Mesh\MeshManager.h">
       <Filter>03. Asset\01. Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="Shader\Shader.h">
+      <Filter>04. Shader\02. Shader Class</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ShaderManager.h">
+      <Filter>04. Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\GraphicShader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ComputeShader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ColorMeshShader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="KDTDirectX2025.01.13FrameWork.rc">
@@ -132,5 +168,16 @@
     <Image Include="icon1.ico">
       <Filter>리소스 파일</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\Shader\Share.fx">
+      <Filter>04. Shader\01. HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shader\Mesh.fx">
+      <Filter>04. Shader\01. HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shader\ColorMesh.fx">
+      <Filter>04. Shader\01. HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

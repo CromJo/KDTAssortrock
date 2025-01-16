@@ -22,7 +22,7 @@ private:
 private:
 	// unordered_map : key값 중복 허용안함
 	// Asset을 만들어서 CSharedPointer에 넣어주면 된다.
-	std::unordered_map<std::string, CSharedPointer> mMeshMap;
+	std::unordered_map<std::string, CSharedPointer<class CMesh>> mMeshMap;
 
 public:
 	bool CreateMesh(const std::string& Name, void* VertexData, int Size, int Count,
@@ -31,5 +31,8 @@ public:
 		DXGI_FORMAT Format = DXGI_FORMAT_UNKNOWN, D3D11_USAGE IndexUsage = D3D11_USAGE_DEFAULT);
 
 	class CMesh* FindMesh(const std::string& Name);
+	
+	bool Init();
+
 };
 
