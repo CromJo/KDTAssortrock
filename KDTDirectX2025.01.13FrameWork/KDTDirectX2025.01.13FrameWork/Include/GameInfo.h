@@ -8,13 +8,12 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 
-#include <time.h>
-#include <math.h>
 #include "Vector2D.h"
 #include "Vector3D.h"
 #include "Vector4D.h"
 
 #include "Share/SharedPointer.h"
+#include "Matrix.h"
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
@@ -92,29 +91,20 @@ public:\
 
 #define DEFINITION_SINGLE(Type) Type* Type::mInstance = nullptr;
 
-struct FRect
+namespace EShaderBufferType
 {
-	float Left = 0.f;
-	float Top = 0.f;
-	float Right = 0.f;
-	float Bottom = 0.f;
-};
-
-enum class EBulletOption
-{
-	Normal,
-	Bounce
-};
-
-struct FBullet
-{
-	FVector2D Pos;
-	FVector2D Size;
-	FVector2D MoveDirect;
-
-	float Distance = 500.f;
-	EBulletOption Option = EBulletOption::Normal;
-};
+	enum Type
+	{
+		Vertex = 0x1,
+		Pixel = 0x2,
+		Hull = 0x4,
+		Domain = 0x8,
+		Geometry = 0x10,
+		Compute = 0x20,
+		Graphic = Vertex | Pixel | Hull | Domain | Geometry,
+		All = Graphic | Compute
+	};
+}
 
 struct FResolution
 {

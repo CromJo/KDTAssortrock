@@ -10,7 +10,7 @@ CComputeShader::~CComputeShader()
 
 bool CComputeShader::Init()
 {
-    return false;
+    return true;
 }
 
 void CComputeShader::SetShader()

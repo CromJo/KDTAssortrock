@@ -1,21 +1,22 @@
 #pragma once
 #include "../GameInfo.h"
-#include "GraphicShader.h"
+#include "Shader.h"
 
 class CShaderManager
 {
 private:
-	std::unordered_map<std::string, CSharedPointer> mShaderMap;
+	std::unordered_map<std::string, CSharedPointer<CShader>> mShaderMap;
+	std::unordered_map<std::string, CSharedPointer<class CConstantBuffer>> mCBufferMap;
 
 public:
 	bool Init();
+	CShader* FindShader(const std::string& Name);
+	void ReleaseShader(const std::string& Name);
 
-	class CGraphicShader* FindShader(const std::string& Name);
-
-	template<typename T>
+	template <typename T>
 	bool CreateShader(const std::string& Name)
 	{
-		CGraphicShader* Shader = FindShader(Name);
+		CShader* Shader = FindShader(Name);
 
 		if (Shader)
 			return true;
@@ -33,6 +34,12 @@ public:
 
 		return true;
 	}
+
+public:
+	bool CreateConstantBuffer(const std::string& Name, int Size, int Register,
+		int ShaderBufferType = EShaderBufferType::Graphic);
+	CConstantBuffer* FindCBuffer(const std::string& Name);
+	void ReleaseCBuffer(const std::string& Name);
 
 	DECLARE_SINGLE(CShaderManager)
 };

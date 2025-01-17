@@ -46,6 +46,9 @@
     <Filter Include="04. Shader\02. Shader Class">
       <UniqueIdentifier>{2eafefe7-71f4-4cad-99df-f4d5350db853}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Asset\02">
+      <UniqueIdentifier>{d2fc975d-e756-4432-8df2-9931c5d5f8e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -94,6 +97,15 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Shader\ColorMeshShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\ConstantBuffer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\ConstantBufferData.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\TransformCBuffer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -157,6 +169,24 @@
     </ClInclude>
     <ClInclude Include="Shader\ColorMeshShader.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix.h">
+      <Filter>03. Asset\01. Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineMath.h">
+      <Filter>03. Asset\01. Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ConstantBuffer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ConstantBufferData.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\TransformCBuffer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\CBufferContainer.h">
+      <Filter>03. Asset\02</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

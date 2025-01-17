@@ -12,7 +12,7 @@ bool CColorMeshShader::Init()
 {
     if (!LoadVertexShader("ColorMeshVertexShader", TEXT("ColorMesh.fx")))
         return false;
-    if (!LoadVertexShader("ColorMeshPixelShader", TEXT("ColorMesh.fx")))
+    if (!LoadPixelShader("ColorMeshPixelShader", TEXT("ColorMesh.fx")))
         return false;
 
     AddInputLayoutDesc("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,

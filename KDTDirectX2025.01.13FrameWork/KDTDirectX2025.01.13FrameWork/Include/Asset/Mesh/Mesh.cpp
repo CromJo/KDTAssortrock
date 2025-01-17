@@ -107,7 +107,7 @@ void CMesh::Render()
 				mMeshSlot[i]->IndexBuffer.Buffer, mMeshSlot[i]->IndexBuffer.Format, 0);
 			
 			// Index를 참고하여 화면에 도형을 그린다.
-			CDevice::GetInstance()->GetContext()->DrawIndexed(mMeshSlot[i]->IndexBuffer.Buffer, 0, 0);
+			CDevice::GetInstance()->GetContext()->DrawIndexed(mMeshSlot[i]->IndexBuffer.Count, 0, 0);
 		}
 	}
 	// 인덱스가 없을 경우
@@ -115,7 +115,6 @@ void CMesh::Render()
 	{
 		CDevice::GetInstance()->GetContext()->IASetIndexBuffer(nullptr,
 			DXGI_FORMAT_UNKNOWN, 0);
-		CDevice::GetInstance()->GetContext()->IASetIndexBuffer(nullptr,
-			DXGI_FORMAT_UNKNOWN, 0);
+		CDevice::GetInstance()->GetContext()->Draw(mVertexBuffer.Count, 0);
 	}
 }

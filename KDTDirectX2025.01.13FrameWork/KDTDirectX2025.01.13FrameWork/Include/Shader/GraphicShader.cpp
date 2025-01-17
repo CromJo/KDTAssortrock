@@ -62,8 +62,10 @@ void CGraphicShader::AddInputLayoutDesc(const char* Semantic, unsigned int Seman
 
 bool CGraphicShader::CreateInputLayout()
 {
-    CDevice::GetInstance()->GetDevice()->CreateInputLayout(&mVectorDesc[0],
-        (UINT)mVectorDesc.size(), ())
+    if (FAILED(CDevice::GetInstance()->GetDevice()->CreateInputLayout(&mVectorDesc[0],
+        (UINT)mVectorDesc.size(), mVertexShaderBlob->GetBufferPointer(),
+        mVertexShaderBlob->GetBufferSize(), &mInputLayout)))
+        return false;
 
     return true;
 }
@@ -72,11 +74,11 @@ bool CGraphicShader::LoadVertexShader(const char* EntryName, const TCHAR* FileNa
 {
     TCHAR FullPath[MAX_PATH] = {};
 
-    lstrcpy(FullPath, TEXT("../Bin/Shader"));
+    lstrcpy(FullPath, TEXT("../Bin/Shader/"));
     lstrcat(FullPath, FileName);
 
     unsigned int Flag = 0;
-
+    
 #ifdef _DEBUG
     Flag = D3DCOMPILE_DEBUG;
 #endif
@@ -107,7 +109,7 @@ bool CGraphicShader::LoadHullShader(const char* EntryName, const TCHAR* FileName
 {
     TCHAR FullPath[MAX_PATH] = {};
 
-    lstrcpy(FullPath, TEXT("../Bin/Shader"));
+    lstrcpy(FullPath, TEXT("../Bin/Shader/"));
     lstrcat(FullPath, FileName);
 
     unsigned int Flag = 0;
@@ -119,19 +121,19 @@ bool CGraphicShader::LoadHullShader(const char* EntryName, const TCHAR* FileName
     ID3DBlob* ErrorBlob = nullptr;
 
     if (FAILED(D3DCompileFromFile(FullPath, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
-        EntryName, "vs_5_0", Flag, 0, &mHullShaderBlob, &ErrorBlob)))
+        EntryName, "hs_5_0", Flag, 0, &mHullShaderBlob, &ErrorBlob)))
     {
 #ifdef _DEBUG
         char ErrorText[512] = {};
         strcpy_s(ErrorText, (const char*)ErrorBlob->GetBufferPointer());
         strcat_s(ErrorText, "\n");
-        OutputDebugStringA((const char*)ErrorBlob->GetBufferPointer());
+        OutputDebugStringA(ErrorText);
 #endif // _DEBUG
 
         return false;
     }
 
-    if (FAILED(CDevice::GetInstance()->GetDevice()->CreateVertexShader(
+    if (FAILED(CDevice::GetInstance()->GetDevice()->CreateHullShader(
         mHullShaderBlob->GetBufferPointer(),
         mHullShaderBlob->GetBufferSize(),
         nullptr, &mHullShader)))
@@ -144,7 +146,7 @@ bool CGraphicShader::LoadPixelShader(const char* EntryName, const TCHAR* FileNam
 {
     TCHAR FullPath[MAX_PATH] = {};
 
-    lstrcpy(FullPath, TEXT("../Bin/Shader"));
+    lstrcpy(FullPath, TEXT("../Bin/Shader/"));
     lstrcat(FullPath, FileName);
 
     unsigned int Flag = 0;
@@ -156,19 +158,19 @@ bool CGraphicShader::LoadPixelShader(const char* EntryName, const TCHAR* FileNam
     ID3DBlob* ErrorBlob = nullptr;
 
     if (FAILED(D3DCompileFromFile(FullPath, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
-        EntryName, "vs_5_0", Flag, 0, &mPixelShaderBlob, &ErrorBlob)))
+        EntryName, "ps_5_0", Flag, 0, &mPixelShaderBlob, &ErrorBlob)))
     {
 #ifdef _DEBUG
         char ErrorText[512] = {};
         strcpy_s(ErrorText, (const char*)ErrorBlob->GetBufferPointer());
         strcat_s(ErrorText, "\n");
-        OutputDebugStringA((const char*)ErrorBlob->GetBufferPointer());
+        OutputDebugStringA(ErrorText);
 #endif // _DEBUG
 
         return false;
     }
 
-    if (FAILED(CDevice::GetInstance()->GetDevice()->CreateVertexShader(
+    if (FAILED(CDevice::GetInstance()->GetDevice()->CreatePixelShader(
         mPixelShaderBlob->GetBufferPointer(), 
         mPixelShaderBlob->GetBufferSize(),
         nullptr, &mPixelShader)))
@@ -181,7 +183,7 @@ bool CGraphicShader::LoadDomainShader(const char* EntryName, const TCHAR* FileNa
 {
     TCHAR FullPath[MAX_PATH] = {};
 
-    lstrcpy(FullPath, TEXT("../Bin/Shader"));
+    lstrcpy(FullPath, TEXT("../Bin/Shader/"));
     lstrcat(FullPath, FileName);
 
     unsigned int Flag = 0;
@@ -193,19 +195,19 @@ bool CGraphicShader::LoadDomainShader(const char* EntryName, const TCHAR* FileNa
     ID3DBlob* ErrorBlob = nullptr;
 
     if (FAILED(D3DCompileFromFile(FullPath, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
-        EntryName, "vs_5_0", Flag, 0, &mDomainShaderBlob, &ErrorBlob)))
+        EntryName, "ds_5_0", Flag, 0, &mDomainShaderBlob, &ErrorBlob)))
     {
 #ifdef _DEBUG
         char ErrorText[512] = {};
         strcpy_s(ErrorText, (const char*)ErrorBlob->GetBufferPointer());
         strcat_s(ErrorText, "\n");
-        OutputDebugStringA((const char*)ErrorBlob->GetBufferPointer());
+        OutputDebugStringA(ErrorText);
 #endif // _DEBUG
 
         return false;
     }
 
-    if (FAILED(CDevice::GetInstance()->GetDevice()->CreateVertexShader(
+    if (FAILED(CDevice::GetInstance()->GetDevice()->CreateDomainShader(
         mDomainShaderBlob->GetBufferPointer(),
         mDomainShaderBlob->GetBufferSize(),
         nullptr, &mDomainShader)))
@@ -218,7 +220,7 @@ bool CGraphicShader::LoadGeometryShader(const char* EntryName, const TCHAR* File
 {
     TCHAR FullPath[MAX_PATH] = {};
 
-    lstrcpy(FullPath, TEXT("../Bin/Shader"));
+    lstrcpy(FullPath, TEXT("../Bin/Shader/"));
     lstrcat(FullPath, FileName);
 
     unsigned int Flag = 0;
@@ -230,19 +232,19 @@ bool CGraphicShader::LoadGeometryShader(const char* EntryName, const TCHAR* File
     ID3DBlob* ErrorBlob = nullptr;
 
     if (FAILED(D3DCompileFromFile(FullPath, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
-        EntryName, "vs_5_0", Flag, 0, &mGeometryShaderBlob, &ErrorBlob)))
+        EntryName, "gs_5_0", Flag, 0, &mGeometryShaderBlob, &ErrorBlob)))
     {
 #ifdef _DEBUG
         char ErrorText[512] = {};
         strcpy_s(ErrorText, (const char*)ErrorBlob->GetBufferPointer());
         strcat_s(ErrorText, "\n");
-        OutputDebugStringA((const char*)ErrorBlob->GetBufferPointer());
+        OutputDebugStringA(ErrorText);
 #endif // _DEBUG
 
         return false;
     }
 
-    if (FAILED(CDevice::GetInstance()->GetDevice()->CreateVertexShader(
+    if (FAILED(CDevice::GetInstance()->GetDevice()->CreateGeometryShader(
         mGeometryShaderBlob->GetBufferPointer(),
         mGeometryShaderBlob->GetBufferSize(),
         nullptr, &mGeometryShader)))

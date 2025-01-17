@@ -1,5 +1,6 @@
 #pragma once
 #include <math.h>
+#include "EngineMath.h"
 
 struct FVector4D
 {
@@ -8,11 +9,14 @@ struct FVector4D
 	float z = 0.f;
 	float w = 0.f;
 
+#pragma region ÄÁ½ºÆ®·°¼Ç
 	FVector4D() {}
 	FVector4D(float _x, float _y, float _z, float _w) : x(_x), y(_y), z(_z), w(_w){}
 	FVector4D(const FVector4D& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
 	FVector4D(const FVector4D&& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
+#pragma endregion
 
+#pragma region =
 	const FVector4D& operator = (const FVector4D& v)
 	{
 		x = v.x;
@@ -52,6 +56,7 @@ struct FVector4D
 
 		return *this;
 	}
+#pragma endregion
 #pragma region µ¡¼À 
 	FVector4D operator + (const FVector4D& v)	const
 	{
@@ -423,6 +428,23 @@ struct FVector4D
 		return *this;
 	}
 #pragma endregion
+
+	float& operator [] (int Index)
+	{
+		assert(0 <= Index && Index <= 3);
+
+		switch (Index)
+		{
+		case 0:
+			return x;
+		case 1:
+			return y;
+		case 2:
+			return z;
+		}
+
+		return w;
+	}
 
 	static FVector4D Black;
 	static FVector4D White;
