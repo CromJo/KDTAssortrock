@@ -21,3 +21,8 @@ void CObject::Release()
 	if (mRefCount == 0)
 		delete this;
 }
+
+void CObject::Destroy()
+{
+	mActive = false;
+}

@@ -4,11 +4,13 @@ CTransformCBuffer::CTransformCBuffer()
 {
 }
 
-CTransformCBuffer::CTransformCBuffer(const CTransformCBuffer& Data)
+CTransformCBuffer::CTransformCBuffer(const CTransformCBuffer& Data) :
+	CConstantBufferData(Data)
 {
 }
 
-CTransformCBuffer::CTransformCBuffer(CTransformCBuffer&& Data)
+CTransformCBuffer::CTransformCBuffer(CTransformCBuffer&& Data) :
+	CConstantBufferData(Data)
 {
 }
 

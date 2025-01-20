@@ -3,6 +3,7 @@
 #include <list>
 #include <vector>
 #include <unordered_map>
+#include <crtdbg.h>
 #include <string>
 
 #include <d3d11.h>

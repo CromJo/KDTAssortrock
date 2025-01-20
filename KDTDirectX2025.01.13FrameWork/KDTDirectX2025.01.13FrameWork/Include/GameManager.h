@@ -22,9 +22,7 @@ private:
 	void Logic();
 	void Input(float deltaTime);
 	void Update(float deltaTime);
-	void PostUpdate(float deltaTime);
 	void Collision(float deltaTime);
-	void PostCollisionUpdate(float deltaTime);
 	void Render(float deltaTime);
 	
 private:

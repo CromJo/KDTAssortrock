@@ -1,5 +1,8 @@
 #pragma once
 #include "Vector4D.h"
+#include "Vector3D.h"
+#include "Vector2D.h"
+#include <string>
 
 // union : 공용체
 // 메모리를 공유하는 문법. 

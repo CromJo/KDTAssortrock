@@ -8,6 +8,7 @@
 #include "Asset/Mesh/Mesh.h"
 #include "Shader/Shader.h"
 #include "Shader/TransformCBuffer.h"
+#include "Scene/SceneManager.h"
 
 DEFINITION_SINGLE(CGameManager)
 
@@ -21,6 +22,8 @@ CGameManager::CGameManager()
 CGameManager::~CGameManager()
 {
     // Asset Manager먼저 제거
+    CSceneManager::DestroyInstance();
+    
     CAssetManager::DestroyInstance();
     
     CShaderManager::DestroyInstance();
@@ -63,6 +66,10 @@ bool CGameManager::Init(HINSTANCE hInst)
     // 타이머 초기화
     CTimer::Init();
 
+    // 장면관리자 초기화
+    if (!CSceneManager::GetInstance()->Init())
+        return false;
+
 	return true;
 }
 
@@ -99,9 +106,7 @@ void CGameManager::Logic()
 
     Input(DeltaTime);
     Update(DeltaTime);
-    PostUpdate(DeltaTime);
     Collision(DeltaTime);
-    PostCollisionUpdate(DeltaTime);
     Render(DeltaTime);
 }
 
@@ -111,18 +116,12 @@ void CGameManager::Input(float deltaTime)
 
 void CGameManager::Update(float deltaTime)
 {
-}
-
-void CGameManager::PostUpdate(float deltaTime)
-{
+    CSceneManager::GetInstance()->Update(deltaTime);
 }
 
 void CGameManager::Collision(float deltaTime)
 {
-}
-
-void CGameManager::PostCollisionUpdate(float deltaTime)
-{
+    CSceneManager::GetInstance()->Collision(deltaTime);
 }
 
 void CGameManager::Render(float deltaTime)
@@ -131,6 +130,8 @@ void CGameManager::Render(float deltaTime)
     CDevice::GetInstance()->ClearDepthStencil(1.f, 0);
     CDevice::GetInstance()->SetTarget();
 
+    CSceneManager::GetInstance()->Render();
+    /*
     // 출력
     static CTransformCBuffer buffer;
     static FVector3D Position;
@@ -182,6 +183,7 @@ void CGameManager::Render(float deltaTime)
 
     Shader->SetShader();
     Mesh->Render();
+    */
 
     CDevice::GetInstance()->Render();
 }
