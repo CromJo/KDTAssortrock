@@ -25,6 +25,7 @@ bool CDevice::Init(HWND hWnd, unsigned int Width, unsigned int Height, bool Wind
 	mHandleWindow = hWnd;
 	mResolution.Width = Width;
 	mResolution.Height = Height;
+	mWindowMode = WindowMode;
 
 	unsigned int Flag = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 

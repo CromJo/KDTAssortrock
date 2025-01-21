@@ -35,6 +35,8 @@ private:
 	HWND mHandleWindow;
 	FResolution mResolution;
 
+	bool mWindowMode = true;
+
 public:
 	ID3D11Device* GetDevice() const
 	{
@@ -54,6 +56,11 @@ public:
 	const FResolution& GetResolution() const
 	{
 		return mResolution;
+	}
+
+	bool GetWindowMode()	const
+	{
+		return mWindowMode;
 	}
 
 public:

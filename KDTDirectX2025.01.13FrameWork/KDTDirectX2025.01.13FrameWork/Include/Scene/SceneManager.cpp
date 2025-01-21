@@ -38,3 +38,7 @@ void CSceneManager::Render()
 	mCurrentScene->Render();
 	mCurrentScene->PostRender();
 }
+
+void CSceneManager::Input(float deltaTime)
+{
+}

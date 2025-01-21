@@ -12,6 +12,9 @@ CSceneMain::~CSceneMain()
 
 bool CSceneMain::Init()
 {
+	if (!CScene::Init())
+		return false;
+
 	CSceneObject* Obj = CreateObject<CPlayerObject>("Player");
 	return true;
 }

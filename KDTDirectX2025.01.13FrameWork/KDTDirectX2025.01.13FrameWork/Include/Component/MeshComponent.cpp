@@ -67,7 +67,8 @@ void CMeshComponent::PreRender()
 
 void CMeshComponent::Render()
 {
-    //CSceneComponent::Render();
+    CSceneComponent::Render();
+    
     mTransformCBuffer->SetWorldMatrix(mMatrixWorld);
 
     FMatrix matProj = DirectX::XMMatrixPerspectiveFovLH(

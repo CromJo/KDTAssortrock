@@ -37,12 +37,12 @@ __declspec(align(16)) union FMatrix
 		// XMMatrixIdentity : 항등행렬을 만들어주는 함수.
 		m = DirectX::XMMatrixIdentity();
 	}
-	FMatrix(const FMatrix& _m) 
+	FMatrix(const FMatrix& _m)
 	{
 		m = _m.m;
 	}
 
-	FMatrix(FMatrix&& _m)
+	FMatrix(FMatrix&& _m) noexcept
 	{
 		m = _m.m;
 	}

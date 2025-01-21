@@ -112,6 +112,7 @@ void CGameManager::Logic()
 
 void CGameManager::Input(float deltaTime)
 {
+    CSceneManager::GetInstance()->Input(deltaTime);
 }
 
 void CGameManager::Update(float deltaTime)
@@ -131,60 +132,6 @@ void CGameManager::Render(float deltaTime)
     CDevice::GetInstance()->SetTarget();
 
     CSceneManager::GetInstance()->Render();
-    /*
-    // Ãâ·Â
-    static CTransformCBuffer buffer;
-    static FVector3D Position;
-    static FVector3D Rotation;
-
-    Position.z = 5.f;
-
-    if (GetAsyncKeyState('W') & 0x8000)
-    {
-        Position.y += 0.5f * deltaTime;
-    }
-    if (GetAsyncKeyState('S') & 0x8000)
-    {
-        Position.y -= 0.5f * deltaTime;
-    }
-    if (GetAsyncKeyState('D') & 0x8000)
-    {
-        Position.z += 90.f * deltaTime;
-    }
-    if (GetAsyncKeyState('A') & 0x8000)
-    {
-        Position.z -= 90.f * deltaTime;
-    }
-
-    buffer.Init();
-
-    FMatrix matWorld;
-    FMatrix matProj;
-    FMatrix matScale;
-    FMatrix matRotation;
-    FMatrix matTranslate;
-
-    matScale.Scaling(5.f, 5.f, 1.f);
-    matRotation.Rotation(Rotation);
-    matTranslate.Translation(Position);
-
-    matWorld = matScale * matRotation * matTranslate;
-    matProj = DirectX::XMMatrixPerspectiveFovLH(
-        DirectX::XMConvertToRadians(90.f),
-        1200.f / 720.f, 0.5f, 1000.f);
-
-    buffer.SetWorldMatrix(matWorld);
-    buffer.SetProjMatrix(matProj);
-
-    buffer.UpdateBuffer();
-
-    CSharedPointer<CShader> Shader = CShaderManager::GetInstance()->FindShader("ColorMeshShader");
-    CSharedPointer<CMesh> Mesh = CAssetManager::GetInstance()->GetMeshManager()->FindMesh("CenterRect");
-
-    Shader->SetShader();
-    Mesh->Render();
-    */
-
     CDevice::GetInstance()->Render();
 }
 

@@ -1,0 +1,23 @@
+#pragma once
+
+#include "SceneObject.h"
+
+class CBulletObject :
+    public CSceneObject
+{
+    friend class CScene;
+
+protected:
+    CBulletObject();
+    CBulletObject(const CBulletObject& Obj);
+    CBulletObject(CBulletObject&& Obj);
+    virtual ~CBulletObject();
+
+protected:
+    CSharedPtr<class CStaticMeshComponent>  mRoot;
+
+public:
+    virtual bool Init();
+    virtual void Update(float DeltaTime);
+};
+

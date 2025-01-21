@@ -422,7 +422,7 @@ void CSceneComponent::SetWorldScale(const FVector3D& Scale)
     for (size_t i = 0; i < Size; i++)
     {
         mChildList[i]->SetWorldScale(mChildList[i]->mRelativeScale * mWorldScale);
-        mChildList[i]->SetWorldPosition(mChildList[i]->mRelativePosition * mWorldScale * mWorldPosition);
+        mChildList[i]->SetWorldPosition(mChildList[i]->mRelativePosition * mWorldScale + mWorldPosition);
     }
 }
 
@@ -454,43 +454,68 @@ void CSceneComponent::SetWorldRotation(const FVector3D& Rotation)
         mRelativeRotation = mWorldRotation;
     }
 
+    FVector3D Axis[EAxis::End] =
+    {
+        FVector3D(1.f, 0.f, 0.f),
+        FVector3D(0.f, 1.f, 0.f),
+        FVector3D(0.f, 0.f, 1.f),
+    };
+
+    FMatrix matrixRotation;
+    matrixRotation.Rotation(mWorldRotation);
+
+    // 회전된 축을 구한다.
+    mAxis[EAxis::X] = Axis[EAxis::X].TransformNormal(matrixRotation);
+    mAxis[EAxis::Y] = Axis[EAxis::Y].TransformNormal(matrixRotation);
+    mAxis[EAxis::Z] = Axis[EAxis::Z].TransformNormal(matrixRotation);
+
     size_t Size = mChildList.size();
 
     for (size_t i = 0; i < Size; i++)
     {
         mChildList[i]->SetWorldRotation(mChildList[i]->mRelativeRotation * mWorldRotation);
+        
+        FVector3D ParentRotation = GetWorldRotation();
+
+        FMatrix matrixRotation;
+        matrixRotation.Rotation(ParentRotation);
+
+        memcpy(&matrixRotation._41, &mWorldPosition, sizeof(FVector3D));
+
+        //mChildList[i]->mWorldPosition = mChildList[i]->mRelativePosition.TransformCoord
+
         mChildList[i]->SetWorldPosition(mChildList[i]->mRelativePosition.GetRotation(mWorldRotation) + mWorldPosition);
     }
 }
 
 void CSceneComponent::SetWorldRotation(float x, float y, float z)
 {
-    SetRelativeRotation(FVector3D(x, y, z));
+    SetWorldRotation(FVector3D(x, y, z));
 }
 
 void CSceneComponent::SetWorldRotation(const FVector2D& Rotation)
 {
-    SetRelativeRotation(FVector3D(Rotation.x, Rotation.y, mRelativeRotation.z));
+    SetWorldRotation(FVector3D(Rotation.x, Rotation.y, mRelativeRotation.z));
 }
 
 void CSceneComponent::SetWorldRotation(float x, float y)
 {
-    SetRelativeRotation(FVector3D(x, y, mRelativeRotation.z));
+    SetWorldRotation(FVector3D(x, y, mRelativeRotation.z));
 }
 
 void CSceneComponent::SetWorldRotationX(float x)
 {
-    SetRelativeRotation(FVector3D(x, mRelativeRotation.y, mRelativeRotation.z));
+    SetWorldRotation(FVector3D(x, mRelativeRotation.y, mRelativeRotation.z));
 }
 
 void CSceneComponent::SetWorldRotationY(float y)
 {
-    SetRelativeRotation(FVector3D(mRelativeRotation.x, y, mRelativeRotation.z));
+    SetWorldRotation(FVector3D(mRelativeRotation.x, y, mRelativeRotation.z));
 }
 
 void CSceneComponent::SetWorldRotationZ(float z)
 {
-    SetRelativeRotation(FVector3D(mRelativeRotation.x, mRelativeRotation.y, z));
+    SetWorldRotation(FVector3D(mRelativeRotation.x, mRelativeRotation.y, z));
 }
 
 void CSceneComponent::SetWorldRotationAxis(float Angle, const FVector3D& Axis)
@@ -503,6 +528,17 @@ void CSceneComponent::SetWorldPosition(const FVector3D& Position)
 
     if (mParent)
     {
+        FVector3D ParentRotation = mParent->GetWorldRotation();
+        
+        FMatrix matrixRotation;
+        matrixRotation.Rotation(ParentRotation);
+
+        // 행렬의 41, 42, 43에 부모의 위치를 넣어 부모위치를 중심으로 회전하는
+        // 행렬을 만든다.
+        memcpy(&matrixRotation._41, &mParent->mWorldPosition, sizeof(FVector3D));
+
+        mWorldPosition = mRelativePosition.TransformCoord(matrixRotation);
+
         FVector3D RelativePosition = mWorldPosition - mParent->mWorldPosition;
         mRelativePosition = RelativePosition.GetRotation(mParent->mWorldRotation * -1.f);
     }

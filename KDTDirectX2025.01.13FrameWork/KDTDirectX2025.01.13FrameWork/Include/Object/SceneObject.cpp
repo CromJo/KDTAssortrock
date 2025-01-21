@@ -34,30 +34,37 @@ bool CSceneObject::Init(const char* FileName)
 
 void CSceneObject::PreUpdate(float deltaTime)
 {
+    mRootComponent->PreUpdate(deltaTime);
 }
 
 void CSceneObject::Update(float deltaTime)
 {
+    mRootComponent->Update(deltaTime);
 }
 
 void CSceneObject::PostUpdate(float deltaTime)
 {
+    mRootComponent->PostUpdate(deltaTime);
 }
 
 void CSceneObject::Collision(float deltaTime)
 {
+    mRootComponent->Collision(deltaTime);
 }
 
 void CSceneObject::PreRender()
 {
+    mRootComponent->PreRender();
 }
 
 void CSceneObject::Render()
 {
+    mRootComponent->Render();
 }
 
 void CSceneObject::PostRender()
 {
+    mRootComponent->PostRender();
 }
 
 CSceneObject* CSceneObject::Clone()

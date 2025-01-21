@@ -15,6 +15,17 @@ private:
 	float mClearColor[4] = {};
 
 public:
+	HINSTANCE GetWindowInstance()	const
+	{
+		return mHandleInstance;
+	}
+
+	HWND GetWindowHandle()	const
+	{
+		return mHandleWindow;
+	}
+
+public:
 	bool Init(HINSTANCE hInst);
 	int Run();
 

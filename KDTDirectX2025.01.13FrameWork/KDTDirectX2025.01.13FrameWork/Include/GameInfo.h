@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <crtdbg.h>
 #include <string>
+#include <functional>
 
 #include <d3d11.h>
 #include <d3dcompiler.h>

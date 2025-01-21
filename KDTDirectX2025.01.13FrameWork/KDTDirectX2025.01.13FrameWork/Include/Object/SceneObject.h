@@ -72,6 +72,8 @@ public:
 			SAFE_DELETE(Component);
 			return nullptr;
 		}
+
+		return Component;
 	}
 };
 

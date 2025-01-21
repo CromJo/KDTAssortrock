@@ -13,7 +13,7 @@ struct FVector4D
 	FVector4D() {}
 	FVector4D(float _x, float _y, float _z, float _w) : x(_x), y(_y), z(_z), w(_w){}
 	FVector4D(const FVector4D& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
-	FVector4D(const FVector4D&& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
+	FVector4D(const FVector4D&& v) noexcept : x(v.x), y(v.y), z(v.z), w(v.w) {}
 #pragma endregion
 
 #pragma region =

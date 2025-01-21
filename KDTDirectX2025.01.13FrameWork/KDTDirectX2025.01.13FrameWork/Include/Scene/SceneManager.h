@@ -30,6 +30,7 @@ public:
 
 	DECLARE_SINGLE(CSceneManager)
 
+	void Input(float deltaTime);
 
 };
 

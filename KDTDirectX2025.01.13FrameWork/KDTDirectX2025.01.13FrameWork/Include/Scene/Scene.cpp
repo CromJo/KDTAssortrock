@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "../Object/SceneObject.h"
+#include "Input.h"
 
 CScene::CScene()
 {
@@ -7,15 +8,31 @@ CScene::CScene()
 
 CScene::~CScene()
 {
+	SAFE_DELETE(mInput);
+}
+
+void CScene::Input(float deltaTime)
+{
+	mInput->Update(deltaTime);
 }
 
 bool CScene::Init()
 {
+	mInput = new CInput;
+
+	if (!mInput->Init())
+		return false;
+
 	return true;
 }
 
 bool CScene::Init(const char* FileName)
 {
+	mInput = new CInput;
+
+	if (!mInput->Init())
+		return false;
+
 	return true;
 }
 
@@ -24,7 +41,7 @@ void CScene::PreUpdate(float deltaTime)
 	std::list<CSharedPointer<CSceneObject>>::iterator iter;
 	std::list<CSharedPointer<CSceneObject>>::iterator iterEnd = mObjectList.end();
 
-	for (iter = mObjectList.begin(); iter != iterEnd; iter++)
+	for (iter = mObjectList.begin(); iter != iterEnd;)
 	{
 		// 활성화 안되었다면
 		if (!(*iter)->IsActive())
@@ -53,7 +70,7 @@ void CScene::Update(float deltaTime)
 	std::list<CSharedPointer<CSceneObject>>::iterator iter;
 	std::list<CSharedPointer<CSceneObject>>::iterator iterEnd = mObjectList.end();
 
-	for (iter = mObjectList.begin(); iter != iterEnd; iter++)
+	for (iter = mObjectList.begin(); iter != iterEnd;)
 	{
 		// 활성화 안되었다면
 		if (!(*iter)->IsActive())
@@ -82,7 +99,7 @@ void CScene::PostUpdate(float deltaTime)
 	std::list<CSharedPointer<CSceneObject>>::iterator iter;
 	std::list<CSharedPointer<CSceneObject>>::iterator iterEnd = mObjectList.end();
 
-	for (iter = mObjectList.begin(); iter != iterEnd; iter++)
+	for (iter = mObjectList.begin(); iter != iterEnd;)
 	{
 		// 활성화 안되었다면
 		if (!(*iter)->IsActive())
@@ -111,7 +128,7 @@ void CScene::Collision(float deltaTime)
 	std::list<CSharedPointer<CSceneObject>>::iterator iter;
 	std::list<CSharedPointer<CSceneObject>>::iterator iterEnd = mObjectList.end();
 
-	for (iter = mObjectList.begin(); iter != iterEnd; iter++)
+	for (iter = mObjectList.begin(); iter != iterEnd;)
 	{
 		// 활성화 안되었다면
 		if (!(*iter)->IsActive())
@@ -140,7 +157,7 @@ void CScene::PreRender()
 	std::list<CSharedPointer<CSceneObject>>::iterator iter;
 	std::list<CSharedPointer<CSceneObject>>::iterator iterEnd = mObjectList.end();
 
-	for (iter = mObjectList.begin(); iter != iterEnd; iter++)
+	for (iter = mObjectList.begin(); iter != iterEnd;)
 	{
 		// 활성화 안되었다면
 		if (!(*iter)->IsActive())
@@ -169,7 +186,7 @@ void CScene::Render()
 	std::list<CSharedPointer<CSceneObject>>::iterator iter;
 	std::list<CSharedPointer<CSceneObject>>::iterator iterEnd = mObjectList.end();
 
-	for (iter = mObjectList.begin(); iter != iterEnd; iter++)
+	for (iter = mObjectList.begin(); iter != iterEnd;)
 	{
 		// 활성화 안되었다면
 		if (!(*iter)->IsActive())
@@ -198,7 +215,7 @@ void CScene::PostRender()
 	std::list<CSharedPointer<CSceneObject>>::iterator iter;
 	std::list<CSharedPointer<CSceneObject>>::iterator iterEnd = mObjectList.end();
 
-	for (iter = mObjectList.begin(); iter != iterEnd; iter++)
+	for (iter = mObjectList.begin(); iter != iterEnd;)
 	{
 		// 활성화 안되었다면
 		if (!(*iter)->IsActive())

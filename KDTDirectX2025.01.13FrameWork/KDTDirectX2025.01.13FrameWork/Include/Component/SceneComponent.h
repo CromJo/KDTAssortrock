@@ -51,10 +51,49 @@ protected:
 	FVector3D mWorldRotation;	// 최종 월드 정보
 	FVector3D mWorldPosition;	// 최종 월드 정보
 
+	FVector3D mAxis[EAxis::End] =
+	{
+		FVector3D(1.f, 0.f, 0.f),
+		FVector3D(0.f, 1.f, 0.f),
+		FVector3D(0.f, 0.f, 1.f),
+	};
+
 	FMatrix mMatrixScale;		// 크기
 	FMatrix mMatrixRotation;	// 회전
 	FMatrix mMatrixTranslate;	// 이동
 	FMatrix mMatrixWorld;		// 총합 월드
+
+public:
+	const FVector3D& GetAxis(EAxis::Type Axis)
+	{
+		return mAxis[Axis];
+	}
+
+	const FVector3D& GetRelativeScale() const
+	{
+		return mRelativeScale;
+	}
+	const FVector3D& GetRelativeRotation() const
+	{
+		return mRelativeRotation;
+	}
+	const FVector3D& GetRelativePosition() const
+	{
+		return mRelativePosition;
+	}
+
+	const FVector3D& GetWorldScale() const
+	{
+		return mWorldScale;
+	}
+	const FVector3D& GetWorldRotation() const
+	{
+		return mWorldRotation;
+	}
+	const FVector3D& GetWorldPosition() const
+	{
+		return mWorldPosition;
+	}
 
 public:
 	void SetRelativeScale(const FVector3D& Scale);
