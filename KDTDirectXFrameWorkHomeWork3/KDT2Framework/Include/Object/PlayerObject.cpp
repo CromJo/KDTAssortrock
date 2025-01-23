@@ -4,6 +4,8 @@
 #include "../Scene/Input.h"
 #include "BulletObject.h"
 #include "TornadoBullet.h"
+#include "TalonR.h"
+#include "../Component/MovementComponent.h"
 
 CPlayerObject::CPlayerObject()
 {
@@ -29,6 +31,7 @@ bool CPlayerObject::Init()
     mRotationPivot = CreateComponent<CSceneComponent>();
     mSub = CreateComponent<CStaticMeshComponent>();
     mSub2 = CreateComponent<CStaticMeshComponent>();
+    mMovement = CreateComponent<CMovementComponent>();
 
     mRoot->SetMesh("CenterRect");
     mRoot->SetShader("ColorMeshShader");
@@ -36,6 +39,9 @@ bool CPlayerObject::Init()
     mRoot->SetWorldPos(0.f, 0.f, 5.5f);
 
     SetRootComponent(mRoot);
+
+    mMovement->SetUpdateComponent(mRoot);
+    mMovement->SetMoveSpeed(2.f);
 
     mRoot->AddChild(mRotationPivot);
     mRotationPivot->AddChild(mSub);
@@ -45,13 +51,13 @@ bool CPlayerObject::Init()
     mSub->SetShader("ColorMeshShader");
 
     mSub->SetRelativeScale(0.5f, 0.5f, 1.f);
-    mSub->SetRelativePos(-2.f, 0.f, 0.f);
+    mSub->SetRelativePos(-mSkill4Range, 0.f, 0.f);
 
     mSub2->SetMesh("CenterRect");
     mSub2->SetShader("ColorMeshShader");
 
     mSub2->SetRelativeScale(0.5f, 0.5f, 1.f);
-    mSub2->SetRelativePos(2.f, 0.f, 0.f);
+    mSub2->SetRelativePos(mSkill4Range, 0.f, 0.f);
 
     mScene->GetInput()->AddBindKey("MoveUp", 'W');
     mScene->GetInput()->AddBindKey("MoveDown", 'S');
@@ -62,6 +68,9 @@ bool CPlayerObject::Init()
     mScene->GetInput()->AddBindKey("Fire", VK_SPACE);
 
     mScene->GetInput()->AddBindKey("Skill1", '1');
+    mScene->GetInput()->ChangeKeyCtrl("Skill1", true);
+    mScene->GetInput()->ChangeKeyShift("Skill1", true);
+
     mScene->GetInput()->AddBindKey("Skill2", '2');
     mScene->GetInput()->AddBindKey("Skill3", '3');
     mScene->GetInput()->AddBindKey("Skill4", '4');
@@ -88,8 +97,10 @@ bool CPlayerObject::Init()
     mScene->GetInput()->AddBindFunction<CPlayerObject>("Skill1",
         EInputType::Up, this, &CPlayerObject::Skill1Fire);
 
+
     mScene->GetInput()->AddBindFunction<CPlayerObject>("Skill2",
         EInputType::Down, this, &CPlayerObject::Skill2);
+
 
     mScene->GetInput()->AddBindFunction<CPlayerObject>("Skill3",
         EInputType::Down, this, &CPlayerObject::Skill3);
@@ -100,7 +111,6 @@ bool CPlayerObject::Init()
     mScene->GetInput()->AddBindFunction<CPlayerObject>("Skill5",
         EInputType::Down, this, &CPlayerObject::Skill5);
 
-
     return true;
 }
 
@@ -108,35 +118,31 @@ void CPlayerObject::Update(float DeltaTime)
 {
     CSceneObject::Update(DeltaTime);
 
-    // UpdateSkill4에 회전공식 들어가있음 (그리 썩 좋은 함수명은 아님)
-    UpdateSkill4(DeltaTime);
-    //else
-    //{
-    //    FVector3D Rot = mRotationPivot->GetRelativeRotation();
-    //    Rot.z += DeltaTime * 180.f;
-    //    mRotationPivot->SetRelativeRotationZ(Rot.z);
-    //}
+    FVector3D Rot = mRotationPivot->GetRelativeRotation();
+
+    Rot.z += DeltaTime * mPivotRotationSpeed;
+
+    mRotationPivot->SetRelativeRotationZ(Rot.z);
 
     if (mSkill2Enable)
     {
         UpdateSkill2(DeltaTime);
     }
+
+    if (mSkill4Enable)
+    {
+        UpdateSkill4(DeltaTime);
+    }
 }
 
 void CPlayerObject::MoveUp(float DeltaTime)
 {
-    FVector3D   Pos = mRootComponent->GetWorldPosition();
-    FVector3D   Dir = mRootComponent->GetAxis(EAxis::Y);
-
-    mRootComponent->SetWorldPos(Pos + Dir * 3.f * DeltaTime);
+    mMovement->Move(mRootComponent->GetAxis(EAxis::Y));
 }
 
 void CPlayerObject::MoveDown(float DeltaTime)
 {
-    FVector3D   Pos = mRootComponent->GetWorldPosition();
-    FVector3D   Dir = mRootComponent->GetAxis(EAxis::Y);
-
-    mRootComponent->SetWorldPos(Pos + Dir * 3.f * -DeltaTime);
+    mMovement->Move(mRootComponent->GetAxis(EAxis::Y) * -1.f);
 }
 
 void CPlayerObject::RotationZ(float DeltaTime)
@@ -232,24 +238,44 @@ void CPlayerObject::Skill3(float DeltaTime)
 
 void CPlayerObject::Skill4(float DeltaTime)
 {
-    if (mSkill4Enable)
-        return;
+    if (!mSkill4Enable)
+    {
+        mSkill4Enable = true;
+        mSkill4Time = 5.f;
+        mSkill4TimeAcc = 0.f;
+        mSkill4ReadyTime = 2.f;
 
-    mSkill4Enable = true;
-    mSkill4RotationSpeed = 2.f;
-    mSkill4Range = 2.f;
-    mSkill4Duration = 5.f;
+        mPivotRotationSpeed = 360.f;
+        mSkill4State = ESkill4State::Expansion;
+    }
 }
 
 void CPlayerObject::Skill5(float DeltaTime)
 {
-    float f;
-    typedef double _Float;
+    // 8개 방향에 총알을 생성한다.
+    FVector3D   Dir = mRoot->GetAxis(EAxis::Y);
+    FVector3D   Rot = mRoot->GetWorldRotation();
 
-    for (int i = 0; i < 8; i++)
+    FMatrix matRot;
+    matRot.RotationZ(45.f);
+
+    for (int i = 0; i < 8; ++i)
     {
-        CStaticMeshComponent* newComponent = CreateComponent<CStaticMeshComponent>();
-        mSkill5새끼.push_back(newComponent);
+        CTalonR* Bullet = mScene->CreateObj<CTalonR>("Bullet");
+
+        Bullet->SetTarget(this);
+
+        CSceneComponent* Root = Bullet->GetRootComponent();
+
+        FVector3D Pos = mRoot->GetWorldPosition();
+
+        Root->SetWorldRotation(Rot);
+        Root->SetWorldPos(Pos + Dir);
+
+        Rot.z += 45.f;
+
+        Dir = Dir.TransformNormal(matRot);
+        Dir.Normalize();
     }
 }
 
@@ -296,32 +322,52 @@ void CPlayerObject::UpdateSkill2(float DeltaTime)
 
 void CPlayerObject::UpdateSkill4(float DeltaTime)
 {
-    if (mSkill4Duration <= 0.f)
+    mSkill4TimeAcc += DeltaTime;
+
+    switch (mSkill4State)
     {
-        mSkill4Enable = false;
-        mSub->SetRelativePos(-2.f, 0.f, 0.f);
-        mSub2->SetRelativePos(2.f, 0.f, 0.f);
+    case ESkill4State::Expansion:
+        // DeltaTime / mSkill4ReadyTime 을 하게 되면 확장되는 2초라는
+        // 시간에 대해서 현재 DeltaTime이 몇퍼센트의 시간이 흘렀는지를
+        // 구해낸다.
+        mSkill4Range += DeltaTime / mSkill4ReadyTime * 
+            mSkill4RangeLength;
+        if (mSkill4TimeAcc >= mSkill4ReadyTime)
+        {
+            mSkill4TimeAcc -= mSkill4ReadyTime;
+            mSkill4Range = mSkill4MaxRange;
+            mSkill4State = ESkill4State::Maintain;
+        }
+
+        mSub->SetRelativePos(-mSkill4Range, 0.f, 0.f);
+
+        mSub2->SetRelativePos(mSkill4Range, 0.f, 0.f);
+        break;
+    case ESkill4State::Maintain:
+
+        if (mSkill4TimeAcc >= mSkill4Time)
+        {
+            mSkill4TimeAcc = 0.f;
+            mSkill4State = ESkill4State::Reduction;
+        }
+        break;
+    case ESkill4State::Reduction:
+
+        mSkill4Range -= DeltaTime / mSkill4ReadyTime *
+            mSkill4RangeLength;
+        if (mSkill4TimeAcc >= mSkill4ReadyTime)
+        {
+            mSkill4Enable = false;
+            mSkill4TimeAcc = 0.f;
+            mSkill4Range = 2.f;
+            mSkill4State = ESkill4State::Expansion;
+            mPivotRotationSpeed = 180.f;
+        }
+
+        mSub->SetRelativePos(-mSkill4Range, 0.f, 0.f);
+
+        mSub2->SetRelativePos(mSkill4Range, 0.f, 0.f);
+        break;
     }
 
-    mSkill4Duration -= DeltaTime;
-
-    FVector3D Rot = mRotationPivot->GetRelativeRotation();
-
-    // 회전속도 결정
-    Rot.z += mSkill4Enable ? 
-        DeltaTime * 180.f * mSkill4RotationSpeed :
-        DeltaTime * 180.f;
-
-    if (mSkill4Enable)
-    {
-        mSub->SetRelativePos(-2.f * mSkill4Range, 0.f, 0.f);
-        mSub2->SetRelativePos(2.f * mSkill4Range, 0.f, 0.f);
-    }
-
-    // 회전하기
-    mRotationPivot->SetRelativeRotationZ(Rot.z);
-}
-
-void CPlayerObject::UpdateSkill5(float DeltaTime)
-{
 }
