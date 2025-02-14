@@ -14,6 +14,7 @@
 
 CSpriteComponent::CSpriteComponent()
 {
+    mRenderType = EComponentRender::Render;
 }
 
 CSpriteComponent::CSpriteComponent(const CSpriteComponent& Com) :
@@ -28,6 +29,7 @@ CSpriteComponent::CSpriteComponent(CSpriteComponent&& Com) :
 
 CSpriteComponent::~CSpriteComponent()
 {
+    SAFE_DELETE(mSpriteCBuffer);
 }
 
 void CSpriteComponent::SetShader(const std::string& Name)

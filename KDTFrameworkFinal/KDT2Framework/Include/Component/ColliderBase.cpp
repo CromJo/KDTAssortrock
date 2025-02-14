@@ -11,6 +11,11 @@
 
 CColliderBase::CColliderBase()
 {
+#ifdef _DEBUG
+
+    mRenderType = EComponentRender::Render;
+
+#endif // _DEBUG
     // 리해싱이 자주 일어나지 않도록 미리 공간을 확보한다.
     mCollisionObjects.reserve(100);
     mCollisionObjects.max_load_factor(2.f);

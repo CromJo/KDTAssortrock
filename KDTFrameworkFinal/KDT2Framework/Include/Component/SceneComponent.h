@@ -16,6 +16,7 @@ protected:
 
 protected:
 	CSceneComponent* mParent = nullptr;
+	EComponentRender	mRenderType = EComponentRender::None;
 	std::vector<CSharedPtr<CSceneComponent>>	mChildList;
 
 public:

@@ -27,8 +27,8 @@ protected:
     CSharedPtr<class CColliderOBB2D>        mBody;
     CSharedPtr<class CColliderLine2D>       mLine;
     CSharedPtr<class CSceneComponent>       mRotationPivot;
-    CSharedPtr<class CStaticMeshComponent>  mSub;
-    CSharedPtr<class CStaticMeshComponent>  mSub2;
+    CSharedPtr<class CSpriteComponent>  mSub;
+    CSharedPtr<class CSpriteComponent>  mSub2;
     CSharedPtr<class CCameraComponent>      mCamera;
 
     CSharedPtr<class CMovementComponent>    mMovement;

@@ -148,6 +148,12 @@
     <Filter Include="04. Shader\03. ConstantBuffer\04. Sprite">
       <UniqueIdentifier>{9a534fe5-2698-4f6c-a9e8-22b8b92f04d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Asset\04. Animation">
+      <UniqueIdentifier>{a9fbaa50-f5ce-4eee-ab4a-bcf1070aaeeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="09. Animation">
+      <UniqueIdentifier>{c433429b-4d33-46cc-97b7-0f77754c1f7c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -359,6 +365,18 @@
     </ClCompile>
     <ClCompile Include="Shader\SpriteCBuffer.cpp">
       <Filter>04. Shader\03. ConstantBuffer\04. Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Animation\Animation2DData.cpp">
+      <Filter>03. Asset\04. Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Animation\Animation2DManager.cpp">
+      <Filter>03. Asset\04. Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation\Animation2D.cpp">
+      <Filter>09. Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation\Animation2DSequence.cpp">
+      <Filter>09. Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -592,6 +610,18 @@
     </ClInclude>
     <ClInclude Include="Shader\SpriteCBuffer.h">
       <Filter>04. Shader\03. ConstantBuffer\04. Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Animation\Animation2DData.h">
+      <Filter>03. Asset\04. Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Animation\Animation2DManager.h">
+      <Filter>03. Asset\04. Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\Animation2D.h">
+      <Filter>09. Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\Animation2DSequence.h">
+      <Filter>09. Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

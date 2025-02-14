@@ -110,9 +110,56 @@ bool CTexture::LoadTextureFullPath(const TCHAR* FullPath)
 
 	Texture->Image = Image;
 
+	int	RSVNumber = (int)mTextureList.size();
+
 	mTextureList.emplace_back(Texture);
 
-	return CreateResourceView(0);
+	return CreateResourceView(RSVNumber);
+}
+
+bool CTexture::LoadTexture(
+	const std::vector<const TCHAR*>& FileName)
+{
+	size_t	Size = FileName.size();
+
+	for (size_t i = 0; i < Size; ++i)
+	{
+		if (!LoadTexture(FileName[i]))
+			return false;
+	}
+
+	return true;
+}
+
+bool CTexture::LoadTextureFullPath(
+	const std::vector<const TCHAR*>& FullPath)
+{
+	size_t	Size = FullPath.size();
+
+	for (size_t i = 0; i < Size; ++i)
+	{
+		if (!LoadTextureFullPath(FullPath[i]))
+			return false;
+	}
+
+	return true;
+}
+
+bool CTexture::LoadTexture(const TCHAR* FileName, 
+	const TCHAR* Ext, int Count)
+{
+	for (int i = 0; i < Count; ++i)
+	{
+		TCHAR	_FileName[MAX_PATH] = {};
+
+		wsprintf(_FileName, TEXT("%s%d.%s"), FileName,
+			i, Ext);
+
+		if (!LoadTexture(_FileName))
+			return false;
+	}
+
+	return true;
 }
 
 void CTexture::SetShader(int Register, 

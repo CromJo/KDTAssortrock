@@ -1,5 +1,6 @@
 #include "SceneComponent.h"
 #include "../Shader/TransformCBuffer.h"
+#include "../Render/RenderManager.h"
 
 CSceneComponent::CSceneComponent()
 {
@@ -44,11 +45,17 @@ void CSceneComponent::AddChild(CSceneComponent* Child)
 
 bool CSceneComponent::Init()
 {
+    if (mRenderType == EComponentRender::Render)
+        CRenderManager::GetInst()->AddRenderList(this);
+
     return true;
 }
 
 bool CSceneComponent::Init(const char* FileName)
 {
+    if (mRenderType == EComponentRender::Render)
+        CRenderManager::GetInst()->AddRenderList(this);
+
     return true;
 }
 
@@ -182,90 +189,90 @@ void CSceneComponent::PreRender()
 
     mmatWorld = mmatScale * mmatRot * mmatTranslate;
 
-    std::vector<CSharedPtr<CSceneComponent>>::iterator  iter;
-    std::vector<CSharedPtr<CSceneComponent>>::iterator  iterEnd = mChildList.end();
+    //std::vector<CSharedPtr<CSceneComponent>>::iterator  iter;
+    //std::vector<CSharedPtr<CSceneComponent>>::iterator  iterEnd = mChildList.end();
 
-    for (iter = mChildList.begin(); iter != iterEnd;)
-    {
-        if (!(*iter)->IsActive())
-        {
-            // 지워야 할 값과 마지막 값을 바꾼다.
-            std::swap(*iter, mChildList.back());
+    //for (iter = mChildList.begin(); iter != iterEnd;)
+    //{
+    //    if (!(*iter)->IsActive())
+    //    {
+    //        // 지워야 할 값과 마지막 값을 바꾼다.
+    //        std::swap(*iter, mChildList.back());
 
-            mChildList.pop_back();
-            iterEnd = mChildList.end();
-            continue;
-        }
+    //        mChildList.pop_back();
+    //        iterEnd = mChildList.end();
+    //        continue;
+    //    }
 
-        else if (!(*iter)->IsEnable())
-        {
-            ++iter;
-            continue;
-        }
+    //    else if (!(*iter)->IsEnable())
+    //    {
+    //        ++iter;
+    //        continue;
+    //    }
 
-        (*iter)->PreRender();
-        ++iter;
-    }
+    //    (*iter)->PreRender();
+    //    ++iter;
+    //}
 }
 
 void CSceneComponent::Render()
 {
     CComponent::Render();
 
-    std::vector<CSharedPtr<CSceneComponent>>::iterator  iter;
-    std::vector<CSharedPtr<CSceneComponent>>::iterator  iterEnd = mChildList.end();
+    //std::vector<CSharedPtr<CSceneComponent>>::iterator  iter;
+    //std::vector<CSharedPtr<CSceneComponent>>::iterator  iterEnd = mChildList.end();
 
-    for (iter = mChildList.begin(); iter != iterEnd;)
-    {
-        if (!(*iter)->IsActive())
-        {
-            // 지워야 할 값과 마지막 값을 바꾼다.
-            std::swap(*iter, mChildList.back());
+    //for (iter = mChildList.begin(); iter != iterEnd;)
+    //{
+    //    if (!(*iter)->IsActive())
+    //    {
+    //        // 지워야 할 값과 마지막 값을 바꾼다.
+    //        std::swap(*iter, mChildList.back());
 
-            mChildList.pop_back();
-            iterEnd = mChildList.end();
-            continue;
-        }
+    //        mChildList.pop_back();
+    //        iterEnd = mChildList.end();
+    //        continue;
+    //    }
 
-        else if (!(*iter)->IsEnable())
-        {
-            ++iter;
-            continue;
-        }
+    //    else if (!(*iter)->IsEnable())
+    //    {
+    //        ++iter;
+    //        continue;
+    //    }
 
-        (*iter)->Render();
-        ++iter;
-    }
+    //    (*iter)->Render();
+    //    ++iter;
+    //}
 }
 
 void CSceneComponent::PostRender()
 {
     CComponent::PostRender();
 
-    std::vector<CSharedPtr<CSceneComponent>>::iterator  iter;
-    std::vector<CSharedPtr<CSceneComponent>>::iterator  iterEnd = mChildList.end();
+    //std::vector<CSharedPtr<CSceneComponent>>::iterator  iter;
+    //std::vector<CSharedPtr<CSceneComponent>>::iterator  iterEnd = mChildList.end();
 
-    for (iter = mChildList.begin(); iter != iterEnd;)
-    {
-        if (!(*iter)->IsActive())
-        {
-            // 지워야 할 값과 마지막 값을 바꾼다.
-            std::swap(*iter, mChildList.back());
+    //for (iter = mChildList.begin(); iter != iterEnd;)
+    //{
+    //    if (!(*iter)->IsActive())
+    //    {
+    //        // 지워야 할 값과 마지막 값을 바꾼다.
+    //        std::swap(*iter, mChildList.back());
 
-            mChildList.pop_back();
-            iterEnd = mChildList.end();
-            continue;
-        }
+    //        mChildList.pop_back();
+    //        iterEnd = mChildList.end();
+    //        continue;
+    //    }
 
-        else if (!(*iter)->IsEnable())
-        {
-            ++iter;
-            continue;
-        }
+    //    else if (!(*iter)->IsEnable())
+    //    {
+    //        ++iter;
+    //        continue;
+    //    }
 
-        (*iter)->PostRender();
-        ++iter;
-    }
+    //    (*iter)->PostRender();
+    //    ++iter;
+    //}
 }
 
 CSceneComponent* CSceneComponent::Clone()

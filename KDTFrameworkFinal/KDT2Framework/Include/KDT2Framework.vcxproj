@@ -145,6 +145,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animation\Animation2D.cpp" />
+    <ClCompile Include="Animation\Animation2DSequence.cpp" />
+    <ClCompile Include="Asset\Animation\Animation2DData.cpp" />
+    <ClCompile Include="Asset\Animation\Animation2DManager.cpp" />
     <ClCompile Include="Asset\Asset.cpp" />
     <ClCompile Include="Asset\AssetManager.cpp" />
     <ClCompile Include="Asset\Material\Material.cpp" />
@@ -217,6 +221,10 @@
     <ClCompile Include="Vector4D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation\Animation2D.h" />
+    <ClInclude Include="Animation\Animation2DSequence.h" />
+    <ClInclude Include="Asset\Animation\Animation2DData.h" />
+    <ClInclude Include="Asset\Animation\Animation2DManager.h" />
     <ClInclude Include="Asset\Asset.h" />
     <ClInclude Include="Asset\AssetManager.h" />
     <ClInclude Include="Asset\Material\Material.h" />

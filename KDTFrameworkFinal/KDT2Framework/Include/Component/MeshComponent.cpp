@@ -6,6 +6,7 @@
 
 CMeshComponent::CMeshComponent()
 {
+    mRenderType = EComponentRender::Render;
 }
 
 CMeshComponent::CMeshComponent(const CMeshComponent& Com)   :
