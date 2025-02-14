@@ -19,13 +19,13 @@
     <Filter Include="02. Share">
       <UniqueIdentifier>{becc6e28-9173-46cc-af34-26e8b542bf6e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. GameManager\01. Device">
+      <UniqueIdentifier>{c27eb10c-5cff-4261-8714-b97d80909a62}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="GameManager.cpp">
-      <Filter>01. GameManager</Filter>
     </ClCompile>
     <ClCompile Include="Share\Timer.cpp">
       <Filter>소스 파일</Filter>
@@ -33,11 +33,14 @@
     <ClCompile Include="Vector4D.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>01. GameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Device.cpp">
+      <Filter>01. GameManager\01. Device</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameManager.h">
-      <Filter>01. GameManager</Filter>
-    </ClInclude>
     <ClInclude Include="GameInfo.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -55,6 +58,12 @@
     </ClInclude>
     <ClInclude Include="Vector4D.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>01. GameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Device.h">
+      <Filter>01. GameManager\01. Device</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
