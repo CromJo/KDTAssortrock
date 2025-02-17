@@ -23,6 +23,9 @@ private:
 	FVector2D mEnemyPos = { 1025.f, 125.f };
 	FVector2D mEnemySize = { 50.f, 50.f };
 
+	float mEnemyDir = 1.f;
+	float mClearColor[4] = {};
+
 	static bool mLoop;
 
 public:

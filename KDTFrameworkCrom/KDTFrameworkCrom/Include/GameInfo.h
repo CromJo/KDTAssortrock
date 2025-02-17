@@ -8,6 +8,9 @@
 
 #include <unordered_map>
 #include <vector>
+// 메모리릭이 발생 되었을 때, 어디서 발생되었는지
+// 찾아주는 기능을 제공
+#include <crtdbg.h>
 
 // 다이렉트11 기능 불러오기
 #include <d3d11.h>
@@ -74,7 +77,7 @@ struct FBullet
 	EBulletOption Option = EBulletOption::Normal;
 };
 
-struct FResulution
+struct FResolution
 {
 	unsigned int Width = 0;
 	unsigned int Height = 0;

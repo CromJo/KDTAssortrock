@@ -41,13 +41,42 @@ private:
 
 	// Page Flipping 처리를 위한 사용.
 	IDXGISwapChain* mSwapChain = nullptr;
+	
+	ID3D11RenderTargetView* mTargetView = nullptr;
+	ID3D11DepthStencilView* mDepthView = nullptr;
 
 	HWND mHandleWindow;
-	FResulution mRS;
+	FResolution mRS;
+
+public:
+	ID3D11Device* GetDevice() const
+	{
+		return mDevice;
+	}
+
+	ID3D11DeviceContext* GetContext() const
+	{
+		return mContext;
+	}
+
+	IDXGISwapChain* GetSwapChain() const
+	{
+		return mSwapChain;
+	}
+
+	const FResolution& GetResolution() const
+	{
+		return mRS;
+	}
 
 public:
 	bool Init(HWND hWnd, unsigned int Width, 
 		unsigned int Height, bool WindowMode);
+	void ClearBackBuffer(float ClearColor[4]);
+	void ClearDepthStencil(float Depth, unsigned char Stencil);
+	void SetTarget();
+	void Render();
+
 	DECLARE_SINGLE(CDevice)
 };
 
