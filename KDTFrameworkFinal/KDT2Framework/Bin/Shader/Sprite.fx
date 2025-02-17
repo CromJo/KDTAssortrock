@@ -13,7 +13,7 @@ struct VS_Output_Tex
     float2 UV : TEXCOORD;
 };
 
-cbuffer Sprite : register(b2)
+cbuffer Sprite : register(b3)
 {
     float4 gSpriteTint;
 }
@@ -26,7 +26,7 @@ VS_Output_Tex SpriteVS(VS_Input_Tex input)
         
     // output.Pos의 x, y, z 에는 input.Pos의 x, y, z 가 대입되고 w에는 1이 대입된다.
     output.Pos = mul(float4(Pos, 1.f), gmatWVP);
-    output.UV = input.UV;
+    output.UV = UpdateAnimation2D(input.UV);
     
     return output;
 }

@@ -197,6 +197,7 @@ namespace ECollisionChannel
 		Monster,
 		PlayerAttack,
 		MonsterAttack,
+		MonsterDetect,
 		End
 	};
 }

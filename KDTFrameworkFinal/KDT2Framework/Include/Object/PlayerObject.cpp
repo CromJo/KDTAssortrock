@@ -16,6 +16,8 @@
 #include "BulletDot.h"
 #include "PenetrationBullet.h"
 #include "../Component/SpriteComponent.h"
+#include "../Animation/Animation2D.h"
+#include "../Share/Log.h"
 
 CPlayerObject::CPlayerObject()
 {
@@ -61,6 +63,18 @@ bool CPlayerObject::Init()
     //mRoot->SetBaseColor(0, 1.f, 0.f, 0.f, 1.f);
     //mRoot->SetShader("ColorMeshShader");
 
+    mAnimation = mRoot->CreateAnimation2D<CAnimation2D>();
+
+    mAnimation->AddSequence("PlayerIdle", 1.f, 1.f, true, false);
+    mAnimation->AddSequence("PlayerRun", 0.7f, 1.f, true, false);
+    mAnimation->AddSequence("PlayerWalk", 0.7f, 1.f, true, false);
+    mAnimation->AddSequence("PlayerAttack", 1.f, 1.f, false, false);
+
+    mAnimation->SetEndFunction<CPlayerObject>("PlayerAttack",
+        this, &CPlayerObject::AttackEnd);
+    mAnimation->AddNotify<CPlayerObject>("PlayerAttack",
+        2, this, &CPlayerObject::AttackNotify);
+
     mRoot->SetWorldPos(0.f, 0.f, 0.f);
     mRoot->SetWorldScale(100.f, 100.f, 1.f);
 
@@ -74,6 +88,7 @@ bool CPlayerObject::Init()
 
     mRoot->AddChild(mLine);
 
+    // Default
     mLine->SetCollisionProfile("Player");
     mLine->SetRelativePos(0.f, 50.f);
     mLine->SetLineDistance(300.f);
@@ -146,7 +161,7 @@ bool CPlayerObject::Init()
         EInputType::Hold, this, &CPlayerObject::RotationZInv);
 
     mScene->GetInput()->AddBindFunction<CPlayerObject>("Fire",
-        EInputType::Hold, this, &CPlayerObject::Fire);
+        EInputType::Down, this, &CPlayerObject::Fire);
 
     mScene->GetInput()->AddBindFunction<CPlayerObject>("Skill1",
         EInputType::Hold, this, &CPlayerObject::Skill1);
@@ -202,6 +217,9 @@ void CPlayerObject::Update(float DeltaTime)
     {
         UpdateSkill4(DeltaTime);
     }
+
+    if (mMovement->GetVelocityLength() == 0.f && mAutoBasePose)
+        mAnimation->ChangeAnimation("PlayerIdle");
 }
 
 void CPlayerObject::Damage(int Dmg)
@@ -212,11 +230,19 @@ void CPlayerObject::Damage(int Dmg)
 void CPlayerObject::MoveUp(float DeltaTime)
 {
     mMovement->AddMove(mRootComponent->GetAxis(EAxis::Y));
+
+    mAnimation->ChangeAnimation("PlayerWalk");
+
+    mAutoBasePose = true;
 }
 
 void CPlayerObject::MoveDown(float DeltaTime)
 {
     mMovement->AddMove(mRootComponent->GetAxis(EAxis::Y) * -1.f);
+
+    mAnimation->ChangeAnimation("PlayerWalk");
+
+    mAutoBasePose = true;
 }
 
 void CPlayerObject::RotationZ(float DeltaTime)
@@ -233,20 +259,9 @@ void CPlayerObject::RotationZInv(float DeltaTime)
 
 void CPlayerObject::Fire(float DeltaTime)
 {
-    CBulletObject* Bullet = mScene->CreateObj<CBulletObject>("Bullet");
+    mAnimation->ChangeAnimation("PlayerAttack");
 
-    Bullet->SetBulletCollisionProfile("PlayerAttack");
-
-    CSceneComponent* Root = Bullet->GetRootComponent();
-
-    FVector3D Pos = mRoot->GetWorldPosition();
-    FVector3D Dir = mRoot->GetAxis(EAxis::Y);
-
-    Root->SetWorldScale(50.f, 50.f);
-    Root->SetWorldRotation(mRoot->GetWorldRotation());
-    Root->SetWorldPos(Pos + Dir * 75.f);
-
-    Bullet->SetLifeTime(2.f);
+    mAutoBasePose = false;
 }
 
 void CPlayerObject::Skill1(float DeltaTime)
@@ -508,4 +523,29 @@ void CPlayerObject::UpdateSkill4(float DeltaTime)
         break;
     }
 
+}
+
+void CPlayerObject::AttackEnd()
+{
+    CLog::PrintLog("AttackEnd");
+    mAnimation->ChangeAnimation("PlayerIdle");
+}
+
+void CPlayerObject::AttackNotify()
+{
+    CLog::PrintLog("Attack");
+    CBulletObject* Bullet = mScene->CreateObj<CBulletObject>("Bullet");
+
+    Bullet->SetBulletCollisionProfile("PlayerAttack");
+
+    CSceneComponent* Root = Bullet->GetRootComponent();
+
+    FVector3D Pos = mRoot->GetWorldPosition();
+    FVector3D Dir = mRoot->GetAxis(EAxis::Y);
+
+    Root->SetWorldScale(50.f, 50.f);
+    Root->SetWorldRotation(mRoot->GetWorldRotation());
+    Root->SetWorldPos(Pos + Dir * 75.f);
+
+    Bullet->SetLifeTime(2.f);
 }

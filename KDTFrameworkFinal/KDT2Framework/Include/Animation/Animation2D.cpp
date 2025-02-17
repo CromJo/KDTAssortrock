@@ -1,5 +1,4 @@
 #include "Animation2D.h"
-#include "Animation2DSequence.h"
 #include "../Asset/Animation/Animation2DData.h"
 #include "../Asset/Animation/Animation2DManager.h"
 #include "../Asset/AssetManager.h"
@@ -7,6 +6,27 @@
 #include "../Scene/SceneAssetManager.h"
 #include "../Component/SpriteComponent.h"
 #include "../Asset/Texture/Texture.h"
+
+CAnimation2DCBuffer* CAnimation2D::mAnimCBuffer = nullptr;
+
+void CAnimation2D::CreateCBuffer()
+{
+	mAnimCBuffer = new CAnimation2DCBuffer;
+
+	mAnimCBuffer->Init();
+}
+
+void CAnimation2D::DestroyCBuffer()
+{
+	SAFE_DELETE(mAnimCBuffer);
+}
+
+void CAnimation2D::DisableAnimation()
+{
+	mAnimCBuffer->SetAnimation2DEnable(false);
+
+	mAnimCBuffer->UpdateBuffer();
+}
 
 CAnimation2D::CAnimation2D()
 {
@@ -159,7 +179,10 @@ void CAnimation2D::SetReverse(const std::string& Name,
 
 void CAnimation2D::ChangeAnimation(const std::string& Name)
 {
-	if (!mCurrentSequence)
+	if (Name.empty())
+		return;
+
+	else if (!mCurrentSequence)
 		return;
 
 	else if (mCurrentSequence->GetName() == Name)
@@ -167,11 +190,14 @@ void CAnimation2D::ChangeAnimation(const std::string& Name)
 
 	mCurrentSequence->mFrame = 0;
 	mCurrentSequence->mTime = 0.f;
+	mCurrentSequence->mEndFunctionEnable = true;
 
-	mCurrentSequence = FindSequence(Name);
+	CAnimation2DSequence* Sequence = FindSequence(Name);
 
-	if (!mCurrentSequence)
+	if (!Sequence)
 		return;
+
+	mCurrentSequence = Sequence;
 
 	mCurrentSequence->mFrame = 0;
 	mCurrentSequence->mTime = 0.f;
@@ -188,6 +214,34 @@ CAnimation2D* CAnimation2D::Clone()
 void CAnimation2D::SetShader()
 {
 	// 애니메이션 정보를 Shader에 넘겨준다.
+	float LTX = 0.f, LTY = 0.f, RBX = 1.f, RBY = 1.f;
+
+	EAnimationTextureType	TexType =
+		mCurrentSequence->mAsset->GetAnimationTextureType();
+
+	CTexture* Texture = mCurrentSequence->mAsset->GetTexture();
+
+	const FAnimationFrame& Frame = 
+		mCurrentSequence->mAsset->GetFrame(mCurrentSequence->mFrame);
+
+	switch (TexType)
+	{
+	case EAnimationTextureType::SpriteSheet:
+		LTX = Frame.Start.x / Texture->GetTexture()->Width;
+		LTY = Frame.Start.y / Texture->GetTexture()->Height;
+		RBX = LTX + Frame.Size.x / Texture->GetTexture()->Width;
+		RBY = LTY + Frame.Size.y / Texture->GetTexture()->Height;
+		mOwner->SetTextureIndex(0);
+		break;
+	case EAnimationTextureType::Frame:
+		mOwner->SetTextureIndex(mCurrentSequence->mFrame);
+		break;
+	}
+
+	mAnimCBuffer->SetAnimation2DEnable(true);
+	mAnimCBuffer->SetUV(LTX, LTY, RBX, RBY);
+
+	mAnimCBuffer->UpdateBuffer();
 }
 
 CAnimation2DSequence* CAnimation2D::FindSequence(

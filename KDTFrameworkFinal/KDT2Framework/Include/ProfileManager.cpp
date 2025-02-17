@@ -34,10 +34,15 @@ bool CProfileManager::Init()
 	CreateProfile("MonsterAttack", ECollisionChannel::MonsterAttack, true,
 		ECollisionInteraction::Ignore);
 
+	CreateProfile("MonsterDetect", ECollisionChannel::MonsterDetect, true,
+		ECollisionInteraction::Ignore);
+
 	SetInteraction("Player", ECollisionChannel::Player,
 		ECollisionInteraction::Ignore);
 	SetInteraction("Player", ECollisionChannel::PlayerAttack,
 		ECollisionInteraction::Ignore);
+	/*SetInteraction("Player", ECollisionChannel::Default,
+		ECollisionInteraction::Ignore);*/
 
 	SetInteraction("Monster", ECollisionChannel::Monster,
 		ECollisionInteraction::Ignore);
@@ -52,6 +57,9 @@ bool CProfileManager::Init()
 	SetInteraction("MonsterAttack", ECollisionChannel::Default,
 		ECollisionInteraction::Collision);
 	SetInteraction("MonsterAttack", ECollisionChannel::Player,
+		ECollisionInteraction::Collision);
+
+	SetInteraction("MonsterDetect", ECollisionChannel::Player,
 		ECollisionInteraction::Collision);
 
 	return true;

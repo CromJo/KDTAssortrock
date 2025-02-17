@@ -154,6 +154,9 @@
     <Filter Include="09. Animation">
       <UniqueIdentifier>{c433429b-4d33-46cc-97b7-0f77754c1f7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Shader\03. ConstantBuffer\05. Animation2D">
+      <UniqueIdentifier>{6573566e-2faa-43b7-b766-2ae030cdb878}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -377,6 +380,9 @@
     </ClCompile>
     <ClCompile Include="Animation\Animation2DSequence.cpp">
       <Filter>09. Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\Animation2DCBuffer.cpp">
+      <Filter>04. Shader\03. ConstantBuffer\05. Animation2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -622,6 +628,9 @@
     </ClInclude>
     <ClInclude Include="Animation\Animation2DSequence.h">
       <Filter>09. Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\Animation2DCBuffer.h">
+      <Filter>04. Shader\03. ConstantBuffer\05. Animation2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
