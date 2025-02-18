@@ -2,15 +2,19 @@
 
 #include <Windows.h>
 #include <list>
+#include <unordered_map>
+#include <crtdbg.h>
+#include <vector>
+#include <string>
+
 #include "Vector2D.h"
 #include "Vector3D.h"
 #include "Vector4D.h"
 
-#include <unordered_map>
-#include <vector>
+#include "Share/SharedPointer.h"
+
 // 메모리릭이 발생 되었을 때, 어디서 발생되었는지
 // 찾아주는 기능을 제공
-#include <crtdbg.h>
 
 // 다이렉트11 기능 불러오기
 #include <d3d11.h>
@@ -29,6 +33,7 @@
 
 
 #define SAFE_DELETE(p) if(p) { delete p; p = nullptr; }
+#define SAFE_DELETE_ARRAY(p) if(p) { delete[] p; p = nullptr; }
 #define SAFE_RELEASE(p) if(p) { p->Release(); p = nullptr; }
 
 
@@ -81,4 +86,75 @@ struct FResolution
 {
 	unsigned int Width = 0;
 	unsigned int Height = 0;
+};
+
+// IndexBuffer와 차이점은 Format의 유무차이이다.
+struct FVertexBuffer
+{
+	ID3D11Buffer* Buffer = nullptr;
+	int Size = 0;
+	int Count = 0;
+	void* Data = nullptr;
+
+	FVertexBuffer()
+	{
+	}
+
+	~FVertexBuffer()
+	{
+		SAFE_RELEASE(Buffer);
+		SAFE_DELETE_ARRAY(Data);
+	}
+};
+
+struct FIndexBuffer
+{
+	// 데이터 저장을 위한 버퍼
+	ID3D11Buffer* Buffer;
+	// 데이터 1개의 크기
+	int Size = 0;
+	// 데이터 개수
+	int Count = 0;
+	// 데이터 포맷
+	DXGI_FORMAT Format = DXGI_FORMAT_UNKNOWN;
+	void* Data = nullptr;
+
+	FIndexBuffer()
+	{
+	}
+
+	~FIndexBuffer()
+	{
+		SAFE_RELEASE(Buffer);
+		SAFE_DELETE_ARRAY(Data);
+	}
+};
+
+// 정점 정보 (Vertex Information)
+struct FVertexColor
+{
+	// 2D & 3D : x, y, z값 전부 필요
+	FVector3D Position;
+	// RGB : 0 ~ 255
+	// A : 0.f ~ 1.f 방식
+	FVector4D Color;
+
+	FVertexColor()
+	{
+	}
+
+	FVertexColor(const FVector3D& _Pos, const FVector4D& _Color) :
+		Position(_Pos),
+		Color(_Color)
+	{
+
+	}
+
+	FVertexColor(float x, float y, float z,
+		float r, float g, float b, float a) :
+		Position(x, y, z),
+		Color(r, g, b, a)
+	{
+
+	}
 };

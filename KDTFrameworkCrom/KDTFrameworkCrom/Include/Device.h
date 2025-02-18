@@ -79,4 +79,3 @@ public:
 
 	DECLARE_SINGLE(CDevice)
 };
-

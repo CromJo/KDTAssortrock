@@ -2,6 +2,7 @@
 #include "resource.h"
 #include "Share/Timer.h"
 #include "Device.h"
+#include "Asset/AssetManager.h"
 
 DEFINITION_SINGLE(CGameManager)
 
@@ -13,6 +14,8 @@ CGameManager::CGameManager()
 
 CGameManager::~CGameManager()
 {
+	CAssetManager::DestroyInstance();
+
 	CDevice::DestroyInstance();
 
 	ReleaseDC(mHandleWindow, mHandleDC);
@@ -40,8 +43,13 @@ bool CGameManager::Init(HINSTANCE hInstance)
 	if(!CDevice::GetInstance()->Init(mHandleWindow, 1280, 720, true))
 		return false;
 	 
+	// 에셋매니저 초기화
+	if (!CAssetManager::GetInstance()->Init())
+		return false;
+
 	// 타이머 초기화
 	CTimer::Init();
+
 
 	return true;
 }
@@ -124,6 +132,7 @@ void CGameManager::PostCollision(float DeltaTime)
 			요약) 기하정보만 가진 Static Mesh와
 				기하정보 및 뼈대를 가진 Animation Mesh가 있다.
 	*/
+
 
 }
 

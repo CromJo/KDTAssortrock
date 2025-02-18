@@ -11,19 +11,6 @@ private:
 	TCHAR	mClassName[256] = {};
 	TCHAR	mTitleName[256] = {};
 
-	std::list<FBullet> mBulletList;
-	FVector2D mPlayerPos = { 150.f, 150.f };
-	FVector2D mPlayerSize = { 100.f, 100.f };
-	
-	std::list<FBullet> mEnemyBulletList;
-	float mFireTime = 1.f;
-	float mFireAccelTime = 0.f;
-	float mEnemyDirect = 1.f;
-	FRect mEnemyRC = { 1000, 100, 1100, 200 };
-	FVector2D mEnemyPos = { 1025.f, 125.f };
-	FVector2D mEnemySize = { 50.f, 50.f };
-
-	float mEnemyDir = 1.f;
 	float mClearColor[4] = {};
 
 	static bool mLoop;
