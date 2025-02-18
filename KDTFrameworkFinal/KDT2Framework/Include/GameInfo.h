@@ -22,6 +22,7 @@
 // extern 은 선언된 전역변수를 다른곳에서 사용할 수 있게
 // 해주는 기능이다.
 extern TCHAR   gRootPath[MAX_PATH];
+extern char   gRootPathMultibyte[MAX_PATH];
 
 // .lib 를 링크 걸어주는 기능이다.
 #pragma comment(lib, "d3d11.lib")
@@ -51,6 +52,9 @@ public:\
 	}
 
 #define	DEFINITION_SINGLE(Type)	Type* Type::mInst = nullptr;
+
+int Clamp(int Value, int Min, int Max);
+float Clamp(float Value, float Min, float Max);
 
 
 namespace EShaderBufferType
@@ -250,7 +254,8 @@ enum class EAssetType
 	Mesh,
 	Texture,
 	Material,
-	Animation2D
+	Animation2D,
+	Sound
 };
 
 namespace ERenderStateType
