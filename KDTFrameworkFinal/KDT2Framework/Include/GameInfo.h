@@ -286,3 +286,9 @@ enum class EAnimationTextureType
 	SpriteSheet,
 	Frame
 };
+
+struct FAnimationFrame
+{
+	FVector2D   Start;
+	FVector2D   Size;
+};

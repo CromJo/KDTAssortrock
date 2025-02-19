@@ -58,7 +58,7 @@ bool CSound::LoadSoundFullPath(FMOD::System* System,
 void CSound::Play()
 {
 	// 마지막 인자의 채널에 이 사운드를 재생시키는 채널을 얻어온다.
-	// 마지막 채널은 이 사운드를 겹쳐셔 몇번을 재생하더라도 1개의 채널을
+	// 마지막 채널은 이 사운드를 겹쳐셔 몇번을 재생하더라도 1개의 채널그룹을
 	// 이용하여 재생을 하게 된다.
 	// 따라서 Stop을 위해서는 몇번 겹쳐서 재생되고 있는지를 저장해야 한다.
 	mSystem->playSound(mSound, mGroup, false, &mChannel);

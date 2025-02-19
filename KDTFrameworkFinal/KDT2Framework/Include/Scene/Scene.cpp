@@ -6,6 +6,7 @@
 #include "../Share/Log.h"
 #include "SceneAssetManager.h"
 #include "../Render/RenderManager.h"
+#include "SceneUIManager.h"
 
 CScene::CScene()
 {
@@ -15,6 +16,7 @@ CScene::~CScene()
 {
 	CRenderManager::GetInst()->ClearRenderList();
 	mObjList.clear();
+	SAFE_DELETE(mUIManager);
 	SAFE_DELETE(mAssetManager);
 	SAFE_DELETE(mCollision);
 	SAFE_DELETE(mCameraManager);
@@ -24,6 +26,8 @@ CScene::~CScene()
 bool CScene::Init()
 {
 	mInput = new CInput;
+
+	mInput->mScene = this;
 
 	if (!mInput->Init())
 		return false;
@@ -45,6 +49,13 @@ bool CScene::Init()
 	mAssetManager->mScene = this;
 
 	if (!mAssetManager->Init())
+		return false;
+
+	mUIManager = new CSceneUIManager;
+
+	mUIManager->mScene = this;
+
+	if (!mUIManager->Init())
 		return false;
 
 	return true;

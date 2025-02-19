@@ -49,14 +49,17 @@ bool CSoundManager::Init()
 
 	LoadSound("BGM", "BGM", true, "Sound/MainBgm.mp3");
 	LoadSound("Effect1", "Effect", false, "Sound/TeemoSmile.mp3");
-	/*
-	CSound* BGM = FindSound("BGM");
+	
+	/*CSound* BGM = FindSound("BGM");
 
 	BGM->Play();*/
 	Play("BGM");
+	
+	/*Play("BGM");
 	Play("Effect1");
+	Play("Effect1");*/
 	SetGroupVolume("BGM", 30);
-	SetGroupVolume("Effect", 30);
+	SetGroupVolume("Effect", 5);
 
 	return true;
 }
