@@ -5,7 +5,11 @@
       <FullPath>C:\Users\assort_c5\Desktop\KDTAssortrock\KDTFrameworkCrom\KDTFrameworkCrom\Bin\KDTFrameworkCrom_Debug.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
-  <ContentFiles />
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>C:\Users\assort_c5\Desktop\KDTAssortrock\KDTFrameworkCrom\KDTFrameworkCrom\Bin\ColorMesh.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />
 </Project>

@@ -1,33 +1,126 @@
 #pragma once
 
+template <typename T>
 class CSharedPointer
 {
 public:
-	CSharedPointer();
-	CSharedPointer(class CObject* Object);
-	CSharedPointer(const CSharedPointer& Pointer);
-	CSharedPointer(CSharedPointer&& Pointer);
-	~CSharedPointer();
+	CSharedPointer()
+	{
+
+	}
+	 
+	CSharedPointer(T* Object)
+	{
+		mObject = Object;
+		 
+		if (mObject)
+			mObject->AddReference();
+	}
+
+	CSharedPointer(const CSharedPointer& Pointer)
+	{
+		mObject = Pointer.mObject;
+
+		if (mObject)
+			mObject->AddReference();
+	}
+
+	CSharedPointer(CSharedPointer&& Pointer)
+	{
+		mObject = Pointer.mObject;
+
+		if (mObject)
+			mObject->AddReference();
+	}
+
+	~CSharedPointer()
+	{
+		if (mObject)
+			mObject->Release();
+	}
 
 public:
-	void operator = (class CObject* Object);
-	void operator = (const CSharedPointer& Pointer);
-	void operator = (CSharedPointer&& Pointer);
+	void operator = (T* Object)
+	{
+		if (mObject)
+			mObject->Release();
 
-	bool operator == (class CObject* Object) const;
-	bool operator == (const CSharedPointer& Pointer) const;
-	bool operator == (CSharedPointer&& Pointer) const;
+		mObject = Object;
 
-	bool operator != (class CObject* Object) const;
-	bool operator != (const CSharedPointer& Pointer) const;
-	bool operator != (CSharedPointer&& Pointer) const;
+		if (mObject)
+			mObject->AddReference();
+	}
+	void operator = (const CSharedPointer& Pointer)
+	{
+		// 이미있다면 해제 후
+		if (mObject)
+			mObject->Release();
 
-	class CObject* operator -> () const;
-	operator class CObject* () const;
-	
-	class CObject* Get() const;
+		// 교체작업을 시작한다.
+		mObject = Pointer.mObject;
+
+		if (mObject)
+			mObject->AddReference();
+	}
+
+	void operator = (CSharedPointer&& Pointer)
+	{
+		// 이미있다면 해제 후
+		if (mObject)
+			mObject->Release();
+
+		// 교체작업을 시작한다.
+		mObject = Pointer.mObject;
+
+		if (mObject)
+			mObject->AddReference();
+	}
+
+	bool operator == (T* Object) const
+	{
+		return mObject == Object;
+	}
+
+	bool operator == (const CSharedPointer& Pointer) const
+	{
+		return mObject == Pointer.mObject;
+	}
+
+	bool operator == (CSharedPointer&& Pointer) const
+	{
+		return mObject == Pointer.mObject;
+	}
+
+	bool operator != (T* Object) const
+	{
+		return mObject != Object;
+	}
+
+	bool operator != (const CSharedPointer& Pointer) const
+	{
+		return mObject != Pointer.mObject;
+	}
+
+	bool operator != (CSharedPointer&& Pointer) const
+	{
+		return mObject != Pointer.mObject;
+	}
+
+	T* operator -> () const
+	{
+		return mObject;
+	}
+
+	operator T* () const
+	{
+		return mObject;
+	}
+
+	T* Get() const
+	{
+		return mObject;
+	}
 
 private:
-	class CObject* mObject = nullptr;
+	T* mObject = nullptr;
 };
-

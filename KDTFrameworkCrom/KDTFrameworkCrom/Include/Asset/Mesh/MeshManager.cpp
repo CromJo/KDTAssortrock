@@ -67,10 +67,13 @@ bool CMeshManager::Init()
         DXGI_FORMAT_R16_UINT))
         return false;
 
+    return true;
+
+
     /*
         1. 정점하나 하나를 Vertex Shader를 거친다.
             (사각형은 정점 4개이므로, Shader가 총 4번 동작한다)
-        2. Vertex Shader는 
+        2. Vertex Shader는
             World -> View Space -> Projection 변환을 실행한다.
             - View Space 변환
                 - 화면에 표시할 영역을 표시
@@ -78,7 +81,7 @@ bool CMeshManager::Init()
                 - 나머지 모든 오브젝트들도 View Space가
                     이동한만큼 이동
                 - 행, 렬로 이루어져있다.
-        3. Hall Shader : 테슬레이션 Fector들을 만들어 패치들을 
+        3. Hall Shader : 테슬레이션 Fector들을 만들어 패치들을
                         얼마나 디테일하게 쪼갤지에 대한 계수를 넘겨주는 역할
 
         4. 테슬레이션 : 카메라에서 멀리 있으면 삼각형을 줄여서 뭉뚝하게 그린다.
@@ -87,7 +90,7 @@ bool CMeshManager::Init()
 
         5. Domain Shader : 테슬레이션 단계의 끝
                         디테일하게 쪼개진 Vertex들을 최종적으로 계산하는 단계
-        
+
         6. Geometry Shader : 계산된 점들을 원하는 방식으로 조립하여 삼각형 형태로 만든다.
 
         7. Compute Shader : 독립적으로 이루어진 Shader (순차적으로 이뤄지지 않는다.)
@@ -96,7 +99,7 @@ bool CMeshManager::Init()
                     1. 행렬을 빠르게 계산할 수 있다.
                     2. 계산 후 C++코드에 결과를 받을 수 있다.
                         입자 계산이 필요할때 자주 쓰인다.
-        
+
         8. Resterise Shader : 색을 출력하기 위한 단계
                 - 도형처리 (점이나 선을 삼각형으로 조립)
                 - View Port 공간으로 변환
@@ -110,13 +113,9 @@ bool CMeshManager::Init()
 
         10. 출력 변압기 단계를 통해 최종적으로 화면에 출력
 
-
         - Vertex Shader & Pixel Shader만으로도 화면 출력 가능
-        
     */
 
-
-    return true;
 } 
 
 bool CMeshManager::CreateMesh(const std::string& Name,
@@ -151,7 +150,7 @@ bool CMeshManager::CreateMesh(const std::string& Name,
 
 CMesh* CMeshManager::FindMesh(const std::string& Name)
 {
-    std::unordered_map<std::string, CSharedPointer>::iterator 
+    std::unordered_map<std::string, CSharedPointer<CMesh>>::iterator 
         iter = mMeshMap.find(Name);
 
     if (iter == mMeshMap.end())

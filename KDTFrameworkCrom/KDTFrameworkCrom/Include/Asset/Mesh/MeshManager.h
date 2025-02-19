@@ -16,7 +16,7 @@ private:
 	// 포인터가 아닌 일반객체이기 때문에 erase하더라도 
 	// Delete같은 해제 작업을 할 필요가 없다. 
 	// (알아서 제거 될거기 떄문)
-	std::unordered_map<std::string, CSharedPointer> mMeshMap;
+	std::unordered_map<std::string, CSharedPointer<class CMesh>> mMeshMap;
 
 public:
 	bool Init();

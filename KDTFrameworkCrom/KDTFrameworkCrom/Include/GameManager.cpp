@@ -3,6 +3,11 @@
 #include "Share/Timer.h"
 #include "Device.h"
 #include "Asset/AssetManager.h"
+#include "Shader/ShaderManager.h"
+#include "Asset/Mesh/MeshManager.h"
+#include "Asset/Mesh/Mesh.h"
+#include "Shader/Shader.h"
+
 
 DEFINITION_SINGLE(CGameManager)
 
@@ -15,6 +20,8 @@ CGameManager::CGameManager()
 CGameManager::~CGameManager()
 {
 	CAssetManager::DestroyInstance();
+
+	CShaderManager::DestroyInstance();
 
 	CDevice::DestroyInstance();
 
@@ -42,7 +49,11 @@ bool CGameManager::Init(HINSTANCE hInstance)
 	// 디바이스 초기화
 	if(!CDevice::GetInstance()->Init(mHandleWindow, 1280, 720, true))
 		return false;
-	 
+	
+	// Shader 매니저 초기화
+	if(!CShaderManager::GetInstance()->Init())
+		return false;
+	
 	// 에셋매니저 초기화
 	if (!CAssetManager::GetInstance()->Init())
 		return false;
@@ -141,6 +152,13 @@ void CGameManager::Render(float DeltaTime)
 	CDevice::GetInstance()->ClearBackBuffer(mClearColor);
 	CDevice::GetInstance()->ClearDepthStencil(1.f, 0);
 	CDevice::GetInstance()->SetTarget();
+
+	// 출력
+	CSharedPointer<CShader> Shader = CShaderManager::GetInstance()->FindShader("ColorMeshVertexShader");
+	CSharedPointer<CMesh> Mesh = CAssetManager::GetInstance()->GetMeshManager()->FindMesh("CenterRect");
+
+	Shader->SetShader();
+	Mesh->Render();
 
 	// 출력 끝난 후 Page Flipping을 한번 해준다.
 	CDevice::GetInstance()->Render();

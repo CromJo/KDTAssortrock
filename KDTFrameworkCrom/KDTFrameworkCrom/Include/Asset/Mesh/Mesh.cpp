@@ -40,9 +40,10 @@ bool CMesh::CreateMesh(void* VertexData, int Size,
 		// 메쉬 생성
 		FMeshSlot* Slot = new FMeshSlot;
 
-		Slot->IndexBuffer.Size = Size;
-		Slot->IndexBuffer.Count = Count;
+		Slot->IndexBuffer.Size = IndexSize;
+		Slot->IndexBuffer.Count = IndexCount;
 		Slot->IndexBuffer.Data = new char[IndexSize * IndexCount];
+		Slot->IndexBuffer.Format = Format;
 		memcpy(Slot->IndexBuffer.Data, IndexData, IndexSize * IndexCount);
 
 		if (!CreateBuffer(&Slot->IndexBuffer.Buffer,
@@ -87,4 +88,46 @@ bool CMesh::CreateBuffer(ID3D11Buffer** Buffer,
 		return false;
 
 	return true;
+}
+
+void CMesh::Render()
+{
+	unsigned int Stride = mVertexBuffer.Size;
+	unsigned int Offset = 0;
+
+	// 그려줄 도형 타입 지정
+	CDevice::GetInstance()->GetContext()->
+		IASetPrimitiveTopology(mPrimitive);
+
+	// Vertex Buffer를 지정.
+	CDevice::GetInstance()->GetContext()->
+		IASetVertexBuffers(0, 1, &mVertexBuffer.Buffer,
+			&Stride, &Offset);
+
+	size_t SlotCount = mMeshSlot.size();
+
+	// 인덱스 버퍼가 있을 때와 없을 때를 나누어 출력
+	if (SlotCount > 0)
+	{
+		for (size_t i = 0; i < SlotCount; ++i)
+		{
+			// 출력에 사용할 인덱스버퍼 지정
+			CDevice::GetInstance()->GetContext()->
+				IASetIndexBuffer(mMeshSlot[i]->IndexBuffer.Buffer,
+				mMeshSlot[i]->IndexBuffer.Format, 0);
+			
+			// 인덱스를 참고하여 화면에 도형 그림.
+			CDevice::GetInstance()->GetContext()->DrawIndexed(mMeshSlot[i]->
+				IndexBuffer.Count, 0, 0);
+		}
+	}
+	else
+	{
+		// 별표시
+
+		CDevice::GetInstance()->GetContext()->
+			IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
+		CDevice::GetInstance()->GetContext()->
+			Draw(mVertexBuffer.Count, 0);
+	}
 }

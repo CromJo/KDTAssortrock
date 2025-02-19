@@ -59,4 +59,7 @@ public:
         D3D11_BIND_FLAG Flag, void* Data,
         int Size, int Count, D3D11_USAGE Usage);
 
+public:
+    void Render();
+
 };

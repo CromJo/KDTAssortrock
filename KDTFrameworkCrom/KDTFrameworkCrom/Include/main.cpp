@@ -15,9 +15,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	//	문제를 해결하면 된다.
 	// ※ 필요할때 주석을 해제해서 매개변수에 맞는,
 	//	메모리릭을 찾아서 해결하면 된다.
-	//_CrtSetBreakAlloc(217);
-
-	int* n = new int;
+	//_CrtSetBreakAlloc(211);
 
 	if (!CGameManager::GetInstance()->Init(hInstance))
 	{
