@@ -1,6 +1,7 @@
 #pragma once
 
 #include <math.h>
+#include "EngineMath.h"
 
 // 구조체 형식
 struct FVector2D

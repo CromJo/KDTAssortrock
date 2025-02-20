@@ -1,6 +1,7 @@
 #pragma once
 
 #include <math.h>
+#include "EngineMath.h"
 
 // 구조체 형식
 struct FVector4D
@@ -439,6 +440,24 @@ struct FVector4D
 	}
 
 #pragma endregion 나누기연산자
+
+	// 인덱스 접근자
+	float& operator [] (int Index)
+	{
+		assert(0 <= Index && Index <= 3);
+
+		switch (Index)
+		{
+		case 0:
+			return x;
+		case 1:
+			return y;
+		case 2:
+			return z;
+		}
+
+		return w;
+	}
 
 	static FVector4D Black;
 	static FVector4D White;

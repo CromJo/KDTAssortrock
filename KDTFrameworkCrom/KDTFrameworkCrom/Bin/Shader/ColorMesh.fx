@@ -1,9 +1,5 @@
 #include "Share.fx"
 
-/*
-
-*/
-
 struct VertexShader_Input_Color
 {
     // SV 키워드가 안붙기 때문에,
@@ -25,8 +21,11 @@ VertexShader_Output_Color ColorMeshVertexShader(VertexShader_Input_Color input)
     // 구조체
     VertexShader_Output_Color output = (VertexShader_Output_Color) 0;
 
-        
-    output.Position = float4(input.Position, 1.f);
+    // x,y,z의 값 = (input.Position)
+    // w의 값 = 상수 값으로 넣는 중
+    // w의 값은 0에 수렴할수록 오브젝트(output)의 
+    //  거리는 카메라와 가까워진다.
+    output.Position = float4(input.Position, 0.5f);
     output.Color = input.Color;
     
     return output;
