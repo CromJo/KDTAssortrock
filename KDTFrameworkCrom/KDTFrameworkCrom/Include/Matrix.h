@@ -75,8 +75,180 @@ __declspec(align(16)) union FMatrix
 
     const FMatrix& operator = (const FMatrix& _m)
     {
+        m = _m.m;
+        return *this;
+    }
+    
+    const FMatrix& operator = (const DirectX::XMMATRIX& _m)
+    {
+        m = _m;
+        return *this;
+    }
+    
+    const FMatrix& operator = (const FVector4D _v[4])
+    {
+        memcpy(v, _v, sizeof(FVector4D) * 4);
+        return *this;
+    }
+
+    FMatrix operator * (const FMatrix& _m) const
+    {
+        return FMatrix(m * _m.m);
+    }
+    
+    FMatrix operator * (const DirectX::XMMATRIX& _m) const
+    {
+        return FMatrix(m * _m);
+    }
+    // 단위 행렬로 만들어주는 기능
+    void Identity()
+    {
+        m = DirectX::XMMatrixIdentity();
+    }
+
+    // 어떤 행렬의 전치행렬을 구해주는 기능. 
+    void Transpose()
+    {
+        m = DirectX::XMMatrixTranspose(m);
+    }
+
+    // 역행렬을 구해주는 기능.
+    void Inverse()
+    {
+        DirectX::XMVECTOR det = DirectX::XMMatrixDeterminant(m);
+        m = DirectX::XMMatrixInverse(&det, m);
+    }
+
+    void Scaling(const FVector3D& _v)
+    {
+        m = DirectX::XMMatrixScaling(_v.x, _v.y, _v.z);
+    }
+
+    void Scaling(float x, float y, float z)
+    {
+        m = DirectX::XMMatrixScaling(x, y, z);
+    }
+
+    void Scaling(const FVector2D& _v)
+    {
+        m = DirectX::XMMatrixScaling(_v.x, _v.y, 1.f);
+    }
+
+    void Scaling(float x, float y)
+    {
+        m = DirectX::XMMatrixScaling(x, y, 1.f);
+    }
+
+    // 회전에 대한 값을 받아서 넣어주는 기능
+    void Rotation(const FVector3D& _v)
+    {
+        // 라디안으로 파이는 180도를 의미
+        // 각도 = Radian * 180 / Pi
+        // 라디안 = Angle * Pi / 180
+
+        float x = DirectX::XMConvertToDegrees(_v.x);
+        float y = DirectX::XMConvertToRadians(_v.y);
+        float z = DirectX::XMConvertToRadians(_v.z);
+    
+        // x, y, z 회전값을 이용해 사원수를 구한다.
+        DirectX::XMVECTOR Quaternion =
+            DirectX::XMQuaternionRotationRollPitchYaw(x, y, z);
+        
+        // 위에서 구해준 사원수를 이용해 회전행렬을 만든다.
+        m = DirectX::XMMatrixRotationQuaternion(Quaternion);
+
+        
+    }
+
+    void Rotation(float _x, float _y, float _z)
+    {
+        float x = DirectX::XMConvertToDegrees(_x);
+        float y = DirectX::XMConvertToRadians(_y);
+        float z = DirectX::XMConvertToRadians(_z);
+
+        // x, y, z 회전값을 이용해 사원수를 구한다.
+        DirectX::XMVECTOR Quaternion =
+            DirectX::XMQuaternionRotationRollPitchYaw(x, y, z);
+
+        // 위에서 구해준 사원수를 이용해 회전행렬을 만든다.
+        m = DirectX::XMMatrixRotationQuaternion(Quaternion);
 
     }
+
+    void RotationX(float _x)
+    {
+        float x = DirectX::XMConvertToRadians(_x);
+
+        m = DirectX::XMMatrixRotationX(x);
+    }
+
+    void RotationY(float _y)
+    {
+        float y = DirectX::XMConvertToRadians(_y);
+
+        m = DirectX::XMMatrixRotationX(y);
+    }
+
+    void RotationZ(float _z)
+    {
+        float z = DirectX::XMConvertToRadians(_z);
+
+        m = DirectX::XMMatrixRotationX(z);
+    }
+
+    void RotationAxis(const FVector3D& Axis, float Angle)
+    {
+        float Angle = DirectX::XMConvertToRadians(_Angle);
+        
+        // XMFLOAT3는 기능이 부실하다.
+        DirectX::XMVECTOR _Axis = 
+            DirectX::XMLoadFloat3((DirectX::XMFLOAT3*)&Axis);)
+
+        m = DirectX::XMMatrixRotationAxis(_Axis, Angle);
+    }
+
+    void Translation(const FVector3D& _v)
+    {
+        m = DirectX::XMMatrixTranslation(_v.x, _v.y, _v.z);
+    }
+
+    void Translation(float x, float y, float z)
+    {
+        m = DirectX::XMMatrixTranslation(x, y, z);
+    }
+
+    void Translation(const FVector2D& _v)
+    {
+        m = DirectX::XMMatrixTranslation(_v.x, _v.y, 0.f);
+    }
+
+    void Translation(float x, float y)
+    {
+        m = DirectX::XMMatrixTranslation(x, y, 0.f);
+    }
+
+    static FMatrix StaticIdentity()
+    {
+        return DirectX::XMMatrixIdentity();
+    }
+
+    static FMatrix StaticTranspose(const FMatrix& _m)
+    {
+        return DirectX::XMMatrixTranspose(_m.m);
+    }
+    
+    static FMatrix StaticTranspose(const FMatrix& _m)
+    {
+        return DirectX::XMMatrixTranspose(_m.m);
+    }
+
+    static FMatrix StaticInverse(const FMatrix& _m)
+    {
+        DirectX::XMVECTOR det = DirectX::XMMatrixDeterminant(_m.m);
+        
+        return DirectX::XMMatrixInverse(&det, _m.m);
+    }
+
 
 };
 
@@ -92,4 +264,40 @@ __declspec(align(16)) union FMatrix
             - A행렬 * 단위행렬 = A행렬
             - 행렬 중 유일하게 교환법칙이 성립함.
             - A행렬 * 역행렬 = 단위행렬 이다.
+
+    3. 전치행렬 : 행과 열을 바꿔준다.
+        1 2 3 4     1 5 9 3
+        5 6 7 8 ->  2 6 0 4
+        9 0 1 2     3 7 1 5
+        3 4 5 6     4 8 2 6
+
+    4. 월드 행렬 구성요소
+    크기, 자전, 위치(이동), 공전, 부모
+    월드행렬 = 크기행렬 * 자전행렬 * 
+                이동행렬 * 공전행렬 * 부모행렬
+    
+    x 0 0 0
+    0 y 0 0
+    0 0 z 0
+    0 0 0 1
+
+    x  y   z  w (w는 강제로 1로 대입함)
+    1, 1 , 0, 1 * 100   0   0   0   = 100, 100, 0
+                  0     100 0   0    
+                  0     0   100 0
+                  0     0   0   1
+
+   -1, 1 , 0, 1 * 100   0   0   0   = -100, 100, 0
+                  0     100 0   0    
+                  0     0   100 0
+                  0     0   0   1
+
+    X축 회전 키워드 검색 ㄱ
+        - 2D 회전 행렬
+        - 3D 회전 행렬
+
+    Y축 회전
+
+    최종 회전행렬 = X축 * Y축 * Z축 (회전행렬들)
+
 */
