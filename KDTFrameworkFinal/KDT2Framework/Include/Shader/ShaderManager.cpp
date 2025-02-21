@@ -5,6 +5,7 @@
 #include "StaticMeshShader.h"
 #include "../Device.h"
 #include "SpriteShader.h"
+#include "UIShader.h"
 
 DEFINITION_SINGLE(CShaderManager)
 
@@ -33,6 +34,8 @@ bool CShaderManager::Init()
 
 	CreateShader<CSpriteShader>("SpriteShader");
 
+	CreateShader<CUIShader>("UIShader");
+
 
 
 	if (!LoadPixelShader("DefaultMaterialShader",
@@ -59,6 +62,10 @@ bool CShaderManager::Init()
 	CreateConstantBuffer("Sprite",
 		sizeof(FSpriteCBufferInfo),
 		3, EShaderBufferType::Pixel);
+
+	CreateConstantBuffer("UI",
+		sizeof(FUICBufferInfo),
+		3, EShaderBufferType::Vertex | EShaderBufferType::Pixel);
 
 	return true;
 }

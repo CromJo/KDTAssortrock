@@ -41,7 +41,7 @@ protected:
 	CSharedPtr<class CSound>	mSound[EButtonEventState::End];
 	std::function<void()>		mEventCallback[EButtonEventState::End];
 
-	FVector4D		mColor;
+	FVector4D		mColor = FVector4D::White;
 
 public:
 	void ButtonEnable(bool Enable)
@@ -51,7 +51,29 @@ public:
 
 	void SetChild(CWidget* Child)
 	{
+		if (Child)
+		{
+			Child->SetParent(this);
+			Child->SetSize(mSize);
+		}
+
 		mChild = Child;
+	}
+
+	virtual void SetSize(const FVector2D& Size)
+	{
+		CWidget::SetSize(Size);
+
+		if (mChild)
+			mChild->SetSize(mSize);
+	}
+
+	virtual void SetSize(float x, float y)
+	{
+		CWidget::SetSize(x, y);
+
+		if (mChild)
+			mChild->SetSize(mSize);
 	}
 
 	void SetColor(const FVector4D& Color)
@@ -102,6 +124,9 @@ public:
 	virtual bool Init();
 	virtual void Update(float DeltaTime);
 	virtual void Render();
+	virtual void Render(const FVector3D& Pos);
+	virtual void MouseHovered();
+	virtual void MouseUnHovered();
 
 public:
 	template <typename T>

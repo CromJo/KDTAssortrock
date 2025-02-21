@@ -39,5 +39,11 @@ public:
 	{
 		mData.Pivot = Pivot;
 	}
+
+	void SetPivot(const FVector2D& Pivot)
+	{
+		mData.Pivot.x = Pivot.x;
+		mData.Pivot.y = Pivot.y;
+	}
 };
 

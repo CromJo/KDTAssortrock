@@ -14,6 +14,7 @@ private:
 	class CScene* mScene = nullptr;
 	std::unordered_map<std::string, CSharedPtr<CWindowWidget>>	mWindowMap;
 	std::vector<CSharedPtr<CWidget>>	mWidgetList;
+	CSharedPtr<CWidget>					mMouseHoveredWidget;
 
 public:
 	void AddWindowWidget(const std::string& Name,
@@ -35,10 +36,21 @@ public:
 		return iter->second;
 	}
 
+	void AddToViewport(CWidget* Widget);
+
 public:
 	bool Init();
 	void Update(float DeltaTime);
+	bool CollisionMouse(float DeltaTime, const FVector2D& MousePos);
+	void Collision(float DeltaTime);
 	void Render();
+
+private:
+	static bool SortCollision(const CSharedPtr<CWidget>& Src,
+		const CSharedPtr<CWidget>& Dest);
+
+	static bool SortRender(const CSharedPtr<CWidget>& Src,
+		const CSharedPtr<CWidget>& Dest);
 
 public:
 	template <typename T>
@@ -49,14 +61,13 @@ public:
 
 		Widget->mScene = mScene;
 		Widget->mOwnerObject = Owner;
+		Widget->mName = Name;
 
 		if (!Widget->Init())
 		{
 			SAFE_DELETE(Widget);
 			return nullptr;
 		}
-
-		mWidgetList.emplace_back(Widget);
 
 		return Widget;
 	}

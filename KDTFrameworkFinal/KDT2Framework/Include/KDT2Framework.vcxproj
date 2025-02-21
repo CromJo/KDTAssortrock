@@ -151,6 +151,9 @@
     <ClCompile Include="Asset\Animation\Animation2DManager.cpp" />
     <ClCompile Include="Asset\Asset.cpp" />
     <ClCompile Include="Asset\AssetManager.cpp" />
+    <ClCompile Include="Asset\Font\Font.cpp" />
+    <ClCompile Include="Asset\Font\FontCollection.cpp" />
+    <ClCompile Include="Asset\Font\FontManager.cpp" />
     <ClCompile Include="Asset\Material\Material.cpp" />
     <ClCompile Include="Asset\Material\MaterialManager.cpp" />
     <ClCompile Include="Asset\Mesh\Mesh.cpp" />
@@ -175,6 +178,7 @@
     <ClCompile Include="Component\SceneComponent.cpp" />
     <ClCompile Include="Component\SpriteComponent.cpp" />
     <ClCompile Include="Component\StaticMeshComponent.cpp" />
+    <ClCompile Include="Component\WidgetComponent.cpp" />
     <ClCompile Include="Device.cpp" />
     <ClCompile Include="GameInfo.cpp" />
     <ClCompile Include="GameManager.cpp" />
@@ -222,10 +226,15 @@
     <ClCompile Include="Shader\SpriteShader.cpp" />
     <ClCompile Include="Shader\StaticMeshShader.cpp" />
     <ClCompile Include="Shader\TransformCBuffer.cpp" />
+    <ClCompile Include="Shader\UICBuffer.cpp" />
+    <ClCompile Include="Shader\UIShader.cpp" />
     <ClCompile Include="Share\Log.cpp" />
     <ClCompile Include="Share\Object.cpp" />
     <ClCompile Include="Share\Timer.cpp" />
     <ClCompile Include="UI\Common\Button.cpp" />
+    <ClCompile Include="UI\Common\Image.cpp" />
+    <ClCompile Include="UI\Common\ProgressBar.cpp" />
+    <ClCompile Include="UI\Common\TextBlock.cpp" />
     <ClCompile Include="UI\UserWidget\MainWidget.cpp" />
     <ClCompile Include="UI\UserWidget\UserWidget.cpp" />
     <ClCompile Include="UI\UserWidget\WindowWidget.cpp" />
@@ -240,6 +249,9 @@
     <ClInclude Include="Asset\Animation\Animation2DManager.h" />
     <ClInclude Include="Asset\Asset.h" />
     <ClInclude Include="Asset\AssetManager.h" />
+    <ClInclude Include="Asset\Font\Font.h" />
+    <ClInclude Include="Asset\Font\FontCollection.h" />
+    <ClInclude Include="Asset\Font\FontManager.h" />
     <ClInclude Include="Asset\Material\Material.h" />
     <ClInclude Include="Asset\Material\MaterialManager.h" />
     <ClInclude Include="Asset\Mesh\Mesh.h" />
@@ -273,6 +285,7 @@
     <ClInclude Include="Component\SceneComponent.h" />
     <ClInclude Include="Component\SpriteComponent.h" />
     <ClInclude Include="Component\StaticMeshComponent.h" />
+    <ClInclude Include="Component\WidgetComponent.h" />
     <ClInclude Include="Device.h" />
     <ClInclude Include="EngineMath.h" />
     <ClInclude Include="GameInfo.h" />
@@ -323,11 +336,16 @@
     <ClInclude Include="Shader\SpriteShader.h" />
     <ClInclude Include="Shader\StaticMeshShader.h" />
     <ClInclude Include="Shader\TransformCBuffer.h" />
+    <ClInclude Include="Shader\UICBuffer.h" />
+    <ClInclude Include="Shader\UIShader.h" />
     <ClInclude Include="Share\Log.h" />
     <ClInclude Include="Share\Object.h" />
     <ClInclude Include="Share\SharedPtr.h" />
     <ClInclude Include="Share\Timer.h" />
     <ClInclude Include="UI\Common\Button.h" />
+    <ClInclude Include="UI\Common\Image.h" />
+    <ClInclude Include="UI\Common\ProgressBar.h" />
+    <ClInclude Include="UI\Common\TextBlock.h" />
     <ClInclude Include="UI\UIInfo.h" />
     <ClInclude Include="UI\UserWidget\MainWidget.h" />
     <ClInclude Include="UI\UserWidget\UserWidget.h" />
@@ -389,6 +407,20 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">SpriteVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Shader\UI.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">UIVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">UIVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UIVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UIVS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>

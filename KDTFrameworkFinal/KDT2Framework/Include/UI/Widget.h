@@ -14,16 +14,33 @@ protected:
 	virtual ~CWidget();
 
 protected:
+	static FMatrix	mUIProj;
+
+public:
+	static void CreateUIProjection(float Width, float Height, float ViewDist)
+	{
+		mUIProj = DirectX::XMMatrixOrthographicOffCenterLH(0.f,
+			Width, 0.f, Height,
+			0.f, ViewDist);
+	}
+
+protected:
 	class CScene* mScene = nullptr;
+	class CWidget* mParent = nullptr;
 	CSharedPtr<CSceneObject>	mOwnerObject;
 	CSharedPtr<class CShader>	mShader;
+	CSharedPtr<class CMesh>		mMesh;
+	class CUICBuffer* mUICBuffer = nullptr;
+	class CTransformCBuffer* mTransformCBuffer = nullptr;
 	std::string	mName;
-	FVector2D	mPos;
+	FVector2D	mPos;		// 상대적인 위치
+	FVector2D	mRenderPos;	// 최종 출력 위치
 	FVector2D	mSize;
 	FVector2D	mPivot;
 	float		mRotation = 0.f;
 
 	int			mZOrder = 0;
+	bool		mMouseOn = false;
 
 public:
 	void SetOwnerObject(class CSceneObject* Object)
@@ -31,10 +48,20 @@ public:
 		mOwnerObject = Object;
 	}
 
+	void SetParent(CWidget* Widget)
+	{
+		mParent = Widget;
+	}
+
 public:
 	const FVector2D& GetPos()	const
 	{
 		return mPos;
+	}
+
+	const FVector2D& GetRenderPos()	const
+	{
+		return mRenderPos;
 	}
 
 	const FVector2D& GetSize()	const
@@ -69,12 +96,17 @@ public:
 		mPos.y = y;
 	}
 
-	void SetSize(const FVector2D& Size)
+	void SetRenderPos(const FVector2D& Pos)
+	{
+		mRenderPos = mPos + Pos;
+	}
+
+	virtual void SetSize(const FVector2D& Size)
 	{
 		mSize = Size;
 	}
 
-	void SetSize(float x, float y)
+	virtual void SetSize(float x, float y)
 	{
 		mSize.x = x;
 		mSize.y = y;
@@ -135,7 +167,10 @@ public:
 	virtual bool Init();
 	virtual void Update(float DeltaTime);
 	virtual void Render();
-	virtual bool CollisionMouse(const FVector2D& MousePos);
-
+	virtual void Render(const FVector3D& Pos);
+	virtual bool CollisionMouse(CWidget** Result, const FVector2D& MousePos);
+	virtual void EndFrame();
+	virtual void MouseHovered();
+	virtual void MouseUnHovered();
 };
 

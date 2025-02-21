@@ -6,6 +6,11 @@
 #include "../../Asset/Texture/TextureManager.h"
 #include "../../Asset/Sound/Sound.h"
 #include "../../Asset/Sound/SoundManager.h"
+#include "../../Asset/Mesh/Mesh.h"
+#include "../../Shader/UICBuffer.h"
+#include "../../Shader/TransformCBuffer.h"
+#include "../../Shader/Shader.h"
+#include "../../Scene/Input.h"
 
 CButton::CButton()
 {
@@ -159,9 +164,119 @@ bool CButton::Init()
 void CButton::Update(float DeltaTime)
 {
     CWidget::Update(DeltaTime);
+
+    if (mState != EButtonState::Disable)
+    {
+        if (mMouseOn)
+        {
+            if (mScene->GetInput()->GetMouseDown(EMouseButtonType::LButton))
+            {
+                mState = EButtonState::Click;
+            }
+
+            else if (mState == EButtonState::Click &&
+                mScene->GetInput()->GetMouseUp(EMouseButtonType::LButton))
+            {
+                if (mSound[EButtonEventState::Click])
+                    mSound[EButtonEventState::Click]->Play();
+
+                if (mEventCallback[EButtonEventState::Click])
+                    mEventCallback[EButtonEventState::Click]();
+
+                mState = EButtonState::Hovered;
+            }
+
+            else if (mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton))
+            {
+                mState = EButtonState::Click;
+            }
+        }
+    }
 }
 
 void CButton::Render()
 {
     CWidget::Render();
+
+    FMatrix matScale, matRot, matTranslate, matWorld;
+
+    matScale.Scaling(mSize);
+    matRot.RotationZ(mRotation);
+    matTranslate.Translation(mRenderPos);
+
+    matWorld = matScale * matRot * matTranslate;
+
+    mTransformCBuffer->SetWorldMatrix(matWorld);
+    mTransformCBuffer->SetProjMatrix(mUIProj);
+    mTransformCBuffer->SetPivot(mPivot);
+
+    mTransformCBuffer->UpdateBuffer();
+
+    mUICBuffer->SetWidgetColor(mColor);
+
+    mUICBuffer->SetTint(mBrush[mState].Tint);
+
+    if (mBrush[mState].Texture)
+    {
+        mUICBuffer->SetTextureEnable(true);
+
+        mBrush[mState].Texture->SetShader(0, EShaderBufferType::Pixel,
+            0);
+    }
+
+    else
+        mUICBuffer->SetTextureEnable(false);
+
+    if (mBrush[mState].AnimationEnable)
+    {
+        mUICBuffer->SetAnimationEnable(true);
+
+        int Frame = mBrush[mState].Frame;
+
+        FAnimationFrame FrameInfo = mBrush[mState].Frames[Frame];
+        mUICBuffer->SetUV(FrameInfo.Start.x, FrameInfo.Start.y,
+            FrameInfo.Start.x + FrameInfo.Size.x,
+            FrameInfo.Start.y + FrameInfo.Size.y);
+    }
+
+    else
+        mUICBuffer->SetAnimationEnable(false);
+
+
+    mUICBuffer->UpdateBuffer();
+
+    mShader->SetShader();
+
+    mMesh->Render();
+
+    if (mChild)
+        mChild->Render();
+}
+
+void CButton::Render(const FVector3D& Pos)
+{
+    CWidget::Render(Pos);
+
+    if (mChild)
+        mChild->Render(Pos);
+}
+
+void CButton::MouseHovered()
+{
+    if (mState == EButtonState::Normal)
+    {
+        if (mSound[EButtonEventState::Hovered])
+            mSound[EButtonEventState::Hovered]->Play();
+
+        if (mEventCallback[EButtonEventState::Hovered])
+            mEventCallback[EButtonEventState::Hovered]();
+
+        mState = EButtonState::Hovered;
+    }
+}
+
+void CButton::MouseUnHovered()
+{
+    if (mState != EButtonState::Disable)
+        mState = EButtonState::Normal;
 }
