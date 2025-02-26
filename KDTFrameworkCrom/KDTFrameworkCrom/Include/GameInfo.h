@@ -58,30 +58,21 @@ public:\
 
 #define DEFINITION_SINGLE(Type) Type* Type::mInstance = nullptr;
 
-
-
-struct FRect
+// 쉐이더 번호
+namespace EShaderBufferType
 {
-	float Left	 = 0.f;
-	float Top	 = 0.f;
-	float Right	 = 0.f;
-	float Bottom = 0.f;
-};
-
-enum class EBulletOption
-{
-	Normal,			// 일반 특성
-	Bounce			// 튕기기 특성
-};
-
-struct FBullet
-{
-	FVector2D Pos;			// 위치
-	FVector2D Size;			// 크기
-	FVector2D MoveDirect;	// 방향
-	float Distance = 800.f;	// 거리
-	EBulletOption Option = EBulletOption::Normal;
-};
+	enum Type
+	{
+		Vertex = 0x1,
+		Pixel = 0x2,
+		Hull = 0x4,
+		Domain = 0x8,
+		Geometry = 0x10,
+		Compute = 0x20,
+		Graphic = Vertex | Pixel | Hull | Domain | Geometry,
+		All = Graphic | Compute
+	};
+}
 
 struct FResolution
 {

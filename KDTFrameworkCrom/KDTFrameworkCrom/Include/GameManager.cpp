@@ -7,7 +7,7 @@
 #include "Asset/Mesh/MeshManager.h"
 #include "Asset/Mesh/Mesh.h"
 #include "Shader/Shader.h"
-
+#include "Shader/TransformCBuffer.h"
 
 DEFINITION_SINGLE(CGameManager)
 
@@ -143,8 +143,6 @@ void CGameManager::PostCollision(float DeltaTime)
 			요약) 기하정보만 가진 Static Mesh와
 				기하정보 및 뼈대를 가진 Animation Mesh가 있다.
 	*/
-
-
 }
 
 void CGameManager::Render(float DeltaTime)
@@ -154,7 +152,30 @@ void CGameManager::Render(float DeltaTime)
 	CDevice::GetInstance()->SetTarget();
 
 	// 출력
-	CSharedPointer<CShader> Shader = CShaderManager::GetInstance()->FindShader("ColorMeshVertexShader");
+	static CTransformCBuffer buffer;
+
+	buffer.Init();
+
+	FMatrix matrixWorld, matrixProjection;
+	FMatrix matrixScale, matrixRotation, matrixTranslate;
+
+	matrixScale.Scaling(5.f, 5.f, 1.f);
+	matrixRotation.Rotation(0.f, 0.f, 0.f);
+	matrixTranslate.Translation(2.f, 0.5f, 5.f);
+
+	// 공식 : 크기 * 자전 * 이동 * 공전 * 부모
+	matrixWorld = matrixScale * matrixRotation * matrixTranslate;
+	matrixProjection = DirectX::XMMatrixPerspectiveFovLH(
+		DirectX::XMConvertToRadians(90.f),
+		/*가로세로 비율*/ 1280.f / 720.f,
+		/*카메라 출력 근/장거리 범위*/ 0.5f, 1000.f);
+
+	buffer.SetWorldMatrix(matrixWorld);
+	buffer.SetProjectionMatrix(matrixProjection);
+
+	buffer.UpdateBuffer();
+
+	CSharedPointer<CShader> Shader = CShaderManager::GetInstance()->FindShader("ColorMeshShader");
 	CSharedPointer<CMesh> Mesh = CAssetManager::GetInstance()->GetMeshManager()->FindMesh("CenterRect");
 
 	Shader->SetShader();

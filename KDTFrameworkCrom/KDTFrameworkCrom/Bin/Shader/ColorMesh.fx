@@ -25,9 +25,9 @@ VertexShader_Output_Color ColorMeshVertexShader(VertexShader_Input_Color input)
     // w의 값 = 상수 값으로 넣는 중
     // w의 값은 0에 수렴할수록 오브젝트(output)의 
     //  거리는 카메라와 가까워진다.
-    output.Position = float4(input.Position, 0.5f);
+    output.Position = mul(float4(input.Position, 1.f), gMatrixWVP);
     output.Color = input.Color;
-    
+   
     return output;
 }
 

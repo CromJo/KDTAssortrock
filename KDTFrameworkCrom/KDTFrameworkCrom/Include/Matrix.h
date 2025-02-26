@@ -1,6 +1,10 @@
 #pragma once
 
 #include "Vector4D.h"
+#include "Vector3D.h"
+#include "Vector2D.h"
+#include <string>
+
 
 // union
 //  - 메모리 주소를 공유하는 기능
@@ -198,13 +202,13 @@ __declspec(align(16)) union FMatrix
 
     void RotationAxis(const FVector3D& Axis, float Angle)
     {
-        float Angle = DirectX::XMConvertToRadians(_Angle);
+        float _Angle = DirectX::XMConvertToRadians(Angle);
         
         // XMFLOAT3는 기능이 부실하다.
         DirectX::XMVECTOR _Axis = 
-            DirectX::XMLoadFloat3((DirectX::XMFLOAT3*)&Axis);)
+            DirectX::XMLoadFloat3((DirectX::XMFLOAT3*)&Axis);
 
-        m = DirectX::XMMatrixRotationAxis(_Axis, Angle);
+        m = DirectX::XMMatrixRotationAxis(_Axis, _Angle);
     }
 
     void Translation(const FVector3D& _v)
@@ -237,11 +241,6 @@ __declspec(align(16)) union FMatrix
         return DirectX::XMMatrixTranspose(_m.m);
     }
     
-    static FMatrix StaticTranspose(const FMatrix& _m)
-    {
-        return DirectX::XMMatrixTranspose(_m.m);
-    }
-
     static FMatrix StaticInverse(const FMatrix& _m)
     {
         DirectX::XMVECTOR det = DirectX::XMMatrixDeterminant(_m.m);
@@ -249,6 +248,112 @@ __declspec(align(16)) union FMatrix
         return DirectX::XMMatrixInverse(&det, _m.m);
     }
 
+
+    static FMatrix StaticScaling(const FVector3D& _v)
+    {
+        return  DirectX::XMMatrixScaling(_v.x, _v.y, _v.z);
+    }
+
+    static FMatrix StaticScaling(float x, float y, float z)
+    {
+        return  DirectX::XMMatrixScaling(x, y, z);
+    }
+
+    static FMatrix StaticScaling(const FVector2D& _v)
+    {
+        return  DirectX::XMMatrixScaling(_v.x, _v.y, 1.f);
+    }
+
+    static FMatrix StaticScaling(float x, float y)
+    {
+        return  DirectX::XMMatrixScaling(x, y, 1.f);
+    }
+
+    // 회전에 대한 값을 받아서 넣어주는 기능
+    static FMatrix StaticRotation(const FVector3D& _v)
+    {
+        // 라디안으로 파이는 180도를 의미
+        // 각도 = Radian * 180 / Pi
+        // 라디안 = Angle * Pi / 180
+
+        float x = DirectX::XMConvertToDegrees(_v.x);
+        float y = DirectX::XMConvertToRadians(_v.y);
+        float z = DirectX::XMConvertToRadians(_v.z);
+
+        // x, y, z 회전값을 이용해 사원수를 구한다.
+        DirectX::XMVECTOR Quaternion =
+            DirectX::XMQuaternionRotationRollPitchYaw(x, y, z);
+
+        // 위에서 구해준 사원수를 이용해 회전행렬을 만든다.
+        return DirectX::XMMatrixRotationQuaternion(Quaternion);
+    }
+
+    static FMatrix StaticRotation(float _x, float _y, float _z)
+    {
+        float x = DirectX::XMConvertToDegrees(_x);
+        float y = DirectX::XMConvertToRadians(_y);
+        float z = DirectX::XMConvertToRadians(_z);
+
+        // x, y, z 회전값을 이용해 사원수를 구한다.
+        DirectX::XMVECTOR Quaternion =
+            DirectX::XMQuaternionRotationRollPitchYaw(x, y, z);
+
+        // 위에서 구해준 사원수를 이용해 회전행렬을 만든다.
+        return DirectX::XMMatrixRotationQuaternion(Quaternion);
+
+    }
+
+    static FMatrix StaticRotationX(float _x)
+    {
+        float x = DirectX::XMConvertToRadians(_x);
+
+        return DirectX::XMMatrixRotationX(x);
+    }
+
+    static FMatrix StaticRotationY(float _y)
+    {
+        float y = DirectX::XMConvertToRadians(_y);
+
+        return DirectX::XMMatrixRotationX(y);
+    }
+
+    static FMatrix StaticRotationZ(float _z)
+    {
+        float z = DirectX::XMConvertToRadians(_z);
+
+        return DirectX::XMMatrixRotationX(z);
+    }
+
+    static FMatrix StaticRotationAxis(const FVector3D& Axis, float Angle)
+    {
+        float _Angle = DirectX::XMConvertToRadians(Angle);
+
+        // XMFLOAT3는 기능이 부실하다.
+        DirectX::XMVECTOR _Axis =
+            DirectX::XMLoadFloat3((DirectX::XMFLOAT3*)&Axis);
+
+        return DirectX::XMMatrixRotationAxis(_Axis, _Angle);
+    }
+
+    static FMatrix StaticTranslation(const FVector3D& _v)
+    {
+        return DirectX::XMMatrixTranslation(_v.x, _v.y, _v.z);
+    }
+
+    static FMatrix StaticTranslation(float x, float y, float z)
+    {
+        return DirectX::XMMatrixTranslation(x, y, z);
+    }
+
+    static FMatrix StaticTranslation(const FVector2D& _v)
+    {
+        return DirectX::XMMatrixTranslation(_v.x, _v.y, 0.f);
+    }
+
+    static FMatrix StaticTranslation(float x, float y)
+    {
+        return DirectX::XMMatrixTranslation(x, y, 0.f);
+    }
 
 };
 

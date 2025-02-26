@@ -39,3 +39,14 @@ struct PixelShader_Output_Single
     float4 Color : SV_TARGET;
     
 };
+
+// 상수버퍼 b0번 레지스터로 지정
+cbuffer Transform : register(b0)
+{
+    matrix gMatrixWorld;
+    matrix gMatrixView;
+    matrix gMatrixProjection;
+    matrix gMatrixWV;
+    matrix gMatrixWVP;
+    
+}

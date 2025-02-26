@@ -49,6 +49,24 @@
     <Filter Include="04. Shader\02. Shader Class\01. ColorMesh">
       <UniqueIdentifier>{d7b64009-6c86-4baa-be4b-ae83dd744712}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Shader\03. ConstantBuffer">
+      <UniqueIdentifier>{ebe0c3e8-c244-4281-87a5-254858c9b389}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. Shader\03. ConstantBuffer\01. Transform">
+      <UniqueIdentifier>{00f4f645-9ff8-4669-8c2a-815a71cdef3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Scene">
+      <UniqueIdentifier>{caed9c03-5ebf-4265-97a9-0419b4e975ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Object">
+      <UniqueIdentifier>{405f596c-4ef3-4f85-abff-ab8c7c2e1f85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. Component">
+      <UniqueIdentifier>{89dfe28e-9b25-4791-bcf3-be0acfc4dc5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. Component\01. SceneComponent">
+      <UniqueIdentifier>{bb2f21b2-20b6-48ca-9f67-a69a82e2c3fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -97,6 +115,39 @@
       <Filter>04. Shader\02. Shader Class</Filter>
     </ClCompile>
     <ClCompile Include="Shader\ColorMeshShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\ConstantBuffer.cpp">
+      <Filter>04. Shader\03. ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\ConstantBufferData.cpp">
+      <Filter>04. Shader\03. ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\TransformCBuffer.cpp">
+      <Filter>04. Shader\03. ConstantBuffer\01. Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Scene.cpp">
+      <Filter>05. Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SceneMain.cpp">
+      <Filter>05. Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\SceneObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Component.cpp">
+      <Filter>07. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector3D.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\SceneComponent.cpp">
+      <Filter>07. Component\01. SceneComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\MeshComponent.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\StaticMeshComponent.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -165,6 +216,39 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="EngineMath.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ConstantBuffer.h">
+      <Filter>04. Shader\03. ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ConstantBufferData.h">
+      <Filter>04. Shader\03. ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\CBufferContainer.h">
+      <Filter>04. Shader\03. ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\TransformCBuffer.h">
+      <Filter>04. Shader\03. ConstantBuffer\01. Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Scene.h">
+      <Filter>05. Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SceneMain.h">
+      <Filter>05. Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\SceneObject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Component.h">
+      <Filter>07. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\SceneComponent.h">
+      <Filter>07. Component\01. SceneComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\MeshComponent.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\StaticMeshComponent.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
