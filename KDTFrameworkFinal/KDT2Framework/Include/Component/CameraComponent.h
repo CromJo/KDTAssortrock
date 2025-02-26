@@ -31,6 +31,7 @@ protected:
 	float		mViewDistance = 1000.f;
 
 public:
+	// 카메라 보는 행렬값 받아오기
 	const FMatrix& GetViewMatrix()	const
 	{
 		return mmatView;

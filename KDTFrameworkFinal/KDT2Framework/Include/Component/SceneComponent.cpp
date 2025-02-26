@@ -2,10 +2,12 @@
 #include "../Shader/TransformCBuffer.h"
 #include "../Render/RenderManager.h"
 
+// 생성자
 CSceneComponent::CSceneComponent()
 {
+    // 생성
     mTransformCBuffer = new CTransformCBuffer;
-
+    // 후 초기화
     mTransformCBuffer->Init();
 }
 

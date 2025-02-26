@@ -14,6 +14,7 @@ CColliderBase::CColliderBase()
 #ifdef _DEBUG
 
     mRenderType = EComponentRender::Render;
+    mRenderLayerName = "Object";
 
 #endif // _DEBUG
     // 리해싱이 자주 일어나지 않도록 미리 공간을 확보한다.
@@ -44,7 +45,6 @@ CColliderBase::~CColliderBase()
 
 #ifdef _DEBUG
 
-    SAFE_DELETE(mTransformCBuffer);
     SAFE_DELETE(mCBuffer);
 
 #endif // _DEBUG
@@ -126,10 +126,6 @@ bool CColliderBase::Init()
     mCBuffer = new CColliderCBuffer;
 
     mCBuffer->Init();
-
-    mTransformCBuffer = new CTransformCBuffer;
-
-    mTransformCBuffer->Init();
 
 #endif // _DEBUG
 

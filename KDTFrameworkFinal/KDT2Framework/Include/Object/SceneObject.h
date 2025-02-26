@@ -78,10 +78,11 @@ public:
 
 public:
 	template <typename T>
-	T* CreateComponent()
+	T* CreateComponent(const std::string& Name = "Component")
 	{
 		T* Component = new T;
 
+		Component->SetName(Name);
 		Component->mScene = mScene;
 		Component->mOwnerObject = this;
 
@@ -100,6 +101,40 @@ public:
 			mSceneComponentList.emplace_back(Component);
 
 		return Component;
+	}
+
+	template <typename T>
+	T* FindNonSceneComponent()
+	{
+		auto	iter = mNonComponentList.begin();
+		auto	iterEnd = mNonComponentList.end();
+
+		for (; iter != iterEnd; ++iter)
+		{
+			T* Com = dynamic_cast<T*>((*iter).Get());
+
+			if (Com)
+				return Com;
+		}
+
+		return nullptr;
+	}
+
+	template <typename T>
+	T* FindSceneComponent()
+	{
+		auto	iter = mSceneComponentList.begin();
+		auto	iterEnd = mSceneComponentList.end();
+
+		for (; iter != iterEnd; ++iter)
+		{
+			T* Com = dynamic_cast<T*>((*iter).Get());
+
+			if (Com)
+				return Com;
+		}
+
+		return nullptr;
 	}
 
 

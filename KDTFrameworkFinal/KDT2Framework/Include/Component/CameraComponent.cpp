@@ -20,6 +20,10 @@ CCameraComponent::~CCameraComponent()
 {
 }
 
+/// <summary>
+/// 투영 타입 설정
+/// </summary>
+/// <param name="Type"></param>
 void CCameraComponent::SetProjectionType(
     ECameraProjectionType Type)
 {
@@ -27,6 +31,8 @@ void CCameraComponent::SetProjectionType(
 
     switch (mProjType)
     {
+        // 원근 투영방식 :
+        //  DirectX 왼손 좌표계 방식으로
     case ECameraProjectionType::Perspective:
         mmatProj = DirectX::XMMatrixPerspectiveFovLH(
             DirectX::XMConvertToRadians(mViewAngle),
@@ -45,6 +51,7 @@ void CCameraComponent::SetProjectionType(
 
 bool CCameraComponent::Init()
 {
+    // 씬 컴포넌트 초기화 체크
     if (!CSceneComponent::Init())
         return false;
 

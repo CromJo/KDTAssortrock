@@ -22,6 +22,12 @@
 #include "../Component/WidgetComponent.h"
 #include "../Scene/SceneUIManager.h"
 #include "../UI/Common/ProgressBar.h"
+#include "../UI/UserWidget/HeadInfo.h"
+#include "../Component/InventoryComponent.h"
+#include "../Scene/SceneAssetManager.h"
+#include "../Asset/AssetManager.h"
+#include "../Asset/Texture/Texture.h"
+#include "../Asset/Texture/TextureManager.h"
 
 CPlayerObject::CPlayerObject()
 {
@@ -44,7 +50,7 @@ CPlayerObject::~CPlayerObject()
 bool CPlayerObject::Init()
 {
     //mRoot = CreateComponent<CStaticMeshComponent>();
-    mRoot = CreateComponent<CSpriteComponent>();
+    mRoot = CreateComponent<CSpriteComponent>("Player");
     //mBody = CreateComponent<CColliderAABB2D>();
     //mBody = CreateComponent<CColliderSphere2D>();
     mBody = CreateComponent<CColliderOBB2D>();
@@ -55,28 +61,32 @@ bool CPlayerObject::Init()
     mCamera = CreateComponent<CCameraComponent>();
     mHPBar = CreateComponent<CWidgetComponent>();
 
-    mHPBar->SetRelativePos(0.f, 100.f);
+    mHPBar->SetRelativePos(-50.f, 50.f);
 
-    CProgressBar* HPBar = mScene->GetUIManager()->CreateWidget<CProgressBar>("HPBar");
+    //CProgressBar* HPBar = mScene->GetUIManager()->CreateWidget<CProgressBar>("HPBar");
 
-    //HPBar->SetPos(0.f, 100.f);
-    //HPBar->SetSize(50.f, 200.f);
-    HPBar->SetSize(200.f, 50.f);
-    HPBar->SetTint(EProgressBarImageType::Back, 0.3f, 0.3f, 0.3f);
-    //HPBar->SetOpacity(EProgressBarImageType::Fill, 0.4f);
-    HPBar->SetTexture(EProgressBarImageType::Fill, "HPBar",
-        TEXT("Texture\\HPBar.png"));
-    //HPBar->SetBarDir(EProgressBarDir::TopToBottom);
+    ////HPBar->SetPos(0.f, 100.f);
+    ////HPBar->SetSize(50.f, 200.f);
+    //HPBar->SetSize(200.f, 50.f);
+    //HPBar->SetTint(EProgressBarImageType::Back, 0.3f, 0.3f, 0.3f);
+    ////HPBar->SetOpacity(EProgressBarImageType::Fill, 0.4f);
+    //HPBar->SetTexture(EProgressBarImageType::Fill, "HPBar",
+    //    TEXT("Texture\\HPBar.png"));
+    ////HPBar->SetBarDir(EProgressBarDir::TopToBottom);
 
-    HPBar->SetPercent(0.7f);
+    //HPBar->SetPercent(0.7f);
 
-    mHPBar->SetWidget(HPBar);
+    //mHPBar->SetWidget(HPBar);
+    CHeadInfo* HeadInfo = mScene->GetUIManager()->CreateWidget<CHeadInfo>("HeadInfo");
+
+    mHPBar->SetWidget(HeadInfo);
 
     mRoot->AddChild(mHPBar);
 
 
     mMovement = CreateComponent<CMovementComponent>();
     mRotation = CreateComponent<CRotationComponent>();
+    mInventory = CreateComponent<CInventoryComponent>();
 
     mRoot->SetTexture("Teemo", TEXT("Texture/teemo.png"));
     mRoot->SetPivot(0.5f, 0.5f);
@@ -244,6 +254,62 @@ void CPlayerObject::Update(float DeltaTime)
 
     if (mMovement->GetVelocityLength() == 0.f && mAutoBasePose)
         mAnimation->ChangeAnimation("PlayerIdle");
+
+    static bool ItemTest = false;
+
+    if (GetAsyncKeyState(VK_RETURN) & 0x8000)
+    {
+        ItemTest = true;
+    }
+
+    else if (ItemTest)
+    {
+        ItemTest = false;
+        std::string NameArray[2] =
+        {
+            "IconSword",
+            "IconShield"
+        };
+
+        int RandIndex = rand() % 2;
+
+        FItemData* Data = new FItemData;
+
+        Data->Name = NameArray[RandIndex];
+
+        if (RandIndex == 0)
+            Data->Type = EItemType::Weapon;
+
+        else if (RandIndex == 1)
+            Data->Type = EItemType::Armor;
+
+        if (mScene)
+            Data->Icon = mScene->GetAssetManager()->FindTexture(NameArray[RandIndex]);
+
+        else
+            Data->Icon = CAssetManager::GetInst()->GetTextureManager()->FindTexture(NameArray[RandIndex]);
+
+        mInventory->AddItem(Data);
+    }
+
+    static bool ItemTest1 = false;
+
+    if (GetAsyncKeyState('0') & 0x8000)
+    {
+        ItemTest1 = true;
+    }
+
+    else if (ItemTest1)
+    {
+        ItemTest1 = false;
+
+        mInventory->RemoveItem(rand() % 10);
+    }
+}
+
+void CPlayerObject::Render()
+{
+    CSceneObject::Render();
 }
 
 void CPlayerObject::Damage(int Dmg)

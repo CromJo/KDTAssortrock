@@ -49,6 +49,9 @@ CGameManager::~CGameManager()
 
 bool CGameManager::Init(HINSTANCE hInst)
 {
+    srand(GetTickCount());
+    rand();
+
 	mhInst = hInst;
 
 	lstrcpy(mClassName, TEXT("KDT2Framework"));
@@ -74,16 +77,16 @@ bool CGameManager::Init(HINSTANCE hInst)
     if (!CShaderManager::GetInst()->Init())
         return false;
 
-    // Render 관리자 초기화
-    if (!CRenderManager::GetInst()->Init())
-        return false;
-
     // 애셋 관리자 초기화
     if (!CAssetManager::GetInst()->Init())
         return false;
 
     // Profile 관리자 초기화
     if (!CProfileManager::GetInst()->Init())
+        return false;
+
+    // Render 관리자 초기화
+    if (!CRenderManager::GetInst()->Init())
         return false;
 
     // 타이머 초기화
@@ -134,7 +137,8 @@ void CGameManager::Logic()
 
     Input(DeltaTime);
 
-    Update(DeltaTime);
+    if (Update(DeltaTime))
+        return;
 
     Collision(DeltaTime);
 
@@ -148,7 +152,7 @@ void CGameManager::Input(float DeltaTime)
     CSceneManager::GetInst()->Input(DeltaTime);
 }
 
-void CGameManager::Update(float DeltaTime)
+bool CGameManager::Update(float DeltaTime)
 {
     //CLog::PrintLog("Update");
 
@@ -165,8 +169,9 @@ void CGameManager::Update(float DeltaTime)
         CLog::SaveLog();
     }
 
+    CRenderManager::GetInst()->Update(DeltaTime);
 
-    CSceneManager::GetInst()->Update(DeltaTime);
+    return CSceneManager::GetInst()->Update(DeltaTime);
 }
 
 void CGameManager::Collision(float DeltaTime)

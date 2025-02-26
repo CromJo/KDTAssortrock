@@ -18,8 +18,20 @@ protected:
 	CSceneComponent* mParent = nullptr;
 	EComponentRender	mRenderType = EComponentRender::None;
 	std::vector<CSharedPtr<CSceneComponent>>	mChildList;
+	std::string			mRenderLayerName;
 
 public:
+	const std::string& GetRenderLayerName()	const
+	{
+		return mRenderLayerName;
+	}
+
+public:
+	void SetRenderLayerName(const std::string& Name)
+	{
+		mRenderLayerName = Name;
+	}
+
 	void AddChild(CSceneComponent* Child);
 
 public:
@@ -37,7 +49,7 @@ public:
 	virtual void EndFrame();
 
 protected:
-	class CTransformCBuffer* mTransformCBuffer;
+	class CTransformCBuffer* mTransformCBuffer = nullptr;
 	FVector3D	mRelativeScale = FVector3D(1.f, 1.f, 1.f);
 	FVector3D	mRelativeRot;
 	FVector3D	mRelativePos;

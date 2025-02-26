@@ -4,6 +4,7 @@
 #include <list>
 #include <vector>
 #include <unordered_map>
+#include <map>
 #include <crtdbg.h>
 #include <string>
 #include <functional>
@@ -300,4 +301,35 @@ struct FAnimationFrame
 {
 	FVector2D   Start;
 	FVector2D   Size;
+};
+
+enum class EItemType : unsigned char
+{
+	Weapon,
+	Armor,
+	Consume,
+	Other
+};
+
+struct FItemData
+{
+	std::string		Name;
+	EItemType		Type;
+	CSharedPtr<class CTexture>	Icon;
+};
+
+enum class ETileShape
+{
+	Rect,
+	Isometric,
+	End
+};
+
+enum class ETileType
+{
+	None = -2,
+	MouseOver,
+	Normal,
+	UnableToMove,
+	End
 };

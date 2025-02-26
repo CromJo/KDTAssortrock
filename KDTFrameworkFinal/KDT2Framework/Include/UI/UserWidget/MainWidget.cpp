@@ -5,6 +5,7 @@
 #include "../../Scene/Scene.h"
 #include "../../Scene/SceneUIManager.h"
 #include "../../Device.h"
+#include "Inventory.h"
 
 CMainWidget::CMainWidget()
 {
@@ -19,6 +20,13 @@ bool CMainWidget::Init()
     CUserWidget::Init();
 
     FResolution RS = CDevice::GetInst()->GetResolution();
+
+    mInventory = mScene->GetUIManager()->CreateWidget<CInventory>("Inventory");
+
+    mInventory->SetZOrder(10);
+    mInventory->SetPos(100.f, 100.f);
+
+    AddWidget(mInventory);
 
     CSharedPtr<CButton>    Button = mScene->GetUIManager()->CreateWidget<CButton>("TestButton");
 
@@ -41,12 +49,15 @@ bool CMainWidget::Init()
     Button->SetSound(EButtonEventState::Click, "ButtonClick",
         "Sound\\TeemoStartClicck.mp3");
 
+    Button->SetEventCallback<CMainWidget>(EButtonEventState::Click,
+        this, &CMainWidget::InventoryButton);
+
     AddWidget(Button);
 
     CSharedPtr<CTextBlock>    Text = 
         mScene->GetUIManager()->CreateWidget<CTextBlock>("TestButtonText");
 
-    Text->SetText(TEXT("Button"));
+    Text->SetText(TEXT("Buttonspkjghlwkehrolih"));
     Text->SetTextColor(255, 0, 0, 255);
     //Text->SetPos(100.f, 100.f);
     //Text->SetSize(100.f, 100.f);
@@ -84,4 +95,13 @@ void CMainWidget::Update(float DeltaTime)
 void CMainWidget::Render()
 {
     CUserWidget::Render();
+}
+
+void CMainWidget::InventoryButton()
+{
+    if (mInventory->IsEnable())
+        mInventory->SetEnable(false);
+
+    else
+        mInventory->SetEnable(true);
 }

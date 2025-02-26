@@ -6,6 +6,7 @@
 #include "../Device.h"
 #include "SpriteShader.h"
 #include "UIShader.h"
+#include "TileMapShader.h"
 
 DEFINITION_SINGLE(CShaderManager)
 
@@ -35,6 +36,8 @@ bool CShaderManager::Init()
 	CreateShader<CSpriteShader>("SpriteShader");
 
 	CreateShader<CUIShader>("UIShader");
+
+	CreateShader<CTileMapShader>("TileMapShader");
 
 
 
@@ -176,11 +179,13 @@ bool CShaderManager::CreateConstantBuffer(
 CConstantBuffer* CShaderManager::FindCBuffer(
 	const std::string& Name)
 {
+	// unordered 키값 찾기
 	auto iter = mCBufferMap.find(Name);
-
+	// 키값 없으면 null
 	if (iter == mCBufferMap.end())
 		return nullptr;
 
+	// unordered값 반환
 	return iter->second;
 }
 

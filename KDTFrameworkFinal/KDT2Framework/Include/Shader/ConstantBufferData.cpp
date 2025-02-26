@@ -21,6 +21,10 @@ CConstantBufferData::~CConstantBufferData()
 {
 }
 
+/// <summary>
+/// Ω¶¿Ã¥ı
+/// </summary>
+/// <param name="Name"></param>
 void CConstantBufferData::SetConstantBuffer(
 	const std::string& Name)
 {

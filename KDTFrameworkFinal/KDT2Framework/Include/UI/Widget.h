@@ -85,15 +85,26 @@ public:
 	}
 
 public:
-	void SetPos(const FVector2D& Pos)
+	virtual void SetPos(const FVector2D& Pos)
 	{
 		mPos = Pos;
 	}
 
-	void SetPos(float x, float y)
+	virtual void SetPos(float x, float y)
 	{
 		mPos.x = x;
 		mPos.y = y;
+	}
+
+	void AddPos(const FVector2D& Pos)
+	{
+		mPos += Pos;
+	}
+
+	void AddPos(float x, float y)
+	{
+		mPos.x += x;
+		mPos.y += y;
 	}
 
 	void SetRenderPos(const FVector2D& Pos)

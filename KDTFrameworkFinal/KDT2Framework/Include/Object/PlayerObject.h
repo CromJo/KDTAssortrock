@@ -34,6 +34,7 @@ protected:
 
     CSharedPtr<class CMovementComponent>    mMovement;
     CSharedPtr<class CRotationComponent>    mRotation;
+    CSharedPtr<class CInventoryComponent>    mInventory;
 
     CSharedPtr<class CBulletObject> mSkill1Object;
 
@@ -60,6 +61,7 @@ protected:
 public:
     virtual bool Init();
     virtual void Update(float DeltaTime);
+    virtual void Render();
     virtual void Damage(int Dmg);
     virtual float Damage(float Attack, CSceneObject* Obj);
 

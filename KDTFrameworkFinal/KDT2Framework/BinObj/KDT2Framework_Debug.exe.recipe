@@ -12,6 +12,15 @@
     <ContentFile>
       <FullPath>C:\Users\assort_c5\Desktop\ClassMaterials\KDT2Framework\Bin\Mesh.cso</FullPath>
     </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\assort_c5\Desktop\ClassMaterials\KDT2Framework\Bin\Sprite.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\assort_c5\Desktop\ClassMaterials\KDT2Framework\Bin\TileMap.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\assort_c5\Desktop\ClassMaterials\KDT2Framework\Bin\UI.cso</FullPath>
+    </ContentFile>
   </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />

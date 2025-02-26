@@ -34,10 +34,11 @@ void CWidget::SetShader(CShader* Shader)
 bool CWidget::Init()
 {
     SetShader("UIShader");
-
+    
+    // 씬이 존재하면, 씬의 메쉬 찾기
     if (mScene)
         mMesh = mScene->GetAssetManager()->FindMesh("SpriteRect");
-
+    // 씬이 존재하지 않으면, 기본 메쉬 찾기
     else
         mMesh = CAssetManager::GetInst()->GetMeshManager()->FindMesh("SpriteRect");
 
@@ -56,15 +57,19 @@ void CWidget::Update(float DeltaTime)
 {
 }
 
+// 출력
 void CWidget::Render()
 {
+    // 상위 객체가 있으면
     if (mParent)
     {
+        // 출력위치 = 상위객체위치 + 내 위치
         mRenderPos = mParent->GetRenderPos() + mPos;
     }
-
+    // 상위 객체가 없으면
     else
     {
+        // 출력위치 = 내 위치
         mRenderPos = mPos;
     }
 }
@@ -80,16 +85,30 @@ void CWidget::Render(const FVector3D& Pos)
     {
         mRenderPos = mPos;
     }
+
 }
 
+// 마우스 인터렉션 기능
 bool CWidget::CollisionMouse(CWidget** Result, const FVector2D& MousePos)
 {
+    if (mParent)
+    {
+        mRenderPos = mParent->GetRenderPos() + mPos;
+    }
+
+    else
+    {
+        mRenderPos = mPos;
+    }
+
+    // 회전된 값이 완전 정방향이라면
     if (mRotation == 0.f || mRotation == 360.f)
     {
         // 사각형 정보를 만든다.
-        FVector2D   Min = mPos - mSize * mPivot;
+        FVector2D   Min = mRenderPos - mSize * mPivot;
         FVector2D   Max = Min + mSize;
 
+        // 상자의 왼쪽 끝보다 더 왼쪽일경우
         if (MousePos.x < Min.x)
         {
             if (mMouseOn)
@@ -100,7 +119,7 @@ bool CWidget::CollisionMouse(CWidget** Result, const FVector2D& MousePos)
 
             return false;
         }
-
+        // 상자의 오른쪽 끝보다 더 오른쪽일 경우
         else if (MousePos.x > Max.x)
         {
             if (mMouseOn)
@@ -111,7 +130,7 @@ bool CWidget::CollisionMouse(CWidget** Result, const FVector2D& MousePos)
 
             return false;
         }
-
+        // 상자의 아래보다 더 아래일 경우
         else if (MousePos.y < Min.y)
         {
             if (mMouseOn)
@@ -122,7 +141,7 @@ bool CWidget::CollisionMouse(CWidget** Result, const FVector2D& MousePos)
 
             return false;
         }
-
+        // 상자의 위보다 더 위일 경우
         else if (MousePos.y > Max.y)
         {
             if (mMouseOn)
@@ -134,6 +153,10 @@ bool CWidget::CollisionMouse(CWidget** Result, const FVector2D& MousePos)
             return false;
         }
 
+        // 위조건들이 다 만족하지 않는다면,
+        // 상자안에 마우스가 들어왔음을 암시한다.
+
+        // 결과
         *Result = this;
         mMouseOn = true;
         MouseHovered();
@@ -145,7 +168,7 @@ bool CWidget::CollisionMouse(CWidget** Result, const FVector2D& MousePos)
     FVector3D   OriginAxis[2];
     FVector2D   Axis[2];
     FVector2D   HalfSize = mSize * 0.5f;
-    FVector2D   Center = mPos - mSize * mPivot + HalfSize;
+    FVector2D   Center = mRenderPos - mSize * mPivot + HalfSize;
 
     FMatrix matRot;
     matRot.RotationZ(mRotation);

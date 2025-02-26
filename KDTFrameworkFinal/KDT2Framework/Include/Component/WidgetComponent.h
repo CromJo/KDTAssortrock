@@ -6,6 +6,7 @@
 class CWidgetComponent :
     public CSceneComponent
 {
+	// 위젯 컴포넌트 추가 데이터 사용가능
 	friend class CScene;
 	friend class CSceneObject;
 
@@ -16,7 +17,7 @@ protected:
 	virtual ~CWidgetComponent();
 
 protected:
-	CSharedPtr<CWidget>	mWidget;
+	CSharedPtr<CWidget>	mWidget;	
 
 public:
 	void SetWidget(CWidget* Widget)
