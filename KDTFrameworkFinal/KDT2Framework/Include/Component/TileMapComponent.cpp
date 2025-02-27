@@ -9,9 +9,11 @@
 #include "../Asset/Mesh/Mesh.h"
 #include "../Shader/ColliderCBuffer.h"
 #include "../Shader/TransformCBuffer.h"
+#include "../Shader/TileMapCBuffer.h"
 #include "../Shader/Shader.h"
 #include "../Shader/ShaderManager.h"
 #include "../Device.h"
+#include "../Asset/Texture/Texture.h"
 
 CTileMapComponent::CTileMapComponent()
 {
@@ -36,6 +38,7 @@ CTileMapComponent::~CTileMapComponent()
         SAFE_DELETE(mTileList[i]);
     }
 
+    SAFE_DELETE(mTileMapCBuffer);
     SAFE_DELETE(mColorCBuffer);
     SAFE_DELETE(mLineTransformCBuffer);
 }
@@ -62,137 +65,289 @@ void CTileMapComponent::SetTileOutLineRender(bool Render)
     }
 }
 
+void CTileMapComponent::SetTileTexture(
+    const std::string& Name)
+{
+    CTileMapRendererComponent* Renderer =
+        mOwnerObject->FindSceneComponent<CTileMapRendererComponent>();
+
+    if (Renderer)
+        Renderer->SetTileTexture(Name);
+}
+
+void CTileMapComponent::SetTileTexture(
+    const std::string& Name, const TCHAR* FileName)
+{
+    CTileMapRendererComponent* Renderer =
+        mOwnerObject->FindSceneComponent<CTileMapRendererComponent>();
+
+    if (Renderer)
+        Renderer->SetTileTexture(Name, FileName);
+}
+
+void CTileMapComponent::SetTileTexture(CTexture* Texture)
+{
+    CTileMapRendererComponent* Renderer =
+        mOwnerObject->FindSceneComponent<CTileMapRendererComponent>();
+
+    if (Renderer)
+        Renderer->SetTileTexture(Texture);
+}
+
+void CTileMapComponent::AddTileTextureFrame(
+    const FVector2D& Start, const FVector2D& Size)
+{
+    FAnimationFrame Frame;
+    Frame.Start = Start;
+    Frame.Size = Size;
+
+    mTileFrameList.emplace_back(Frame);
+}
+
+void CTileMapComponent::AddTileTextureFrame(float StartX,
+    float StartY, float SizeX, float SizeY)
+{
+    FAnimationFrame Frame;
+    Frame.Start.x = StartX;
+    Frame.Start.y = StartY;
+    Frame.Size.x = SizeX;
+    Frame.Size.y = SizeY;
+
+    mTileFrameList.emplace_back(Frame);
+}
+
 int CTileMapComponent::GetTileIndexX(const FVector3D& Pos) const
 {
-    float Convert = Pos.x -
-        mOwnerObject->GetWorldPosition().x;
-
-    float   Value = Convert / mTileSize.x;
-
-    if (Value < 0.f)
-        return -1;
-
-    int Index = (int)Value;
-
-    return (Index < 0 || Index >= mCountX) ? -1 : Index;
+    return GetTileIndexX(FVector2D(Pos.x, Pos.y));
 }
 
 int CTileMapComponent::GetTileIndexX(const FVector2D& Pos) const
 {
-    float Convert = Pos.x -
-        mOwnerObject->GetWorldPosition().x;
+    switch (mTileShape)
+    {
+    case ETileShape::Rect:
+    {
+        float Convert = Pos.x -
+            mOwnerObject->GetWorldPosition().x;
 
-    float   Value = Convert / mTileSize.x;
+        float   Value = Convert / mTileSize.x;
 
-    if (Value < 0.f)
-        return -1;
+        if (Value < 0.f)
+            return -1;
 
-    int Index = (int)Value;
+        int Index = (int)Value;
 
-    return (Index < 0 || Index >= mCountX) ? -1 : Index;
-}
+        return (Index < 0 || Index >= mCountX) ? -1 : Index;
+    }
+    case ETileShape::Isometric:
+    {
+        FVector2D   ConvertPos;
+        ConvertPos.x = Pos.x -
+            mOwnerObject->GetWorldPosition().x;
+        ConvertPos.y = Pos.y -
+            mOwnerObject->GetWorldPosition().y;
 
-int CTileMapComponent::GetTileIndexX(float x) const
-{
-    float Convert = x - mOwnerObject->GetWorldPosition().x;
+        int IndexY = GetTileIndexY(ConvertPos);
 
-    float   Value = Convert / mTileSize.x;
+        int IndexX = -1;
 
-    if (Value < 0.f)
-        return -1;
+        if (IndexY % 2 == 0)
+        {
+            float   Value = ConvertPos.x / mTileSize.x;
 
-    int Index = (int)Value;
+            if (Value < 0.f)
+                return -1;
 
-    return (Index < 0 || Index >= mCountX) ? -1 : Index;
+            IndexX = (int)Value;
+
+            if (IndexX < 0 || IndexX >= mCountX)
+                IndexX = -1;
+        }
+
+        else
+        {
+            float   Value = (ConvertPos.x - mTileSize.x * 0.5f) /
+                mTileSize.x;
+
+            if (Value < 0.f)
+                return -1;
+
+            IndexX = (int)Value;
+
+            if (IndexX < 0 || IndexX >= mCountX)
+                IndexX = -1;
+        }
+
+        return IndexX;
+    }
+    break;
+    }
+
+    return -1;
 }
 
 int CTileMapComponent::GetTileIndexY(const FVector3D& Pos) const
 {
-    float Convert = Pos.y -
-        mOwnerObject->GetWorldPosition().y;
-
-    float   Value = Convert / mTileSize.y;
-
-    if (Value < 0.f)
-        return -1;
-
-    int Index = (int)Value;
-
-    return (Index < 0 || Index >= mCountY) ? -1 : Index;
+    return GetTileIndexY(FVector2D(Pos.x, Pos.y));
 }
 
 int CTileMapComponent::GetTileIndexY(const FVector2D& Pos) const
 {
-    float Convert = Pos.y -
-        mOwnerObject->GetWorldPosition().y;
+    switch (mTileShape)
+    {
+    case ETileShape::Rect:
+    {
+        float Convert = Pos.y -
+            mOwnerObject->GetWorldPosition().y;
 
-    float   Value = Convert / mTileSize.y;
+        float   Value = Convert / mTileSize.y;
 
-    if (Value < 0.f)
-        return -1;
+        if (Value < 0.f)
+            return -1;
 
-    int Index = (int)Value;
+        int Index = (int)Value;
 
-    return (Index < 0 || Index >= mCountY) ? -1 : Index;
-}
+        return (Index < 0 || Index >= mCountY) ? -1 : Index;
+    }
+    case ETileShape::Isometric:
+    {
+        FVector2D   ConvertPos;
+        ConvertPos.x = Pos.x -
+            mOwnerObject->GetWorldPosition().x;
+        ConvertPos.y = Pos.y -
+            mOwnerObject->GetWorldPosition().y;
 
-int CTileMapComponent::GetTileIndexY(float y) const
-{
-    float Convert = y - mOwnerObject->GetWorldPosition().y;
+        if (ConvertPos.x < 0 || ConvertPos.x > mMapSize.x ||
+            ConvertPos.y < 0 || ConvertPos.y > mMapSize.y)
+            return -1;
 
-    float   Value = Convert / mTileSize.y;
+        float   RatioX = ConvertPos.x / mTileSize.x;
+        float   RatioY = ConvertPos.y / mTileSize.y;
 
-    if (Value < 0.f)
-        return -1;
+        // 정수 부분만 뺀다.
+        int IndexX = (int)RatioX;
+        int IndexY = (int)RatioY;
 
-    int Index = (int)Value;
+        // 전체 영역의 왼쪽으로 빠져나왔을 경우
+        /*if (IndexX < 0 || IndexX > mCountX)
+            return -1;
 
-    return (Index < 0 || Index >= mCountY) ? -1 : Index;
+        else if (IndexY < 0 || IndexY > mCountY)
+            return -1;*/
+
+        // 소수점 부분만 남긴다.
+        RatioX -= IndexX;
+        RatioY -= IndexY;
+
+        // 사각 영역의 하단에 존재할 경우
+        if (RatioY < 0.5f)
+        {
+            // 사각영역 기준으로 왼쪽 하단 사각형의
+            // 왼쪽 하단 삼각형일 경우
+            if (RatioY < 0.5f - RatioX)
+            {
+                if (IndexY == 0)
+                    return -1;
+
+                else if (IndexX == 0)
+                    return -1;
+
+                else
+                    return IndexY * 2 - 1;
+            }
+
+            // 오른쪽 하단 사각영역의
+            // 오른쪽 하단 삼각형일 경우
+            else if (RatioY < RatioX - 0.5f)
+            {
+                if (IndexY == 0)
+                    return -1;
+
+                else
+                    return IndexY * 2 - 1;
+            }
+
+            else
+                return IndexY * 2;
+        }
+
+        // 사각 영역의 상단에 존재할 경우
+        else if (RatioY > 0.5f)
+        {
+            // 왼쪽 상단 사각영역의
+            // 왼쪽 상단 삼각형일 경우
+            if (RatioY - 0.5f > RatioX)
+            {
+                // 가장 왼쪽 마름모는 왼쪽 상단이 없다.
+                if (IndexX == 0)
+                    return -1;
+
+                // 가장 위쪽 마름모는 왼쪽 상단이 없다.
+                else if (IndexY * 2 + 1 >= mCountY)
+                    return -1;
+
+                else
+                    return IndexY * 2 + 1;
+            }
+
+            // 오른쪽 상단 사각형의
+            // 오른쪽 상단 삼각형일 경우
+            else if (RatioY - 0.5f > 1.f - RatioX)
+            {
+                if (IndexX >= mCountX)
+                    return -1;
+
+                else if (IndexY * 2 + 1 >= mCountY)
+                    return -1;
+
+                else
+                    return IndexY * 2 + 1;
+            }
+
+            else
+                return IndexY * 2;
+        }
+
+        // 가운데 영역에 존재할 경우
+        else
+        {
+            return IndexY * 2;
+        }
+    }
+    }
+
+    return -1;
 }
 
 int CTileMapComponent::GetTileIndex(const FVector3D& Pos) const
 {
-    int IndexX = GetTileIndexX(Pos.x);
-
-    if (IndexX == -1)
-        return -1;
-
-    int IndexY = GetTileIndexY(Pos.y);
-
-    if (IndexY == -1)
-        return -1;
-
-    return IndexY * mCountX + IndexX;
+    return GetTileIndex(FVector2D(Pos.x, Pos.y));
 }
 
 int CTileMapComponent::GetTileIndex(const FVector2D& Pos) const
 {
-    int IndexX = GetTileIndexX(Pos.x);
+    int IndexX = GetTileIndexX(Pos);
 
     if (IndexX == -1)
         return -1;
 
-    int IndexY = GetTileIndexY(Pos.y);
+    if (IndexX < -1)
+        int a = 0;
+
+    int IndexY = GetTileIndexY(Pos);
 
     if (IndexY == -1)
         return -1;
+
+    if (IndexY < -1)
+        int a = 0;
 
     return IndexY * mCountX + IndexX;
 }
 
 int CTileMapComponent::GetTileIndex(float x, float y) const
 {
-    int IndexX = GetTileIndexX(x);
-
-    if (IndexX == -1)
-        return -1;
-
-    int IndexY = GetTileIndexY(y);
-
-    if (IndexY == -1)
-        return -1;
-
-    return IndexY * mCountX + IndexX;
+    return GetTileIndex(FVector2D(x, y));
 }
 
 const CTile* CTileMapComponent::GetTile(const FVector3D& Pos) const
@@ -217,7 +372,7 @@ const CTile* CTileMapComponent::GetTile(const FVector2D& Pos) const
 
 const CTile* CTileMapComponent::GetTile(float x, float y) const
 {
-    int Index = GetTileIndex(x, y);
+    int Index = GetTileIndex(FVector2D(x, y));
 
     if (Index == -1)
         return nullptr;
@@ -280,6 +435,269 @@ ETileType CTileMapComponent::ChangeTileType(ETileType Type,
     return PrevType;
 }
 
+void CTileMapComponent::ChangeTileFrame(int Frame, 
+    const FVector3D& Pos)
+{
+    int Index = GetTileIndex(Pos);
+
+    if (Index == -1)
+        return;
+
+    mTileList[Index]->SetTextureFrame(Frame);
+}
+
+void CTileMapComponent::ChangeTileFrame(int Frame, 
+    const FVector2D& Pos)
+{
+    int Index = GetTileIndex(Pos);
+
+    if (Index == -1)
+        return;
+
+    mTileList[Index]->SetTextureFrame(Frame);
+}
+
+void CTileMapComponent::ChangeTileFrame(int Frame, 
+    float x, float y)
+{
+    int Index = GetTileIndex(x, y);
+
+    if (Index == -1)
+        return;
+
+    mTileList[Index]->SetTextureFrame(Frame);
+}
+
+void CTileMapComponent::ChangeTileFrame(int Frame, int Index)
+{
+    if (Index == -1)
+        return;
+
+    mTileList[Index]->SetTextureFrame(Frame);
+}
+
+int CTileMapComponent::GetTileRenderIndexX(
+    const FVector2D& Pos) const
+{
+    switch (mTileShape)
+    {
+    case ETileShape::Rect:
+    {
+        float Convert = Pos.x -
+            mOwnerObject->GetWorldPosition().x;
+
+        float   Value = Convert / mTileSize.x;
+
+        if (Value < 0.f)
+            return 0;
+
+        int Index = (int)Value;
+
+        if (Index < 0)
+            return 0;
+
+        else if (Index >= mCountX)
+            return mCountX - 1;
+
+        return Index;
+    }
+    case ETileShape::Isometric:
+    {
+        FVector2D   ConvertPos;
+        ConvertPos.x = Pos.x -
+            mOwnerObject->GetWorldPosition().x;
+        ConvertPos.y = Pos.y -
+            mOwnerObject->GetWorldPosition().y;
+
+        int IndexY = GetTileRenderIndexY(ConvertPos);
+
+        int IndexX = -1;
+
+        if (IndexY % 2 == 0)
+        {
+            float   Value = ConvertPos.x / mTileSize.x;
+
+            if (Value < 0.f)
+                return 0;
+
+            IndexX = (int)Value;
+
+            if (IndexX < 0)
+                return 0;
+
+            else if (IndexX >= mCountX)
+                return mCountX - 1;
+        }
+
+        else
+        {
+            float   Value = (ConvertPos.x - mTileSize.x * 0.5f) /
+                mTileSize.x;
+
+            if (Value < 0.f)
+                return 0;
+
+            IndexX = (int)Value;
+
+            if (IndexX < 0)
+                return 0;
+
+            else if (IndexX >= mCountX)
+                return mCountX - 1;
+        }
+
+        return IndexX;
+    }
+    break;
+    }
+
+    return -1;
+}
+
+int CTileMapComponent::GetTileRenderIndexY(
+    const FVector2D& Pos) const
+{
+    switch (mTileShape)
+    {
+    case ETileShape::Rect:
+    {
+        float Convert = Pos.y -
+            mOwnerObject->GetWorldPosition().y;
+
+        float   Value = Convert / mTileSize.y;
+
+        if (Value < 0.f)
+            return 0;
+
+        int Index = (int)Value;
+
+        if (Index < 0)
+            return 0;
+
+        else if (Index >= mCountY)
+            return mCountY - 1;
+
+        return Index;
+    }
+    case ETileShape::Isometric:
+    {
+        FVector2D   ConvertPos;
+        ConvertPos.x = Pos.x -
+            mOwnerObject->GetWorldPosition().x;
+        ConvertPos.y = Pos.y -
+            mOwnerObject->GetWorldPosition().y;
+
+        float   RatioX = ConvertPos.x / mTileSize.x;
+        float   RatioY = ConvertPos.y / mTileSize.y;
+
+        // 정수 부분만 뺀다.
+        int IndexX = (int)RatioX;
+        int IndexY = (int)RatioY;
+
+        // 전체 영역의 왼쪽으로 빠져나왔을 경우
+        if (IndexX < 0)
+            IndexX = 0;
+        
+        else if(IndexX > mCountX)
+            IndexX = mCountX - 1;
+
+        // 소수점 부분만 남긴다.
+        RatioX -= IndexX;
+        RatioY -= IndexY;
+
+        // 사각 영역의 하단에 존재할 경우
+        if (RatioY < 0.5f)
+        {
+            // 사각영역 기준으로 왼쪽 하단 사각형의
+            // 왼쪽 하단 삼각형일 경우
+            if (RatioY < 0.5f - RatioX)
+            {
+                if (IndexY == 0)
+                    return 0;
+
+                else if (IndexX == 0)
+                {
+                    if (IndexY < 0)
+                        return 0;
+
+                    else if (IndexY >= mCountY)
+                        return mCountY - 1;
+                }
+
+                return IndexY * 2 - 1;
+            }
+
+            // 오른쪽 하단 사각영역의
+            // 오른쪽 하단 삼각형일 경우
+            else if (RatioY < RatioX - 0.5f)
+            {
+                if (IndexY == 0)
+                    return -1;
+
+                else
+                    return IndexY * 2 - 1;
+            }
+
+            return IndexY * 2;
+        }
+
+        // 사각 영역의 상단에 존재할 경우
+        else if (RatioY > 0.5f)
+        {
+            // 왼쪽 상단 사각영역의
+            // 왼쪽 상단 삼각형일 경우
+            if (RatioY - 0.5f > RatioX)
+            {
+                // 가장 왼쪽 마름모는 왼쪽 상단이 없다.
+                if (IndexX == 0)
+                {
+                    if (IndexY < 0)
+                        return 0;
+
+                    else if (IndexY >= mCountY)
+                        return mCountY - 1;
+                }
+
+                // 가장 위쪽 마름모는 왼쪽 상단이 없다.
+                else if (IndexY * 2 + 1 >= mCountY)
+                    return mCountY - 1;
+
+                return IndexY * 2 + 1;
+            }
+
+            // 오른쪽 상단 사각형의
+            // 오른쪽 상단 삼각형일 경우
+            else if (RatioY - 0.5f > 1.f - RatioX)
+            {
+                if (IndexX >= mCountX)
+                {
+                    if (IndexY < 0)
+                        return 0;
+
+                    else if (IndexY >= mCountY)
+                        return mCountY - 1;
+                }
+
+                else if (IndexY * 2 + 1 >= mCountY)
+                    return mCountY - 1;
+
+                return IndexY * 2 + 1;
+            }
+
+            return IndexY * 2;
+        }
+
+        // 가운데 영역에 존재할 경우
+        else
+        {
+            return IndexY * 2;
+        }
+    }
+    }
+
+    return -1;
+}
+
 bool CTileMapComponent::Init()
 {
     CComponent::Init();
@@ -297,6 +715,19 @@ bool CTileMapComponent::Init()
     mColorCBuffer = new CColliderCBuffer;
 
     mColorCBuffer->Init();
+
+    mTileMapCBuffer = new CTileMapCBuffer;
+
+    mTileMapCBuffer->Init();
+
+
+    mTileShader = CShaderManager::GetInst()->FindShader("TileShader");
+
+    if (mScene)
+        mTileMesh = mScene->GetAssetManager()->FindMesh("SpriteRect");
+
+    else
+        mTileMesh = CAssetManager::GetInst()->GetMeshManager()->FindMesh("SpriteRect");
 
     return true;
 }
@@ -319,6 +750,19 @@ bool CTileMapComponent::Init(const char* FileName)
 
     mColorCBuffer->Init();
 
+    mTileMapCBuffer = new CTileMapCBuffer;
+
+    mTileMapCBuffer->Init();
+
+
+    mTileShader = CShaderManager::GetInst()->FindShader("TileShader");
+
+    if (mScene)
+        mTileMesh = mScene->GetAssetManager()->FindMesh("SpriteRect");
+
+    else
+        mTileMesh = CAssetManager::GetInst()->GetMeshManager()->FindMesh("SpriteRect");
+
     return true;
 }
 
@@ -339,11 +783,32 @@ void CTileMapComponent::Update(float DeltaTime)
 
     FResolution RS = CDevice::GetInst()->GetResolution();
 
-    mViewStartX = (int)((Center.x - RS.Width * 0.5f) / mTileSize.x);
-    mViewStartY = (int)((Center.y - RS.Height * 0.5f) / mTileSize.y);
+    switch (mTileShape)
+    {
+    case ETileShape::Rect:
+        mViewStartX = (int)((Center.x - RS.Width * 0.5f) / mTileSize.x);
+        mViewStartY = (int)((Center.y - RS.Height * 0.5f) / mTileSize.y);
 
-    mViewEndX = (int)((Center.x + RS.Width * 0.5f) / mTileSize.x);
-    mViewEndY = (int)((Center.y + RS.Height * 0.5f) / mTileSize.y);
+        mViewEndX = (int)((Center.x + RS.Width * 0.5f) / mTileSize.x);
+        mViewEndY = (int)((Center.y + RS.Height * 0.5f) / mTileSize.y);
+        break;
+    case ETileShape::Isometric:
+    {
+        FVector2D   LB, RT;
+        LB.x = Center.x - RS.Width * 0.5f;
+        LB.y = Center.y - RS.Height * 0.5f;
+
+        RT.x = Center.x + RS.Width * 0.5f;
+        RT.y = Center.y + RS.Height * 0.5f;
+
+        mViewStartX = GetTileRenderIndexX(LB);
+        mViewStartY = GetTileRenderIndexY(LB);
+
+        mViewEndX = GetTileRenderIndexX(RT);
+        mViewEndY = GetTileRenderIndexY(RT);
+    }
+        break;
+    }
 
     if (mViewStartX < 0)
         mViewStartX = 0;
@@ -387,6 +852,52 @@ void CTileMapComponent::EndFrame()
 
 void CTileMapComponent::RenderTile()
 {
+    for (int i = mViewStartY; i <= mViewEndY; ++i)
+    {
+        for (int j = mViewStartX; j <= mViewEndX; ++j)
+        {
+            int Index = i * mCountX + j;
+
+            int TileFrame = mTileList[Index]->GetTextureFrame();
+
+            if (TileFrame == -1)
+                continue;
+
+            FMatrix  matScale, matTranslate, matWorld;
+
+            matScale.Scaling(mTileList[Index]->GetSize());
+
+            FVector2D   Pos = mTileList[Index]->GetPos();
+
+            Pos.x += mOwnerObject->GetWorldPosition().x;
+            Pos.y += mOwnerObject->GetWorldPosition().y;
+
+            matTranslate.Translation(Pos);
+
+            matWorld = matScale * matTranslate;
+
+            mLineTransformCBuffer->SetWorldMatrix(matWorld);
+            mLineTransformCBuffer->SetViewMatrix(mScene->GetCameraManager()->GetViewMatrix());
+            mLineTransformCBuffer->SetProjMatrix(mScene->GetCameraManager()->GetProjMatrix());
+
+            mLineTransformCBuffer->UpdateBuffer();
+
+            FVector2D   LTUV, RBUV;
+
+            LTUV = mTileFrameList[TileFrame].Start /
+                mTileTextureSize;
+            RBUV = LTUV + mTileFrameList[TileFrame].Size /
+                mTileTextureSize;
+
+            mTileMapCBuffer->SetUV(LTUV, RBUV);
+
+            mTileMapCBuffer->UpdateBuffer();
+
+            mTileShader->SetShader();
+            
+            mTileMesh->Render();
+        }
+    }
 }
 
 void CTileMapComponent::RenderTileOutLine()
@@ -442,12 +953,38 @@ void CTileMapComponent::RenderTileOutLine()
 
 void CTileMapComponent::CreateTile(ETileShape Shape,
     int CountX, int CountY,
-    const FVector2D& TileSize)
+    const FVector2D& TileSize, int TileTextureFrame)
 {
     mTileShape = Shape;
     mCountX = CountX;
     mCountY = CountY;
     mTileSize = TileSize;
+
+    switch (mTileShape)
+    {
+    case ETileShape::Rect:
+        mMapSize.x = mTileSize.x * mCountX;
+        mMapSize.y = mTileSize.y * mCountY;
+
+        if (mScene)
+            mOutLineMesh = mScene->GetAssetManager()->FindMesh("SpriteRect");
+
+        else
+            mOutLineMesh = CAssetManager::GetInst()->GetMeshManager()->FindMesh("SpriteRect");
+        break;
+    case ETileShape::Isometric:
+        mMapSize.x = mTileSize.x * mCountX +
+            mTileSize.x * 0.5f;
+        mMapSize.y = mTileSize.y + 
+            mTileSize.y * 0.5f * (mCountY - 2);
+
+        if (mScene)
+            mOutLineMesh = mScene->GetAssetManager()->FindMesh("FrameIsometric");
+
+        else
+            mOutLineMesh = CAssetManager::GetInst()->GetMeshManager()->FindMesh("FrameIsometric");
+        break;
+    }
 
     mTileList.resize(mCountX * mCountY);
 
@@ -468,12 +1005,271 @@ void CTileMapComponent::CreateTile(ETileShape Shape,
         {
             CTile* Tile = new CTile;
 
-            Tile->mPos.x = j * mTileSize.x;
-            Tile->mPos.y = i * mTileSize.y;
+            switch (mTileShape)
+            {
+            case ETileShape::Rect:
+                Tile->mPos.x = j * mTileSize.x;
+                Tile->mPos.y = i * mTileSize.y;
+                break;
+            case ETileShape::Isometric:
+                if (i % 2 == 1)
+                {
+                    Tile->mPos.x = j * mTileSize.x +
+                        mTileSize.x * 0.5f;
+                }
+
+                else
+                    Tile->mPos.x = j * mTileSize.x;
+
+                Tile->mPos.y = i * mTileSize.y * 0.5f;
+                break;
+            }
+
             Tile->mSize = mTileSize;
             Tile->mCenter = Tile->mPos + mTileSize * 0.5f;
+            Tile->mTextureFrame = TileTextureFrame;
 
             mTileList[i * mCountX + j] = Tile;
         }
     }
+}
+
+void CTileMapComponent::Save(const TCHAR* FullPath)
+{
+    char    ConvertPath[MAX_PATH] = {};
+
+    int Count = WideCharToMultiByte(CP_ACP, 0, FullPath,
+        -1, nullptr, 0, nullptr, nullptr);
+    WideCharToMultiByte(CP_ACP, 0, FullPath, -1,
+        ConvertPath, Count, nullptr, nullptr);
+
+    // Bin\\ 폴더까지의 경로와 이후의 경로를 분리한다.
+    char    FileName[MAX_PATH] = {};
+
+    // 루트패스까지의 글자 수 얻어오기
+    int RootPathCount = (int)strlen(gRootPathMultibyte);
+    RootPathCount += (int)strlen("Asset\\Data\\");
+    int FullPathCount = (int)strlen(ConvertPath);
+
+    strcpy_s(FileName, &ConvertPath[RootPathCount]);
+
+    Save(FileName);
+}
+
+void CTileMapComponent::Save(const char* FileName)
+{
+    char	FullPath[MAX_PATH] = {};
+
+    strcpy_s(FullPath, gRootPathMultibyte);
+    strcat_s(FullPath, "Asset\\Data\\");
+    strcat_s(FullPath, FileName);
+
+    FILE* File = nullptr;
+
+    fopen_s(&File, FullPath, "wb");
+
+    if (!File)
+        return;
+
+    fwrite(&mTileShape, sizeof(ETileShape), 1, File);
+    fwrite(&mTileSize, sizeof(FVector2D), 1, File);
+    fwrite(&mCountX, sizeof(int), 1, File);
+    fwrite(&mCountY, sizeof(int), 1, File);
+
+    int FrameCount = (int)mTileFrameList.size();
+
+    fwrite(&FrameCount, sizeof(int), 1, File);
+
+    fwrite(&mTileFrameList[0], sizeof(FAnimationFrame),
+        FrameCount, File);
+
+    fwrite(&mTileTextureSize, sizeof(FVector2D), 1, File);
+
+    int TileCount = (int)mTileList.size();
+
+    for (int i = 0; i < TileCount; ++i)
+    {
+        mTileList[i]->Save(File);
+    }
+
+    CTileMapRendererComponent* Renderer =
+        mOwnerObject->FindSceneComponent<CTileMapRendererComponent>();
+
+    if (Renderer)
+    {
+        bool    TextureEnable = false;
+
+        CTexture* Texture = Renderer->GetBackTexture();
+
+        if (Texture)
+        {
+            TextureEnable = true;
+
+            fwrite(&TextureEnable, sizeof(bool), 1, File);
+
+            int NameCount = (int)Texture->GetName().length();
+
+            fwrite(&NameCount, sizeof(int), 1, File);
+
+            fwrite(Texture->GetName().c_str(), sizeof(char),
+                NameCount, File);
+
+            fwrite(Texture->GetTexture(0)->FileName,
+                sizeof(TCHAR), MAX_PATH, File);
+        }
+
+        else
+            fwrite(&TextureEnable, sizeof(bool), 1, File);
+
+        TextureEnable = false;
+        Texture = Renderer->GetTileTexture();
+
+        if (Texture)
+        {
+            TextureEnable = true;
+
+            fwrite(&TextureEnable, sizeof(bool), 1, File);
+
+            int NameCount = (int)Texture->GetName().length();
+
+            fwrite(&NameCount, sizeof(int), 1, File);
+
+            fwrite(Texture->GetName().c_str(), sizeof(char),
+                NameCount, File);
+
+            fwrite(Texture->GetTexture(0)->FileName,
+                sizeof(TCHAR), MAX_PATH, File);
+        }
+
+        else
+            fwrite(&TextureEnable, sizeof(bool), 1, File);
+
+    }
+
+    fclose(File);
+}
+
+void CTileMapComponent::Load(const TCHAR* FullPath)
+{
+    char    ConvertPath[MAX_PATH] = {};
+
+    int Count = WideCharToMultiByte(CP_ACP, 0, FullPath,
+        -1, nullptr, 0, nullptr, nullptr);
+    WideCharToMultiByte(CP_ACP, 0, FullPath, -1,
+        ConvertPath, Count, nullptr, nullptr);
+
+    // Bin\\ 폴더까지의 경로와 이후의 경로를 분리한다.
+    char    FileName[MAX_PATH] = {};
+
+    // 루트패스까지의 글자 수 얻어오기
+    int RootPathCount = (int)strlen(gRootPathMultibyte);
+    RootPathCount += (int)strlen("Asset\\Data\\");
+    int FullPathCount = (int)strlen(ConvertPath);
+
+    strcpy_s(FileName, &ConvertPath[RootPathCount]);
+
+    Load(FileName);
+}
+
+void CTileMapComponent::Load(const char* FileName)
+{
+    char	FullPath[MAX_PATH] = {};
+
+    strcpy_s(FullPath, gRootPathMultibyte);
+    strcat_s(FullPath, "Asset\\Data\\");
+    strcat_s(FullPath, FileName);
+
+    FILE* File = nullptr;
+
+    fopen_s(&File, FullPath, "rb");
+
+    if (!File)
+        return;
+
+    fread(&mTileShape, sizeof(ETileShape), 1, File);
+    fread(&mTileSize, sizeof(FVector2D), 1, File);
+    fread(&mCountX, sizeof(int), 1, File);
+    fread(&mCountY, sizeof(int), 1, File);
+
+    int FrameCount = 0;
+
+    fread(&FrameCount, sizeof(int), 1, File);
+
+    mTileFrameList.clear();
+    mTileFrameList.resize((size_t)FrameCount);
+
+    fread(&mTileFrameList[0], sizeof(FAnimationFrame),
+        FrameCount, File);
+
+    fread(&mTileTextureSize, sizeof(FVector2D), 1, File);
+
+    size_t  Size = mTileList.size();
+
+    for (size_t i = 0; i < Size; ++i)
+    {
+        SAFE_DELETE(mTileList[i]);
+    }
+
+    mTileList.clear();
+
+    int TileCount = mCountX * mCountY;
+
+    mTileList.resize((size_t)TileCount);
+
+    for (int i = 0; i < TileCount; ++i)
+    {
+        CTile* Tile = new CTile;
+
+        Tile->Load(File);
+
+        mTileList[i] = Tile;
+    }
+
+    CTileMapRendererComponent* Renderer =
+        mOwnerObject->FindSceneComponent<CTileMapRendererComponent>();
+
+    if (Renderer)
+    {
+        bool    TextureEnable = false;
+
+        fread(&TextureEnable, sizeof(bool), 1, File);
+
+        if (TextureEnable)
+        {
+            char    TexName[256] = {};
+
+            int NameCount = 0;
+
+            fread(&NameCount, sizeof(int), 1, File);
+            fread(TexName, sizeof(char), NameCount, File);
+
+            TCHAR   FileName[MAX_PATH] = {};
+
+            fread(FileName,
+                sizeof(TCHAR), MAX_PATH, File);
+
+            Renderer->SetBackTexture(TexName, FileName);
+        }
+
+        fread(&TextureEnable, sizeof(bool), 1, File);
+
+        if (TextureEnable)
+        {
+            char    TexName[256] = {};
+
+            int NameCount = 0;
+
+            fread(&NameCount, sizeof(int), 1, File);
+            fread(TexName, sizeof(char), NameCount, File);
+
+            TCHAR   FileName[MAX_PATH] = {};
+
+            fread(FileName,
+                sizeof(TCHAR), MAX_PATH, File);
+
+            Renderer->SetTileTexture(TexName, FileName);
+        }
+    }
+
+    fclose(File);
 }
