@@ -1,4 +1,4 @@
-#include "SpriteCBuffer.h"
+﻿#include "SpriteCBuffer.h"
 
 CSpriteCBuffer::CSpriteCBuffer()
 {

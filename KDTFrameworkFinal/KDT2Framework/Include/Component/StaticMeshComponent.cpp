@@ -1,4 +1,4 @@
-#include "StaticMeshComponent.h"
+﻿#include "StaticMeshComponent.h"
 #include "../Asset/Mesh/StaticMesh.h"
 #include "../Shader/Shader.h"
 #include "../Shader/ShaderManager.h"

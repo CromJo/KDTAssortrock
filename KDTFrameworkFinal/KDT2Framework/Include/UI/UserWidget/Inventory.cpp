@@ -1,4 +1,4 @@
-#include "Inventory.h"
+﻿#include "Inventory.h"
 #include "../Common/Button.h"
 #include "../Common/TextBlock.h"
 #include "../Common/TitleBar.h"

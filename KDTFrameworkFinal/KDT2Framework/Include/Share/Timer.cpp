@@ -1,4 +1,4 @@
-#include "Timer.h"
+﻿#include "Timer.h"
 #include "Log.h"
 
 LARGE_INTEGER CTimer::mSecond = {};

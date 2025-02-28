@@ -1,4 +1,4 @@
-#include "Animation2DSequence.h"
+﻿#include "Animation2DSequence.h"
 #include "../Asset/Animation/Animation2DData.h"
 #include "../Share/Log.h"
 

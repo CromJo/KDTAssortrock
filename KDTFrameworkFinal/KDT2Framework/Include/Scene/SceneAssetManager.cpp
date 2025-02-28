@@ -1,4 +1,4 @@
-#include "SceneAssetManager.h"
+﻿#include "SceneAssetManager.h"
 #include "../Asset/Mesh/Mesh.h"
 #include "../Asset/Texture/Texture.h"
 #include "../Asset/Texture/TextureManager.h"

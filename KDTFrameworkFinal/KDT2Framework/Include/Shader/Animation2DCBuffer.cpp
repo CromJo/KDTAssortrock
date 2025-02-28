@@ -1,4 +1,4 @@
-#include "Animation2DCBuffer.h"
+﻿#include "Animation2DCBuffer.h"
 
 CAnimation2DCBuffer::CAnimation2DCBuffer()
 {

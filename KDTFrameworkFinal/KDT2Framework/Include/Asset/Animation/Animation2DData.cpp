@@ -1,4 +1,4 @@
-#include "Animation2DData.h"
+﻿#include "Animation2DData.h"
 #include "../Texture/Texture.h"
 #include "../Texture/TextureManager.h"
 #include "../AssetManager.h"

@@ -1,4 +1,4 @@
-#include "Device.h"
+﻿#include "Device.h"
 
 DEFINITION_SINGLE(CDevice)
 

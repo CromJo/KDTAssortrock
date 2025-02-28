@@ -1,4 +1,4 @@
-#include "SharedPtr.h"
+﻿#include "SharedPtr.h"
 #include "Object.h"
 
 CSharedPtr::CSharedPtr()

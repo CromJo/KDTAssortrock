@@ -1,4 +1,4 @@
-#include "Animation2D.h"
+﻿#include "Animation2D.h"
 #include "../Asset/Animation/Animation2DData.h"
 #include "../Asset/Animation/Animation2DManager.h"
 #include "../Asset/AssetManager.h"

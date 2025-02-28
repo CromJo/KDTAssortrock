@@ -1,4 +1,4 @@
-#include "ColliderBase.h"
+﻿#include "ColliderBase.h"
 #include "../Scene/Scene.h"
 #include "../Scene/SceneCollision.h"
 #include "../ProfileManager.h"

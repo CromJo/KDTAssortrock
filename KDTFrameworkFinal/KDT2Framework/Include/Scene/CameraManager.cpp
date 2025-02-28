@@ -1,4 +1,4 @@
-#include "CameraManager.h"
+﻿#include "CameraManager.h"
 #include "../Component/CameraComponent.h"
 
 CCameraManager::CCameraManager()
@@ -11,9 +11,11 @@ CCameraManager::~CCameraManager()
 
 const FVector3D& CCameraManager::GetCameraWorldPos() const
 {
+	// ��Ÿ���� �������� �ʴ´ٸ� �ʱ�ȭ ���� �ش�.
 	if (!mViewTarget)
 		return FVector3D::Zero;
 
+	// ��Ÿ���� �����Ѵٸ� ��Ÿ���� ���� �����ǰ��� �ش�.
 	return mViewTarget->GetWorldPosition();
 }
 

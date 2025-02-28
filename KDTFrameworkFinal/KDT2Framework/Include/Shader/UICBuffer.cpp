@@ -1,4 +1,4 @@
-#include "UICBuffer.h"
+﻿#include "UICBuffer.h"
 
 CUICBuffer::CUICBuffer()
 {

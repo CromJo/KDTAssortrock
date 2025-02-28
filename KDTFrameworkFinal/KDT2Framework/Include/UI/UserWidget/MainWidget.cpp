@@ -1,4 +1,4 @@
-#include "MainWidget.h"
+﻿#include "MainWidget.h"
 #include "../Common/Button.h"
 #include "../Common/TextBlock.h"
 #include "../Common/ProgressBar.h"

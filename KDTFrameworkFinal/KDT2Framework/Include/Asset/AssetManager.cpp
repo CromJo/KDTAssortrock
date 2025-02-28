@@ -1,4 +1,4 @@
-#include "AssetManager.h"
+﻿#include "AssetManager.h"
 #include "Mesh/MeshManager.h"
 #include "Texture/TextureManager.h"
 #include "Material/MaterialManager.h"

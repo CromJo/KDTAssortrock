@@ -1,4 +1,4 @@
-#include "RenderManager.h"
+﻿#include "RenderManager.h"
 #include "RenderStateManager.h"
 #include "RenderState.h"
 #include "../Component/SceneComponent.h"

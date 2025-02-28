@@ -1,4 +1,4 @@
-#include "Texture.h"
+﻿#include "Texture.h"
 #include "../../Device.h"
 
 #ifdef _DEBUG

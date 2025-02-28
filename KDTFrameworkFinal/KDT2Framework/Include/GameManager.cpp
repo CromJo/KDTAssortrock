@@ -1,4 +1,4 @@
-#include "GameManager.h"
+﻿#include "GameManager.h"
 #include "resource.h"
 #include "Share/Timer.h"
 #include "Device.h"

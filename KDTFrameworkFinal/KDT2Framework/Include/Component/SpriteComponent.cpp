@@ -1,4 +1,4 @@
-#include "SpriteComponent.h"
+﻿#include "SpriteComponent.h"
 #include "../Shader/Shader.h"
 #include "../Shader/ShaderManager.h"
 #include "../Asset/AssetManager.h"

@@ -1,4 +1,4 @@
-#include "Asset.h"
+﻿#include "Asset.h"
 
 CAsset::CAsset()
 {

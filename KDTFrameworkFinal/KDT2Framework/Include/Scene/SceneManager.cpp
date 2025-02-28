@@ -1,4 +1,4 @@
-#include "SceneManager.h"
+﻿#include "SceneManager.h"
 #include "SceneStart.h"
 
 DEFINITION_SINGLE(CSceneManager)

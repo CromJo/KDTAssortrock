@@ -1,4 +1,4 @@
-#include "ConstantBufferData.h"
+ï»¿#include "ConstantBufferData.h"
 #include "ShaderManager.h"
 
 CConstantBufferData::CConstantBufferData()
@@ -22,7 +22,7 @@ CConstantBufferData::~CConstantBufferData()
 }
 
 /// <summary>
-/// ½¦ÀÌ´õ
+/// ï¿½ï¿½ï¿½Ì´ï¿½
 /// </summary>
 /// <param name="Name"></param>
 void CConstantBufferData::SetConstantBuffer(

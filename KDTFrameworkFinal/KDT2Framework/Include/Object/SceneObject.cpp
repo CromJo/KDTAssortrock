@@ -1,4 +1,4 @@
-#include "SceneObject.h"
+﻿#include "SceneObject.h"
 #include "../Component/SceneComponent.h"
 #include "ObjectSpawnPoint.h"
 

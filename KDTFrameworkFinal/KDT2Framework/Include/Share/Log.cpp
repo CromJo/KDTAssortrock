@@ -1,4 +1,4 @@
-#include "Log.h"
+﻿#include "Log.h"
 
 std::vector<std::string> CLog::mvecLog;
 HANDLE CLog::hConsole;

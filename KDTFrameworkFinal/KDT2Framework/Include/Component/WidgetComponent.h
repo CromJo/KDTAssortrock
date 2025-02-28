@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "SceneComponent.h"
 #include "../UI/Widget.h"
@@ -6,7 +6,7 @@
 class CWidgetComponent :
     public CSceneComponent
 {
-	// À§Á¬ ÄÄÆ÷³ÍÆ® Ãß°¡ µ¥ÀÌÅÍ »ç¿ë°¡´É
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ë°¡ï¿½ï¿½
 	friend class CScene;
 	friend class CSceneObject;
 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "WindowWidget.h"
 #include "Slot.h"

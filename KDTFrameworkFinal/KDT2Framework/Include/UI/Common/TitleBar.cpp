@@ -1,4 +1,4 @@
-#include "TitleBar.h"
+ï»¿#include "TitleBar.h"
 #include "../../Scene/Scene.h"
 #include "../../Scene/SceneAssetManager.h"
 #include "../../Asset/AssetManager.h"
@@ -20,7 +20,7 @@ CTitleBar::~CTitleBar()
 {
 }
 
-// ÅØ½ºÃÄ ¼³Á¤
+// ï¿½Ø½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 void CTitleBar::SetTexture(const std::string& Name)
 {
     if (mScene)
@@ -92,7 +92,7 @@ void CTitleBar::SetSize(float x, float y)
 
 bool CTitleBar::Init()
 {
-    // ºÎ¸ð ÃÊ±âÈ­
+    // ï¿½Î¸ï¿½ ï¿½Ê±ï¿½È­
     CWidget::Init();
 
     mTextBlock = mScene->GetUIManager()->CreateWidget<CTextBlock>("Name");

@@ -1,4 +1,4 @@
-#include "GraphicShader.h"
+﻿#include "GraphicShader.h"
 #include "../Device.h"
 
 CGraphicShader::CGraphicShader()

@@ -1,4 +1,4 @@
-#include "SpriteShader.h"
+﻿#include "SpriteShader.h"
 
 CSpriteShader::CSpriteShader()
 {

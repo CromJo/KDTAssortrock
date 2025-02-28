@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "MonsterObject.h"
 class CGunnerMonster :
     public CMonsterObject

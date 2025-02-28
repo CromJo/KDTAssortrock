@@ -1,6 +1,6 @@
-#include "WidgetComponent.h"
+ï»¿#include "WidgetComponent.h"
 
-// »ý¼ºÀÚ 
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 CWidgetComponent::CWidgetComponent()
 {
     mRenderType = EComponentRender::Render;
@@ -28,7 +28,7 @@ bool CWidgetComponent::Init()
     return true;
 }
 
-// À§Á¬ ¾÷µ¥ÀÌÆ® (Update ±¸Çö X)
+// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® (Update ï¿½ï¿½ï¿½ï¿½ X)
 void CWidgetComponent::Update(float DeltaTime)
 {
     CSceneComponent::Update(DeltaTime);
@@ -37,7 +37,7 @@ void CWidgetComponent::Update(float DeltaTime)
         mWidget->Update(DeltaTime);
 }
 
-// À§Á¬ Ãâ·Â
+// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 void CWidgetComponent::Render()
 {
     CSceneComponent::Render();

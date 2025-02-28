@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "SceneComponent.h"
 
@@ -31,7 +31,7 @@ protected:
 	float		mViewDistance = 1000.f;
 
 public:
-	// Ä«¸Þ¶ó º¸´Â Çà·Ä°ª ¹Þ¾Æ¿À±â
+	// Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä°ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½
 	const FMatrix& GetViewMatrix()	const
 	{
 		return mmatView;

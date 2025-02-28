@@ -1,4 +1,4 @@
-#include "ProgressBar.h"
+﻿#include "ProgressBar.h"
 #include "../../Scene/Scene.h"
 #include "../../Scene/SceneAssetManager.h"
 #include "../../Asset/AssetManager.h"

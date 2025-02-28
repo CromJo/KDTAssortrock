@@ -1,4 +1,4 @@
-#include "FontManager.h"
+﻿#include "FontManager.h"
 #include "../../Device.h"
 
 CFontManager::CFontManager()

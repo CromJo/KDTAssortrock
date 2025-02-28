@@ -1,4 +1,4 @@
-
+﻿
 #include "GameInfo.h"
 
 int Clamp(int Value, int Min, int Max)

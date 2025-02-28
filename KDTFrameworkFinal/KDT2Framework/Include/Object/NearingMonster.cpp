@@ -1,4 +1,4 @@
-#include "NearingMonster.h"
+﻿#include "NearingMonster.h"
 #include "../Component/StaticMeshComponent.h"
 #include "../Component/SpriteComponent.h"
 #include "../Scene/Scene.h"

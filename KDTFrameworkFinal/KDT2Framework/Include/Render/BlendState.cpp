@@ -1,4 +1,4 @@
-#include "BlendState.h"
+﻿#include "BlendState.h"
 #include "../Device.h"
 
 CBlendState::CBlendState()

@@ -1,4 +1,4 @@
-#include "ProfileManager.h"
+﻿#include "ProfileManager.h"
 
 DEFINITION_SINGLE(CProfileManager)
 

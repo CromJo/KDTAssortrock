@@ -1,10 +1,10 @@
-#pragma once
+ï»¿#pragma once
 
 #include "../GameInfo.h"
 
 class CTile
 {
-	// TileMapComponent¿¡¼­ private »ç¿ëÇÒ ¼ö ÀÖ°Ô ¼³Á¤
+	// TileMapComponentï¿½ï¿½ï¿½ï¿½ private ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö°ï¿½ ï¿½ï¿½ï¿½ï¿½
 	friend class CTileMapComponent;
 
 private:

@@ -1,4 +1,4 @@
-#include "Slot.h"
+﻿#include "Slot.h"
 #include "../Common/Image.h"
 #include "../Common/TextBlock.h"
 #include "../../Scene/Scene.h"

@@ -1,4 +1,4 @@
-#include "CollisionQuadTree.h"
+﻿#include "CollisionQuadTree.h"
 #include "../Device.h"
 #include "Scene.h"
 #include "CameraManager.h"
@@ -423,6 +423,7 @@ void CCollisionQuadTree::AddCollider(CColliderBase* Collider)
 
 void CCollisionQuadTree::Update(float DeltaTime)
 {
+	// 현재씬의 존재하는 카메라 매니저의 카메라 방향을 넣어준다.
 	CCameraComponent* Camera = mScene->GetCameraManager()->GetViewTarget();
 
 	// 카메라를 얻어와서 카메라의 위치로 루트의 센터를 지정한다.

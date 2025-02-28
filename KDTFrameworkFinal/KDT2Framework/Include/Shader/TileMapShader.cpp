@@ -1,4 +1,4 @@
-#include "TileMapShader.h"
+ï»¿#include "TileMapShader.h"
 
 CTileMapShader::CTileMapShader()
 {
@@ -10,10 +10,10 @@ CTileMapShader::~CTileMapShader()
 
 bool CTileMapShader::Init()
 {
-    // ¹öÅØ½º ½¦ÀÌ´õ ºÒ·¯¿À±â
+    // ï¿½ï¿½ï¿½Ø½ï¿½ ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
     if (!LoadVertexShader("TileMapVS", TEXT("TileMap.fx")))
         return false;
-    // ÇÈ¼¿ ½¦ÀÌ´õ ºÒ·¯¿À±â
+    // ï¿½È¼ï¿½ ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
     if (!LoadPixelShader("TileMapPS", TEXT("TileMap.fx")))
         return false;
 

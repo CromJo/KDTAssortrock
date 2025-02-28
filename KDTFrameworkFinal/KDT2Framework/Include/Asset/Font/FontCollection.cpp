@@ -1,4 +1,4 @@
-#include "FontCollection.h"
+﻿#include "FontCollection.h"
 
 CFontCollection::CFontCollection()
 {

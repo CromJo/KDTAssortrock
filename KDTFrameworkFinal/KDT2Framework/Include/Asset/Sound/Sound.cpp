@@ -1,4 +1,4 @@
-#include "Sound.h"
+﻿#include "Sound.h"
 #include "../../Share/Log.h"
 
 #pragma comment(lib, "../Bin/fmod_vc.lib")

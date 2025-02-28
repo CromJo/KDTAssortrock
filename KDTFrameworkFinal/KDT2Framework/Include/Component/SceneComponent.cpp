@@ -1,4 +1,4 @@
-#include "SceneComponent.h"
+﻿#include "SceneComponent.h"
 #include "../Shader/TransformCBuffer.h"
 #include "../Render/RenderManager.h"
 

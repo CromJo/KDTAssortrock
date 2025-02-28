@@ -1,4 +1,4 @@
-#include "SpriteEffect.h"
+﻿#include "SpriteEffect.h"
 #include "../Component/SpriteComponent.h"
 #include "../Component/AudioComponent.h"
 #include "../Animation/Animation2D.h"

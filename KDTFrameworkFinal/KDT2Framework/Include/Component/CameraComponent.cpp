@@ -1,4 +1,4 @@
-#include "CameraComponent.h"
+﻿#include "CameraComponent.h"
 #include "../Scene/Scene.h"
 #include "../Scene/CameraManager.h"
 
@@ -33,11 +33,36 @@ void CCameraComponent::SetProjectionType(
     {
         // 원근 투영방식 :
         //  DirectX 왼손 좌표계 방식으로
+        //  FovAngleY    : 수직 시야각을 라디안 단위로 지정 (화면에 그려지는 시야각도)
+        //  AspectRatio  : 뷰포트의 가로 세로 비율
+        //  NearZ        : 카메라의 시야에서 그릴 수 있는 최소단위 (0보다 커야함)
+        //  FarZ         : 카메라의 시야에서 그릴 수 있는 최대단위 (0보다 커야함)
+        //  기능 : 
+        //      1. FOV버전 시야각과 종횡비 사용하여 투영 평면의 크기를 계산
+        //      2. 생성한 행렬은 3D 객체로 2D화면의 투영할 때 원근감 제공
+        //      3. 일반적으로 NearZ < FarZ로 설정하지만,
+        //          반대로 NearZ > FarZ로 설정하면,
+        //          역방향 z버퍼를 생성하여 부동소수점 정밀도를 향상
     case ECameraProjectionType::Perspective:
         mmatProj = DirectX::XMMatrixPerspectiveFovLH(
             DirectX::XMConvertToRadians(mViewAngle),
             mWidth / mHeight, 0.5f, mViewDistance);
         break;
+        // 직교 투영 행렬 방식 :
+        //  DirectXMath 라이브러리의 왼손좌표계 방식으로,
+        //  ViewLeft    : 뷰 볼륨의 최소 x값
+        //  ViewRight   : 뷰 볼륨의 최대 x값
+        //  ViewBottom  : 뷰 볼륨의 최소 y값
+        //  ViewTop     : 뷰 볼륨의 최대 y값
+        //  NearZ       : 카메라 뷰의 그릴 수 있는 최소단위 (0보다 커야함)
+        //  FarZ        : 카메라 뷰의 그릴 수 있는 최대단위 (0보다 커야함)
+        //  기능  : 
+        //      1. 직교 튜영 행렬을 반환
+        //      2. NearZ와 FarZ는 서로 다른값이여야 하고, 둘다 0보다 커야함
+        //      3. 일반적으로 NearZ < FarZ로 설정하지만,
+        //          반대로 NearZ > FarZ로 설정하면,
+        //          역방향 z버퍼를 생성하여 부동소수점 정밀도를 향상
+        //      4. 이 함수의 모든 매개변수는 카메라 공간의 거리를 나타낸다.
     case ECameraProjectionType::Ortho:
         mmatProj = DirectX::XMMatrixOrthographicOffCenterLH(mWidth / -2.f,
             mWidth / 2.f, mHeight / -2.f, mHeight / 2.f,
@@ -49,17 +74,22 @@ void CCameraComponent::SetProjectionType(
     }
 }
 
+// 카메라 초기화
 bool CCameraComponent::Init()
 {
     // 씬 컴포넌트 초기화 체크
     if (!CSceneComponent::Init())
         return false;
 
+    // 카메라의 그림 방식을 설정해준다.
     SetProjectionType(ECameraProjectionType::Perspective);
 
+    // 현재씬의 카메라 매니저를 불러와 카메라의 방향이 존재하는지 체크한다.
+    // 현재씬의 카메라 매니저를 불러와 바라볼 방향을 이 카메라로 바꿔준다.
     if (!mScene->GetCameraManager()->GetViewTarget())
         mScene->GetCameraManager()->SetViewTarget(this);
 
+    // 진실!
     return true;
 }
 
