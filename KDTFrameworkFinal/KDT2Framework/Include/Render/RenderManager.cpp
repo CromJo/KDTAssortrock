@@ -14,6 +14,9 @@ CRenderManager::CRenderManager()
 {
 }
 
+/// <summary>
+/// 메모리 해제
+/// </summary>
 CRenderManager::~CRenderManager()
 {
 	auto	iter = mLayerList.begin();
@@ -28,6 +31,12 @@ CRenderManager::~CRenderManager()
 	SAFE_DELETE(mStateManager);
 }
 
+/// <summary>
+/// 출력할 목록 추가 기능
+/// 1. 출력할 레이어를 받아온다.
+/// 2. 있다면 출력할 레이어를 목록에 추가해준다.
+/// </summary>
+/// <param name="Component"></param>
 void CRenderManager::AddRenderList(CSceneComponent* Component)
 {
 	FRenderLayer* Layer = FindLayer(Component->GetRenderLayerName());
@@ -35,9 +44,17 @@ void CRenderManager::AddRenderList(CSceneComponent* Component)
 	if (!Layer)
 		return;
 
+	mRenderModified = true;
+
 	Layer->RenderList.emplace_back(Component);
 }
 
+/// <summary>
+/// 렌더 목록 초기화 기능
+/// 1. 목록들을 지운다.
+///		- 다만 SharedPointer로 되어있으므로,
+///			메모리 해제가 되진 않는다. (맞나? 체크해보셈)
+/// </summary>
 void CRenderManager::ClearRenderList()
 {
 	auto	iter = mLayerList.begin();
@@ -49,6 +66,10 @@ void CRenderManager::ClearRenderList()
 	}
 }
 
+/// <summary>
+/// 마우스 이미지 설정 함수
+/// </summary>
+/// <param name="Widget"></param>
 void CRenderManager::SetMouseWidget(CWidget* Widget)
 {
 	mMouseWidget = Widget;
@@ -64,6 +85,7 @@ bool CRenderManager::Init()
 {
 	CreateRenderLayer("BackGround", INT_MIN);
 	CreateRenderLayer("Object", 0);
+	CreateRenderLayer("Monster", 1);
 
 	mStateManager = new CRenderStateManager;
 
@@ -90,6 +112,8 @@ bool CRenderManager::Init()
 
 	mDepthDisable = mStateManager->FindState("DepthDisable");
 
+	// 여기서 마우스 아이콘 설정을 해주는 부분이다. 
+	// 이름을 바꾸든 파일을 바꾸든 둘중하나 택1
 	mMouseWidget = CSceneUIManager::CreateWidgetStatic<CMouseWidget>("Mouse");
 
 	ShowCursor(FALSE);
@@ -101,8 +125,12 @@ void CRenderManager::Update(float DeltaTime)
 {
 	if (mMouseWidget)
 		mMouseWidget->Update(DeltaTime);
+
+	//refreshLayer
+	RefreshLayer();
 }
 
+// 출력 기능
 void CRenderManager::Render()
 {
 	CDevice::GetInst()->GetContext()->PSSetSamplers(0,
@@ -174,35 +202,112 @@ void CRenderManager::Render()
 	mAlphaBlend->ResetState();
 }
 
+void CRenderManager::RefreshLayer()
+{
+	if (!mRenderModified)
+		return;
+
+	std::map<int, FRenderLayer*>::iterator it = mLayerList.begin();
+	std::map<int, FRenderLayer*>::iterator itEnd = mLayerList.end();
+
+	// mLayerList가 마지막 순서가 될 때까지 실행
+	while (it != itEnd)
+	{
+		// mLayerList의 값을 받아온다.
+		FRenderLayer* itVal = it->second;
+		
+		// mLayerList값의 RenderList값을 넣어준다.
+		std::list<CSharedPtr<class CSceneComponent>>::iterator subIt = itVal->RenderList.begin();
+		std::list<CSharedPtr<class CSceneComponent>>::iterator subItEnd = itVal->RenderList.end();
+
+		// RenderList가 마지막 순서가 될때까지 실행
+		//for (;subIt != subItEnd; )
+		while (subIt != subItEnd)
+		{
+			// 현재 subIt의 Object 데이터를 넣어준다.
+			CSharedPtr<CSceneComponent> subItVal = subIt->Get();
+			// Object Data의 레이어명칭을 받아온다.
+			FRenderLayer* foundLayer = FindLayer(subItVal->GetRenderLayerName());
+
+			// 레이어명칭이 없다면
+			if (foundLayer == nullptr)
+			{
+				// 다음 Object로 넘겨준다.
+				subIt++;
+				continue;
+			}
+
+			// 레이어값이 레이어목록과 일치한다면
+			if (foundLayer->ZOrder == it->first)
+			{
+				// 다음 Object로 넘겨준다.
+				subIt++;
+				continue;
+			}
+
+			// 레이어의 값이 존재하고 일치하지 않으면
+			//======================
+			// 렌더목록에 레이어목록의 값을 추가
+			foundLayer->RenderList.emplace_back(subItVal); 
+			subIt = itVal->RenderList.erase(subIt);
+
+			//======================
+			continue;
+		}
+
+		it++;
+	}
+
+	mRenderModified = false;
+}
+
+void CRenderManager::SetRenderModified(bool modified)
+{
+	mRenderModified = modified;
+}
+
+// 레이어번호를 생성하는 함수
 bool CRenderManager::CreateRenderLayer(const std::string& Name, 
 	int ZOrder)
 {
+	// 현재 레이어의 키값을 받아온다
 	FRenderLayer* Layer = FindLayer(Name);
 
+	// 있으면 종료
 	if (Layer)
 		return false;
 
+	// 없으면 렌더레이어를 생성해주고
 	Layer = new FRenderLayer;
 
+	// ZOrder값을 설정할 값으로 변경
 	Layer->ZOrder = ZOrder;
 
+	// 레이어목록에 ZOrder값이 설정된 Layer의 값을 추가해준다.
 	mLayerList.insert(std::make_pair(ZOrder, Layer));
+	// 레이어 키값의 배열안에 ZOrder값을 넣어준다.
 	mLayerNameList[Name] = ZOrder;
 
 	return true;
 }
 
+// 레이어 찾는 함수
 FRenderLayer* CRenderManager::FindLayer(const std::string& Name)
 {
+	// 찾을 레이어 네임을 넣어주는데
 	auto	iter1 = mLayerNameList.find(Name);
 
+	// 있고, 마지막배열이라면 null주소 반환
 	if (iter1 == mLayerNameList.end())
 		return nullptr;
 
+	// 없다면 찾은 레이어의 값으로 ZOrder값을 설정 
 	int	ZOrder = iter1->second;
 
+	// 레이어목록의 번호를 찾고
 	auto	iter = mLayerList.find(ZOrder);
 
+	// 값 반환
 	return iter->second;
 }
 

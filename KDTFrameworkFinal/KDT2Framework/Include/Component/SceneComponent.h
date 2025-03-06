@@ -29,7 +29,12 @@ public:
 public:
 	void SetRenderLayerName(const std::string& Name)
 	{
+		if (mRenderLayerName.compare(Name))
+			return;
+
 		mRenderLayerName = Name;
+
+		CRenderManager::GetInst()->SetRenderModified(true);
 	}
 
 	void AddChild(CSceneComponent* Child);

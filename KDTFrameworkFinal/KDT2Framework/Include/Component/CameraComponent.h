@@ -28,15 +28,19 @@ protected:
 	float		mViewAngle = 90.f;
 	float		mWidth = 1280.f;
 	float		mHeight = 720.f;
-	float		mViewDistance = 1000.f;
+	float		mViewDistance = 3000.f;	// 그려줄 이미지 최대 범위
 
 public:
-	// ī�޶� ���� ��İ� �޾ƿ���
+	// 현재 행렬 값 반환 함수
 	const FMatrix& GetViewMatrix()	const
 	{
 		return mmatView;
 	}
 
+	/// <summary>
+	/// 현재 투영행렬 값 반환 함수
+	/// </summary>
+	/// <returns></returns>
 	const FMatrix& GetProjMatrix()	const
 	{
 		return mmatProj;

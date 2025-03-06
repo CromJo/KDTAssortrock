@@ -22,6 +22,7 @@ CEditorPlayer::~CEditorPlayer()
 {
 }
 
+// 에디터용 플레이어 (플레이어 오브젝트는 없고 입력기능만 있다 생각하면됨)
 bool CEditorPlayer::Init()
 {
     CSceneObject::Init();
@@ -35,7 +36,7 @@ bool CEditorPlayer::Init()
     mMovement = CreateComponent<CMovementComponent>();
 
     mMovement->SetUpdateComponent(mCamera);
-    mMovement->SetMoveSpeed(500.f);
+    mMovement->SetMoveSpeed(1000.f);
 
     mScene->GetInput()->AddBindKey("MoveUp", 'W');
     mScene->GetInput()->AddBindKey("MoveDown", 'S');

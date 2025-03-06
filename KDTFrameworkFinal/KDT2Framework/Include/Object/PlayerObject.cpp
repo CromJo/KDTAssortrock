@@ -122,12 +122,17 @@ bool CPlayerObject::Init()
 
     mRoot->AddChild(mLine);
 
+    mRoot->SetRenderLayerName("Object");
+
     // Default
     mLine->SetCollisionProfile("Player");
     mLine->SetRelativePos(0.f, 50.f);
     mLine->SetLineDistance(300.f);
 
-    mCamera->SetProjectionType(ECameraProjectionType::Ortho);
+    // 카메라 최종 세팅타입 : 원근 투영 방식 (현재 버그 있음 깊이 활성화해야함)
+    mCamera->SetProjectionType(ECameraProjectionType::Perspective);
+
+    mCamera->SetRelativePos(0.f, 200.f, -400.f);
 
     mRoot->AddChild(mCamera);
 
@@ -328,7 +333,7 @@ float CPlayerObject::Damage(float Attack, CSceneObject* Obj)
 
 void CPlayerObject::MoveUp(float DeltaTime)
 {
-    mMovement->AddMove(mRootComponent->GetAxis(EAxis::Y));
+    mMovement->AddMove(mRootComponent->GetAxis(EAxis::Z));
 
     mAnimation->ChangeAnimation("PlayerWalk");
 
@@ -337,7 +342,7 @@ void CPlayerObject::MoveUp(float DeltaTime)
 
 void CPlayerObject::MoveDown(float DeltaTime)
 {
-    mMovement->AddMove(mRootComponent->GetAxis(EAxis::Y) * -1.f);
+    mMovement->AddMove(mRootComponent->GetAxis(EAxis::Z) * -1.f);
 
     mAnimation->ChangeAnimation("PlayerWalk");
 
@@ -346,14 +351,26 @@ void CPlayerObject::MoveDown(float DeltaTime)
 
 void CPlayerObject::RotationZ(float DeltaTime)
 {
-    FVector3D   Rot = mRootComponent->GetWorldRotation();
-    mRootComponent->SetWorldRotationZ(Rot.z + DeltaTime * -90.f);
+    //FVector3D   Rot = mRootComponent->GetWorldRotation();
+    //mRootComponent->SetWorldRotationZ(Rot.z + DeltaTime * -90.f);
+
+    mMovement->AddMove(mRootComponent->GetAxis(EAxis::X));
+
+    mAnimation->ChangeAnimation("PlayerWalk");
+
+    mAutoBasePose = true;
+
 }
 
 void CPlayerObject::RotationZInv(float DeltaTime)
 {
-    FVector3D   Rot = mRootComponent->GetWorldRotation();
-    mRootComponent->SetWorldRotationZ(Rot.z + DeltaTime * 90.f);
+    //FVector3D   Rot = mRootComponent->GetWorldRotation();
+    //mRootComponent->SetWorldRotationZ(Rot.z + DeltaTime * 90.f);
+
+    mMovement->AddMove(mRootComponent->GetAxis(EAxis::X) * -1.f);
+
+    mAnimation->ChangeAnimation("PlayerWalk");
+    mAutoBasePose = true;
 }
 
 void CPlayerObject::Fire(float DeltaTime)

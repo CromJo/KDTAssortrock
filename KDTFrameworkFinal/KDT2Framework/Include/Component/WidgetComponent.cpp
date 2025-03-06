@@ -1,6 +1,5 @@
 ﻿#include "WidgetComponent.h"
 
-// ������ 
 CWidgetComponent::CWidgetComponent()
 {
     mRenderType = EComponentRender::Render;

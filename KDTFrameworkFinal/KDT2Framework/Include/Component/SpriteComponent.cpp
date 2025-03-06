@@ -67,6 +67,7 @@ void CSpriteComponent::SetTexture(
         {
             return;
         }
+
         mTexture = mScene->GetAssetManager()->FindTexture(Name);
     }
 

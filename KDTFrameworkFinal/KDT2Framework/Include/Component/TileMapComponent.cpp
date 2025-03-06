@@ -4,6 +4,7 @@
 #include "../Scene/Scene.h"
 #include "../Scene/CameraManager.h"
 #include "../Scene/SceneAssetManager.h"
+#include "../Scene/Navigation.h"
 #include "../Asset/AssetManager.h"
 #include "../Asset/Mesh/MeshManager.h"
 #include "../Asset/Mesh/Mesh.h"
@@ -116,6 +117,11 @@ void CTileMapComponent::AddTileTextureFrame(float StartX,
     mTileFrameList.emplace_back(Frame);
 }
 
+ETileType CTileMapComponent::GetTileType(int Index) const
+{
+    return mTileList[Index]->GetType();
+}
+
 int CTileMapComponent::GetTileIndexX(const FVector3D& Pos) const
 {
     return GetTileIndexX(FVector2D(Pos.x, Pos.y));
@@ -148,6 +154,9 @@ int CTileMapComponent::GetTileIndexX(const FVector2D& Pos) const
             mOwnerObject->GetWorldPosition().y;
 
         int IndexY = GetTileIndexY(ConvertPos);
+
+        if (IndexY == -1)
+            return -1;
 
         int IndexX = -1;
 
@@ -253,7 +262,12 @@ int CTileMapComponent::GetTileIndexY(const FVector2D& Pos) const
                     return -1;
 
                 else
+                {
+                    if (IndexY >= mCountY / 2 + 1)
+                        return -1;
+
                     return IndexY * 2 - 1;
+                }
             }
 
             // 오른쪽 하단 사각영역의
@@ -264,11 +278,21 @@ int CTileMapComponent::GetTileIndexY(const FVector2D& Pos) const
                     return -1;
 
                 else
+                {
+                    if (IndexY >= mCountY / 2 + 1)
+                        return -1;
+
                     return IndexY * 2 - 1;
+                }
             }
 
             else
+            {
+                if (IndexY >= mCountY / 2)
+                    return -1;
+
                 return IndexY * 2;
+            }
         }
 
         // 사각 영역의 상단에 존재할 경우
@@ -287,7 +311,12 @@ int CTileMapComponent::GetTileIndexY(const FVector2D& Pos) const
                     return -1;
 
                 else
+                {
+                    if (IndexY >= mCountY / 2)
+                        return -1;
+
                     return IndexY * 2 + 1;
+                }
             }
 
             // 오른쪽 상단 사각형의
@@ -301,16 +330,29 @@ int CTileMapComponent::GetTileIndexY(const FVector2D& Pos) const
                     return -1;
 
                 else
+                {
+                    if (IndexY >= mCountY / 2)
+                        return -1;
+
                     return IndexY * 2 + 1;
+                }
             }
 
             else
+            {
+                if (IndexY >= mCountY / 2)
+                    return -1;
+
                 return IndexY * 2;
+            }
         }
 
         // 가운데 영역에 존재할 경우
         else
         {
+            if (IndexY >= mCountY / 2)
+                return -1;
+
             return IndexY * 2;
         }
     }
@@ -331,16 +373,10 @@ int CTileMapComponent::GetTileIndex(const FVector2D& Pos) const
     if (IndexX == -1)
         return -1;
 
-    if (IndexX < -1)
-        int a = 0;
-
     int IndexY = GetTileIndexY(Pos);
 
     if (IndexY == -1)
         return -1;
-
-    if (IndexY < -1)
-        int a = 0;
 
     return IndexY * mCountX + IndexX;
 }
@@ -377,6 +413,11 @@ const CTile* CTileMapComponent::GetTile(float x, float y) const
     if (Index == -1)
         return nullptr;
 
+    return mTileList[Index];
+}
+
+const CTile* CTileMapComponent::GetTile(int Index) const
+{
     return mTileList[Index];
 }
 
@@ -474,6 +515,27 @@ void CTileMapComponent::ChangeTileFrame(int Frame, int Index)
         return;
 
     mTileList[Index]->SetTextureFrame(Frame);
+}
+
+FVector2D CTileMapComponent::GetTilePos(int Index)
+{
+    FVector2D   OwnerPos;
+
+    OwnerPos.x = mOwnerObject->GetWorldPosition().x;
+    OwnerPos.y = mOwnerObject->GetWorldPosition().y;
+    return mTileList[Index]->GetPos() + OwnerPos;
+}
+
+FVector2D CTileMapComponent::GetTileCenter(int Index)
+{
+    FVector2D   Pos;
+
+    Pos.x = mOwnerObject->GetWorldPosition().x;
+    Pos.y = mOwnerObject->GetWorldPosition().y;
+
+    Pos += mTileList[Index]->GetPos();
+
+    return Pos + mTileSize * 0.5f;
 }
 
 int CTileMapComponent::GetTileRenderIndexX(
@@ -587,6 +649,7 @@ int CTileMapComponent::GetTileRenderIndexY(
         ConvertPos.y = Pos.y -
             mOwnerObject->GetWorldPosition().y;
 
+
         float   RatioX = ConvertPos.x / mTileSize.x;
         float   RatioY = ConvertPos.y / mTileSize.y;
 
@@ -594,12 +657,23 @@ int CTileMapComponent::GetTileRenderIndexY(
         int IndexX = (int)RatioX;
         int IndexY = (int)RatioY;
 
+        if (ConvertPos.x < 0)
+            IndexX = 0;
+
+        else if (ConvertPos.x >= mMapSize.x)
+            IndexX = mCountX - 1;
+
+        if (ConvertPos.y < 0)
+            IndexY = 0;
+
+        else if (ConvertPos.y >= mMapSize.y)
+            IndexY = mCountY - 1;
         // 전체 영역의 왼쪽으로 빠져나왔을 경우
-        if (IndexX < 0)
+        /*if (IndexX < 0)
             IndexX = 0;
         
         else if(IndexX > mCountX)
-            IndexX = mCountX - 1;
+            IndexX = mCountX - 1;*/
 
         // 소수점 부분만 남긴다.
         RatioX -= IndexX;
@@ -806,6 +880,12 @@ void CTileMapComponent::Update(float DeltaTime)
 
         mViewEndX = GetTileRenderIndexX(RT);
         mViewEndY = GetTileRenderIndexY(RT);
+
+        mViewStartX -= 2;
+        mViewEndX += 2;
+
+        mViewStartY -= 2;
+        mViewEndY += 2;
     }
         break;
     }
@@ -967,16 +1047,16 @@ void CTileMapComponent::CreateTile(ETileShape Shape,
         mMapSize.y = mTileSize.y * mCountY;
 
         if (mScene)
-            mOutLineMesh = mScene->GetAssetManager()->FindMesh("SpriteRect");
+            mOutLineMesh = mScene->GetAssetManager()->FindMesh("FrameLBRect");
 
         else
-            mOutLineMesh = CAssetManager::GetInst()->GetMeshManager()->FindMesh("SpriteRect");
+            mOutLineMesh = CAssetManager::GetInst()->GetMeshManager()->FindMesh("FrameLBRect");
         break;
     case ETileShape::Isometric:
         mMapSize.x = mTileSize.x * mCountX +
             mTileSize.x * 0.5f;
         mMapSize.y = mTileSize.y + 
-            mTileSize.y * 0.5f * (mCountY - 2);
+            mTileSize.y * 0.5f * (mCountY - 1);
 
         if (mScene)
             mOutLineMesh = mScene->GetAssetManager()->FindMesh("FrameIsometric");
@@ -1032,6 +1112,8 @@ void CTileMapComponent::CreateTile(ETileShape Shape,
             mTileList[i * mCountX + j] = Tile;
         }
     }
+
+    mScene->GetNavigation()->SetTileMap(this);
 }
 
 void CTileMapComponent::Save(const TCHAR* FullPath)

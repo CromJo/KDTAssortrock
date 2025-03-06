@@ -2,6 +2,7 @@
 
 #include "../GameInfo.h"
 
+// 구조체
 struct FRenderLayer
 {
 	std::list<CSharedPtr<class CSceneComponent>>	RenderList;
@@ -12,13 +13,16 @@ class CRenderManager
 {
 private:
 	class CRenderStateManager* mStateManager = nullptr;
+	// 키와 값으로 이루어진 데이터
 	std::map<int, FRenderLayer*>			mLayerList;
+	// 키와 값인데
 	std::unordered_map<std::string, int>	mLayerNameList;
-	ERenderSortType	mRenderSortType = ERenderSortType::Y;
+	ERenderSortType	mRenderSortType = ERenderSortType::Alpha;
 	ID3D11SamplerState* mSampler = nullptr;
 	class CRenderState* mAlphaBlend = nullptr;
-	class CRenderState* mDepthDisable = nullptr;
+	class CRenderState* mDepthDisable = nullptr;		// 픽셀의 깊이 (물체의 깊이가 아님)
 	CSharedPtr<class CWidget>	mMouseWidget;
+	bool mRenderModified = false;
 
 public:
 	class CRenderStateManager* GetStateManager()
@@ -39,6 +43,8 @@ public:
 	bool Init();
 	void Update(float DeltaTime);
 	void Render();
+	void RefreshLayer();
+	void SetRenderModified(bool modified);
 
 public:
 	bool CreateRenderLayer(const std::string& Name,
