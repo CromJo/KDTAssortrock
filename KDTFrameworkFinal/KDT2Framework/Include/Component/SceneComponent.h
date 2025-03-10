@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Component.h"
+#include "../Render/RenderManager.h"
 
 class CSceneComponent :
     public CComponent

@@ -83,7 +83,6 @@ bool CPlayerObject::Init()
 
     mRoot->AddChild(mHPBar);
 
-
     mMovement = CreateComponent<CMovementComponent>();
     mRotation = CreateComponent<CRotationComponent>();
     mInventory = CreateComponent<CInventoryComponent>();
