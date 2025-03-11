@@ -32,5 +32,10 @@ public:
 	{
 		mData.AnimEnable = Enable ? 1 : 0;
 	}
+
+	void SetAnimation2DReverseX(bool Reverse)
+	{
+		mData.AnimReverseX = Reverse ? 1 : 0;
+	}
 };
 

@@ -82,6 +82,11 @@ void CSpriteComponent::SetTexture(
     mTextureIndex = TextureIndex;
 }
 
+/// <summary>
+/// 텍스쳐 설정 함수
+/// </summary>
+/// <param name="Texture"></param>
+/// <param name="TextureIndex"></param>
 void CSpriteComponent::SetTexture(
     CTexture* Texture, 
     int TextureIndex)

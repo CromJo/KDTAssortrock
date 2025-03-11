@@ -53,6 +53,10 @@ bool CWidget::Init()
     return true;
 }
 
+/// <summary>
+/// 위젯 업데이트 (비어있음)
+/// </summary>
+/// <param name="DeltaTime"></param>
 void CWidget::Update(float DeltaTime)
 {
 }

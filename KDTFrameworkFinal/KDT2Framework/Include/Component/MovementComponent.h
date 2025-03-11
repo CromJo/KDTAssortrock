@@ -1,9 +1,11 @@
 ﻿#pragma once
 
 #include "Component.h"
+#include "NavAgent.h"
 
 class CMovementComponent :
-    public CComponent
+    public CComponent,
+	public CNavAgent
 {
 	friend class CScene;
 	friend class CSceneObject;
@@ -17,13 +19,14 @@ protected:
 protected:
 	CSharedPtr<class CSceneComponent>	mUpdateComponent;
 	EAxis::Type		mMoveAxis = EAxis::None;
-	class CNavAgent* mNavAgent = nullptr;
 
 protected:
 	FVector3D		mVelocity;
 	FVector3D		mMoveStep;
 	float			mSpeed = 1.f;
 	bool			mVelocityInit = true;
+
+	float			mTargetDist = 0.f;
 
 public:
 	const FVector3D& GetMoveStep()	const
@@ -72,6 +75,8 @@ public:
 	{
 		mMoveAxis = Axis;
 	}
+
+	void SetMovePoint(const FVector2D& Pos);
 
 public:
 	virtual bool Init();

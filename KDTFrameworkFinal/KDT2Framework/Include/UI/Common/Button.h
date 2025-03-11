@@ -2,25 +2,25 @@
 
 #include "../Widget.h"
 
-namespace EButtonState
+namespace EButtonState		// 버튼 특성
 {
 	enum Type
 	{
-		Normal,
-		Hovered,
-		Click,
-		Disable,
-		End
+		Normal,				// 디폴트
+		Hovered,			// 마우스 올리고 있는 상태
+		Click,				// 누른 상태
+		Disable,			// 비활성화 되어있는 상태
+		End					// 땐 상태
 	};
 }
 
-namespace EButtonEventState
+namespace EButtonEventState	// 버튼 이벤트 특성
 {
 	enum Type
 	{
-		Hovered,
-		Click,
-		End
+		Hovered,			// 마우스 올려놓은 이벤트
+		Click,				// 눌렀을때 이벤트
+		End					// 땟을 때 이벤트
 	};
 }
 

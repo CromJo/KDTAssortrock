@@ -311,11 +311,19 @@ void CSceneObject::EndFrame()
     mRootComponent->EndFrame();
 }
 
+/// <summary>
+/// 씬오브젝트에게 대미지를 주는 기능
+/// </summary>
+/// <param name="Attack"></param>
+/// <param name="Obj"></param>
+/// <returns></returns>
 float CSceneObject::Damage(float Attack, CSceneObject* Obj)
 {
+    // 대미지 기능이 활성화가 안되어있으면 대미지 무효화
     if (!mDamageEnable)
         Attack = 0.f;
 
+    // 대미지를 반환 (무효화일수도, 실제 대미지일수도 있음)
     return Attack;
 }
 

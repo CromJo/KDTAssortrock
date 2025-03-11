@@ -11,20 +11,20 @@
 
 #pragma comment(lib, "dinput8.lib")
 
-enum class EInputSystem_Type
+enum class EInputSystem_Type	// 입력 시스템 타입
 {
-	DInput,
-	Window
+	DInput,						// ??
+	Window						// Window 모드?
 };
 
-namespace EMouseButtonType
+namespace EMouseButtonType		// 마우스가 버튼눌렀을때 타입
 {
 	enum Type
 	{
-		LButton,
-		RButton,
-		MButton,
-		End
+		LButton,				// 왼쪽 마우스 버튼을 눌렀을 때
+		RButton,				// 오른쪽 마우스 버튼을 눌렀을 때
+		MButton,				// 중앙(휠) 마우스 버튼을 눌렀을 때
+		End						// 그냥 끝내
 	};
 }
 
@@ -103,16 +103,31 @@ private:
 	bool		mMouseCompute = false;
 
 public:
+	/// <summary>
+	/// 마우스 다운했을때
+	/// </summary>
+	/// <param name="Type"></param>
+	/// <returns></returns>
 	bool GetMouseDown(EMouseButtonType::Type Type)
 	{
 		return mMouseDown[Type];
 	}
 
+	/// <summary>
+	/// 마우스 홀드 헀을 때
+	/// </summary>
+	/// <param name="Type"></param>
+	/// <returns></returns>
 	bool GetMouseHold(EMouseButtonType::Type Type)
 	{
 		return mMouseHold[Type];
 	}
 
+	/// <summary>
+	/// 마우스 업 했을 때
+	/// </summary>
+	/// <param name="Type"></param>
+	/// <returns></returns>
 	bool GetMouseUp(EMouseButtonType::Type Type)
 	{
 		return mMouseUp[Type];

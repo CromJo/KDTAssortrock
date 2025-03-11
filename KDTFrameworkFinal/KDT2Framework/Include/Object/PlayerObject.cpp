@@ -168,8 +168,13 @@ bool CPlayerObject::Init()
     mScene->GetInput()->AddBindKey("MoveUp", 'W');
     mScene->GetInput()->AddBindKey("MoveDown", 'S');
 
-    mScene->GetInput()->AddBindKey("RotationZ", 'D');
-    mScene->GetInput()->AddBindKey("RotationZInv", 'A');
+    /*mScene->GetInput()->AddBindKey("RotationZ", 'D');
+    mScene->GetInput()->AddBindKey("RotationZInv", 'A');*/
+
+    mScene->GetInput()->AddBindKey("MoveRight", 'D');
+    mScene->GetInput()->AddBindKey("MoveLeft", 'A');;
+    mScene->GetInput()->AddBindKey("MovePoint", VK_RBUTTON);
+
 
     mScene->GetInput()->AddBindKey("Fire", VK_SPACE);
 
@@ -191,12 +196,23 @@ bool CPlayerObject::Init()
 
     mScene->GetInput()->AddBindFunction<CPlayerObject>("MoveDown",
         EInputType::Hold, this, &CPlayerObject::MoveDown);
+    
+    mScene->GetInput()->AddBindFunction<CPlayerObject>("MoveRight",
+        EInputType::Hold, this, &CPlayerObject::MoveRight);
 
-    mScene->GetInput()->AddBindFunction<CPlayerObject>("RotationZ",
+    mScene->GetInput()->AddBindFunction<CPlayerObject>("MoveLeft",
+        EInputType::Hold, this, &CPlayerObject::MoveLeft);
+
+    mScene->GetInput()->AddBindFunction<CPlayerObject>("MovePoint",
+        EInputType::Down, this, &CPlayerObject::MovePoint);
+
+
+
+   /* mScene->GetInput()->AddBindFunction<CPlayerObject>("RotationZ",
         EInputType::Hold, this, &CPlayerObject::RotationZ);
 
     mScene->GetInput()->AddBindFunction<CPlayerObject>("RotationZInv",
-        EInputType::Hold, this, &CPlayerObject::RotationZInv);
+        EInputType::Hold, this, &CPlayerObject::RotationZInv);*/
 
     mScene->GetInput()->AddBindFunction<CPlayerObject>("Fire",
         EInputType::Down, this, &CPlayerObject::Fire);
@@ -256,53 +272,67 @@ void CPlayerObject::Update(float DeltaTime)
         UpdateSkill4(DeltaTime);
     }
 
+    // 움직이지 않고, 디폴트 자세로 돌아가는 것이 켜져있다면, 
+    // 기본자세로 돌려라
     if (mMovement->GetVelocityLength() == 0.f && mAutoBasePose)
         mAnimation->ChangeAnimation("PlayerIdle");
 
     static bool ItemTest = false;
 
+    // 엔터키 누르면 아이템 추가 테스트 ON
     if (GetAsyncKeyState(VK_RETURN) & 0x8000)
     {
         ItemTest = true;
     }
 
+    // 만약 아이템 추가 기능이 켜진 상태면
     else if (ItemTest)
     {
+        // 초기화해주고,
         ItemTest = false;
+        // 두개의 이름을 데이터에 담는다.
         std::string NameArray[2] =
         {
             "IconSword",
             "IconShield"
         };
-
+        // 랜덤번호를 대입해준다.
         int RandIndex = rand() % 2;
-
+        // 데이터를 생성 및 대입해주고,
         FItemData* Data = new FItemData;
 
+        // 랜덤한 번호의 아이템 이름을 데이터 이름에 대입해주고,
         Data->Name = NameArray[RandIndex];
 
+        // 랜덤번호가 0번이라면 무기를,
         if (RandIndex == 0)
             Data->Type = EItemType::Weapon;
-
+        // 1번이라면 방어구의 타입을 넣어준다.
         else if (RandIndex == 1)
             Data->Type = EItemType::Armor;
 
+        // 씬이 null이 아니면 (존재한다면)
+        // 아이템 타입에 맞는 이미지를 넣어준다.
         if (mScene)
             Data->Icon = mScene->GetAssetManager()->FindTexture(NameArray[RandIndex]);
-
+        // 씬이 null이면 "응 어떻게든 넣을꺼야~"
         else
             Data->Icon = CAssetManager::GetInst()->GetTextureManager()->FindTexture(NameArray[RandIndex]);
 
+        // 인벤토리에 데이터를 추가해준다.
         mInventory->AddItem(Data);
     }
 
     static bool ItemTest1 = false;
 
+    // 0번 누르면 테스트 기능 활성화
     if (GetAsyncKeyState('0') & 0x8000)
     {
         ItemTest1 = true;
     }
 
+    // 테스트 기능이 활성화 되었다면 인벤토리 1~10번째까지의 아이템중
+    // 한개의 아이템을 제거한다.
     else if (ItemTest1)
     {
         ItemTest1 = false;
@@ -316,17 +346,29 @@ void CPlayerObject::Render()
     CSceneObject::Render();
 }
 
+/// <summary>
+/// 자신 피격 기능
+/// </summary>
+/// <param name="Dmg"></param>
 void CPlayerObject::Damage(int Dmg)
 {
     mHP -= Dmg;
 }
 
+/// <summary>
+/// 상대 오브젝트로 인한 자신 피격 기능
+/// </summary>
+/// <param name="Attack"></param>
+/// <param name="Obj"></param>
+/// <returns></returns>
 float CPlayerObject::Damage(float Attack, CSceneObject* Obj)
 {
+    // 상대 Obj의 공격력을 Attack에 대입 후
     Attack = CSceneObject::Damage(Attack, Obj);
-
+    // 플레이어의 HP를 깎는다.
     mHP -= (int)Attack;
 
+    // 공격 값을 반환
     return Attack;
 }
 
@@ -346,6 +388,12 @@ void CPlayerObject::MoveDown(float DeltaTime)
     mAnimation->ChangeAnimation("PlayerWalk");
 
     mAutoBasePose = true;
+}
+
+void CPlayerObject::MovePoint(float DeltaTime)
+{
+    mMovement->SetMovePoint(
+        mScene->GetInput()->GetMouseWorldPos2D());
 }
 
 void CPlayerObject::RotationZ(float DeltaTime)
@@ -372,8 +420,32 @@ void CPlayerObject::RotationZInv(float DeltaTime)
     mAutoBasePose = true;
 }
 
+void CPlayerObject::MoveRight(float DeltaTime)
+{
+    mMovement->AddMove(mRootComponent->GetAxis(EAxis::X));
+
+    mAnimation->ChangeAnimation("PlayerWalk");
+
+    mAnimation->SetAnimationReverseX(false);
+
+    mAutoBasePose = true;
+}
+
+void CPlayerObject::MoveLeft(float DeltaTime)
+{
+    mMovement->AddMove(mRootComponent->GetAxis(EAxis::X) * -1);
+
+    mAnimation->ChangeAnimation("PlayerWalk");
+
+    mAnimation->SetAnimationReverseX(true);
+
+    mAutoBasePose = true;
+}
+
+// 공격 기능
 void CPlayerObject::Fire(float DeltaTime)
 {
+    // PlayerAttack 애니메이션으로 변경
     mAnimation->ChangeAnimation("PlayerAttack");
 
     mAutoBasePose = false;

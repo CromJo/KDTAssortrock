@@ -19,7 +19,6 @@ CMovementComponent::CMovementComponent(CMovementComponent&& Com) :
 
 CMovementComponent::~CMovementComponent()
 {
-    SAFE_DELETE(mNavAgent);
 }
 
 void CMovementComponent::SetUpdateComponent(CSceneComponent* Target)
@@ -27,14 +26,27 @@ void CMovementComponent::SetUpdateComponent(CSceneComponent* Target)
     mUpdateComponent = Target;
 }
 
+void CMovementComponent::SetMovePoint(const FVector2D& Pos)
+{
+    if (mUpdateComponent)
+    {
+        FVector2D   WorldPos;
+        WorldPos.x = mUpdateComponent->GetWorldPosition().x;
+        WorldPos.y = mUpdateComponent->GetWorldPosition().y;
+
+        FindPath(WorldPos, Pos);
+
+        if (!mPathList.empty())
+        {
+            mTargetDist = WorldPos.Distance(mPathList.front());
+        }
+    }
+}
+
 bool CMovementComponent::Init()
 {
     if (!CComponent::Init())
         return false;
-
-    mNavAgent = new CNavAgent;
-
-    mNavAgent->Init();
 
     return true;
 }
@@ -43,10 +55,6 @@ bool CMovementComponent::Init(const char* FileName)
 {
     if (!CComponent::Init(FileName))
         return false;
-
-    mNavAgent = new CNavAgent;
-
-    mNavAgent->Init();
 
     return true;
 }
@@ -73,20 +81,59 @@ void CMovementComponent::Update(float DeltaTime)
 
         else
         {
-            if (mMoveAxis != EAxis::None)
+            if (mPathList.empty())
             {
-                mVelocity = mUpdateComponent->GetAxis(mMoveAxis);
+                if (mMoveAxis != EAxis::None)
+                {
+                    mVelocity = mUpdateComponent->GetAxis(mMoveAxis);
 
+                }
+
+                mVelocity.Normalize();
+
+                if (mVelocity.Length() > 0.f)
+                {
+                    mMoveStep = mVelocity * mSpeed * DeltaTime;
+                }
+
+                mUpdateComponent->AddWorldPos(mMoveStep);
             }
 
-            mVelocity.Normalize();
-
-            if (mVelocity.Length() > 0.f)
+            else
             {
-                mMoveStep = mVelocity * mSpeed * DeltaTime;
-            }
+                FVector3D   Target;
+                Target.x = mPathList.front().x;
+                Target.y = mPathList.front().y;
 
-            mUpdateComponent->AddWorldPos(mMoveStep);
+                FVector3D   Dir = Target - 
+                    mUpdateComponent->GetWorldPosition();
+                Dir.Normalize();
+
+                mMoveStep = Dir * mSpeed * DeltaTime;
+
+                float   StepLength = mMoveStep.Length();
+
+                if (StepLength >= mTargetDist)
+                {
+                    FVector2D   _Target = mPathList.front();
+
+                    mPathList.pop_front();
+
+                    if (!mPathList.empty())
+                    {
+                        mTargetDist = _Target.Distance(mPathList.front());
+                    }
+
+                    mUpdateComponent->SetWorldPos(Target);
+                }
+
+                else
+                {
+                    mTargetDist -= StepLength;
+
+                    mUpdateComponent->AddWorldPos(mMoveStep);
+                }
+            }
         }
     }
 }

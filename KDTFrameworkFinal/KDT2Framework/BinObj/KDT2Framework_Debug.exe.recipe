@@ -2,24 +2,24 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\assort_c5\Desktop\ClassMaterials\KDT2Framework\Bin\KDT2Framework_Debug.exe</FullPath>
+      <FullPath>C:\Users\assort_c5\Desktop\KDTAssortrock\KDTFrameworkFinal\KDT2Framework\Bin\KDT2Framework_Debug.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>C:\Users\assort_c5\Desktop\ClassMaterials\KDT2Framework\Bin\ColorMesh.cso</FullPath>
+      <FullPath>C:\Users\assort_c5\Desktop\KDTAssortrock\KDTFrameworkFinal\KDT2Framework\Bin\ColorMesh.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\assort_c5\Desktop\ClassMaterials\KDT2Framework\Bin\Mesh.cso</FullPath>
+      <FullPath>C:\Users\assort_c5\Desktop\KDTAssortrock\KDTFrameworkFinal\KDT2Framework\Bin\Mesh.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\assort_c5\Desktop\ClassMaterials\KDT2Framework\Bin\Sprite.cso</FullPath>
+      <FullPath>C:\Users\assort_c5\Desktop\KDTAssortrock\KDTFrameworkFinal\KDT2Framework\Bin\Sprite.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\assort_c5\Desktop\ClassMaterials\KDT2Framework\Bin\TileMap.cso</FullPath>
+      <FullPath>C:\Users\assort_c5\Desktop\KDTAssortrock\KDTFrameworkFinal\KDT2Framework\Bin\TileMap.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\assort_c5\Desktop\ClassMaterials\KDT2Framework\Bin\UI.cso</FullPath>
+      <FullPath>C:\Users\assort_c5\Desktop\KDTAssortrock\KDTFrameworkFinal\KDT2Framework\Bin\UI.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />

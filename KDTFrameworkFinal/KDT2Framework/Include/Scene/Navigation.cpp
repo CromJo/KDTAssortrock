@@ -62,7 +62,11 @@ bool CNavigation::FindPath(const FVector2D& Start,
     std::list<FVector2D>& PathList)
 {
     if (!mTileMap)
+    {
+        PathList.clear();
+        PathList.emplace_back(End);
         return false;
+    }
 
     int StartIndex = mTileMap->GetTileIndex(Start);
     if (StartIndex == -1)

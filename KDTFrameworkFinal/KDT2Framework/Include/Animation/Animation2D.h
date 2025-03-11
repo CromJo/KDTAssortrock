@@ -47,7 +47,9 @@ public:
 	void ChangeAnimation(const std::string& Name);
 	CAnimation2D* Clone();
 	void SetShader();
-	
+	void SetAnimationReverseX(bool left);
+
+
 private:
 	CAnimation2DSequence* FindSequence(
 		const std::string& Name);

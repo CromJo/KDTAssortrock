@@ -177,31 +177,44 @@ void CAnimation2D::SetReverse(const std::string& Name,
 	Sequence->SetReverse(Reverse);
 }
 
+/// <summary>
+/// 현재 실행중인 애니메이션을 변경해주는 함수
+/// </summary>
+/// <param name="Name"></param>
 void CAnimation2D::ChangeAnimation(const std::string& Name)
 {
+	// 변경할 애니메이션 이름이 존재하는지 체크
 	if (Name.empty())
 		return;
 
+	// 
 	else if (!mCurrentSequence)
 		return;
 
+	// 현재 실행중인 애니메이션이 받아오려는 애니메이션이면 종료
 	else if (mCurrentSequence->GetName() == Name)
 		return;
 
+	// 현재 애니메이션을 초기화해준다.
 	mCurrentSequence->mFrame = 0;
 	mCurrentSequence->mTime = 0.f;
 	mCurrentSequence->mEndFunctionEnable = true;
 
+	// 시퀀스 찾기 
 	CAnimation2DSequence* Sequence = FindSequence(Name);
 
+	// 시퀀스를 못찾았다면 종료
 	if (!Sequence)
 		return;
 
+	// 시퀀스를 찾았다면 현재 시퀀스에 대입
 	mCurrentSequence = Sequence;
 
+	// 현재 시퀀스를 초기화 해준다.
 	mCurrentSequence->mFrame = 0;
 	mCurrentSequence->mTime = 0.f;
 
+	// 현재 애니메이션 시퀀스를 텍스쳐로 설정
 	mOwner->SetTexture(
 		mCurrentSequence->GetAnimationAsset()->GetTexture());
 }
@@ -244,13 +257,26 @@ void CAnimation2D::SetShader()
 	mAnimCBuffer->UpdateBuffer();
 }
 
+void CAnimation2D::SetAnimationReverseX(bool Reverse)
+{
+	mAnimCBuffer->SetAnimation2DReverseX(Reverse);
+}
+
+/// <summary>
+/// 2D 애니메이션 시퀀스 찾기
+/// </summary>
+/// <param name="Name"></param>
+/// <returns></returns>
 CAnimation2DSequence* CAnimation2D::FindSequence(
 	const std::string& Name)
 {
+	// 받아오려는 시퀀스이름 찾아 대입
 	auto	iter = mSequenceMap.find(Name);
 
+	// 이름을 못 찾았다면 종료
 	if (iter == mSequenceMap.end())
 		return nullptr;
 
+	// 이름을 찾았다면 값 반환
 	return iter->second;
 }

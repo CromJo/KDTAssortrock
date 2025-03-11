@@ -13,24 +13,21 @@ CMouseWidget::~CMouseWidget()
 {
 }
 
-/// <summary>
-/// 마우스 초기화
-/// </summary>
-/// <returns></returns>
 bool CMouseWidget::Init()
 {
     CUserWidget::Init();
 
-    // 마우스 이미지 데이터 생성
+    // 마우스 이미지 데이터 추가
     mImage = CSceneUIManager::CreateWidgetStatic<CImage>("Mouse");
 
-    // 마우스 이미지 설정
+    // 마우스 이미지 변경
     mImage->SetTexture("MouseDefault", 
-        TEXT("Texture\\Mouse\\Default\\0.png"));
+        TEXT("Texture\\Mouse\\Default\\MouseCrossHair.png"));
 
-    // 이미지 크기 설정
+    // 마우스 이미지 사이즈
     mImage->SetSize(32.f, 32.f);
 
+    // 마우스 이미지로 위젯 추가.
     AddWidget(mImage);
 
     return true;

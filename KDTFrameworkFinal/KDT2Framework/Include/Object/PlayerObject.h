@@ -70,8 +70,14 @@ private:
     void MoveUp(float DeltaTime);
     void MoveDown(float DeltaTime);
 
+    void MovePoint(float DeltaTime);
+
     void RotationZ(float DeltaTime);
     void RotationZInv(float DeltaTime);
+
+    void MoveRight(float DeltaTime);
+    void MoveLeft(float DeltaTime);
+
 
     void Fire(float DeltaTime);
 

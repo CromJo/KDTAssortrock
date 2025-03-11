@@ -123,13 +123,16 @@ bool CInput::UpdateKeyboard()
 
 bool CInput::UpdateMouse()
 {
+	// 마우스가 없다면 종료
     if (!mMouse)
         return false;
 
     // MouseState는 x, y에는 마우스 좌표, z에는 휠값이 들어온다.
+	//  
     HRESULT result = mMouse->GetDeviceState(sizeof(mMouseState),
         (LPVOID)&mMouseState);
 
+	// 
     if (FAILED(result))
     {
         if (result == DIERR_INPUTLOST || result == DIERR_NOTACQUIRED)
@@ -234,16 +237,19 @@ bool CInput::Init()
 
 void CInput::Update(float DeltaTime)
 {
+	// Direct Input 타입으로 설정되어 있다면 
     if (mInputType == EInputSystem_Type::DInput)
     {
+		// 키보드 및 마우스 업데이트
         UpdateKeyboard();
         UpdateMouse();
     }
 
+	// 마우스 포지션 업데이트
 	UpdateMousePos(DeltaTime);
-
+	// 입력 업데이트
     UpdateInput(DeltaTime);
-
+	// 키 기능 추가 업데이트
 	UpdateBind(DeltaTime);
 }
 

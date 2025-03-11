@@ -40,7 +40,8 @@ struct FAnimation2DCBufferInfo
     FVector2D   LTUV;
     FVector2D   RBUV;
     int         AnimEnable;
-    FVector3D   Empty;
+    int         AnimReverseX;
+    FVector2D   Empty;
 };
 
 struct FUICBufferInfo

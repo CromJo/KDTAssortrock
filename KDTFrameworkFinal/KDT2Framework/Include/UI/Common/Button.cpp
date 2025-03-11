@@ -161,33 +161,47 @@ bool CButton::Init()
     return true;
 }
 
+/// <summary>
+/// 버튼 기능 업데이트
+/// </summary>
+/// <param name="DeltaTime"></param>
 void CButton::Update(float DeltaTime)
 {
+    // 위젯 업데이트 돌린 후
     CWidget::Update(DeltaTime);
 
+    // 현재 버튼이 비활성화 상태가 아니고,
     if (mState != EButtonState::Disable)
-    {
+    {   
+        // 마우스가 활성화 된 상태라면
         if (mMouseOn)
         {
+            // 씬의 입력기능 중 마우스 왼쪽버튼을 눌렀을때에 기능이 존재하는지 체크한다.
             if (mScene->GetInput()->GetMouseDown(EMouseButtonType::LButton))
             {
+                // 있다면 현재 버튼의 특성을 클릭을 받은것으로 바꾼다.
                 mState = EButtonState::Click;
             }
 
+            // if문이 실행안된 상태에서,
+            // 내 마우스 특성이 클릭한 상태이고,
+            // 씬의 입력기능 중 내 마우스 왼쪽 버튼을 방금 땐 상태라면,
             else if (mState == EButtonState::Click &&
                 mScene->GetInput()->GetMouseUp(EMouseButtonType::LButton))
             {
+                // 클릭 이벤트 사운드가 존재한다면 사운드 실행
                 if (mSound[EButtonEventState::Click])
                     mSound[EButtonEventState::Click]->Play();
-
+                // 클릭 이벤트 콜백이 존재한다면 콜백 함수 실행.
                 if (mEventCallback[EButtonEventState::Click])
                     mEventCallback[EButtonEventState::Click]();
-
+                // 현재 버튼 특성을 마우스 올려둔 상태로 변경함.
                 mState = EButtonState::Hovered;
             }
-
+            // 씬의 입력기능 중 마우스 왼쪽버튼을 홀드하는 기능이 있다면
             else if (mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton))
             {
+                // 특성 : 클릭으로 변경
                 mState = EButtonState::Click;
             }
         }
