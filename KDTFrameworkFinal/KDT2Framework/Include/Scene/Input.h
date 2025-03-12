@@ -13,8 +13,8 @@
 
 enum class EInputSystem_Type	// 입력 시스템 타입
 {
-	DInput,						// ??
-	Window						// Window 모드?
+	DInput,						// DirectX 방식
+	Window						// Window 방식
 };
 
 namespace EMouseButtonType		// 마우스가 버튼눌렀을때 타입

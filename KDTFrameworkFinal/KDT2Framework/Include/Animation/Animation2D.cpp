@@ -58,49 +58,78 @@ void CAnimation2D::Update(float DeltaTime)
 	mCurrentSequence->Update(DeltaTime);
 }
 
+/// <summary>
+/// Name으로 애니메이션 시퀀스 추가
+/// </summary>
+/// <param name="Name"></param>
+/// <param name="PlayTime : 동작 시간 설정"></param>
+/// <param name="PlayRate : 재생 속도 배율"></param>
+/// <param name="Loop : 반복 설정"></param>
+/// <param name="Reverse : 역재생 설정"></param>
+/// <returns></returns>
 bool CAnimation2D::AddSequence(const std::string& Name, 
 	float PlayTime, float PlayRate, bool Loop, bool Reverse)
 {
+	// 시퀀스 찾아서 대입
 	CAnimation2DSequence* Sequence = FindSequence(Name);
 
+	// 시퀀스 존재 시 종료 (이미 추가되어있기 때문)
 	if (Sequence)
 		return false;
 
+	// 시퀀스가 없다면 데이터 저장 변수 추가
 	CAnimation2DData* Data = nullptr;
 
+	// 씬이 존재하면
+	// 이름으로 애니메이션 찾아와 대입
 	if (mScene)
 		Data = mScene->GetAssetManager()->FindAnimation(Name);
-
+	// 씬이 존재하지 않는다면
+	// 없는대로 이름으로 애니메이션 찾아와 대입
 	else
 		Data = CAssetManager::GetInst()->GetAnimationManager()->FindAnimation(Name);
 
+	// 그럼에도 데이터를 제대로 못 넣으면 종료
 	if (!Data)
 		return false;
 
+	// 데이터가 들어갔다면
+	// 시퀀스를 생성 (기존에 nullptr 이였음)
 	Sequence = new CAnimation2DSequence;
-
+	// 자기자신 넣어주고 (자기자신 : Animation2D)
 	Sequence->mOwner = this;
-
-	Sequence->SetAsset(Data);
-	Sequence->SetPlayTime(PlayTime);
-	Sequence->SetPlayRate(PlayRate);
-	Sequence->SetLoop(Loop);
-	Sequence->SetReverse(Reverse);
+	// 초기 설정 한번 해줌
+	Sequence->SetAsset(Data);			// 보여줄 애니메이션 이미지
+	Sequence->SetPlayTime(PlayTime);	// 동작 시간 설정
+	Sequence->SetPlayRate(PlayRate);	// 재생 속도 설정
+	Sequence->SetLoop(Loop);			// 반복 유무 설정 
+	Sequence->SetReverse(Reverse);		// 역재생 유무 설정
 
 	// 처음 지정된 Sequence로 현재 Sequence를 지정해둔다.
 	if (!mCurrentSequence)
 	{
+		// 초기설정한 시퀀스를 현재 시퀀스에 넣는다.
 		mCurrentSequence = Sequence;
-
+		// Sprite컴포넌트의 텍스쳐를 현재 시퀀스의 텍스쳐로 변경해준다.
 		mOwner->SetTexture(
 			mCurrentSequence->GetAnimationAsset()->GetTexture());
 	}
 
+	// 시퀀스 목록에 추가한다.
 	mSequenceMap.insert(std::make_pair(Name, Sequence));
 
 	return true;
 }
 
+/// <summary>
+/// Asset으로 시퀀스 추가
+/// </summary>
+/// <param name="Asset"></param>
+/// <param name="PlayTime"></param>
+/// <param name="PlayRate"></param>
+/// <param name="Loop"></param>
+/// <param name="Reverse"></param>
+/// <returns></returns>
 bool CAnimation2D::AddSequence(CAnimation2DData* Asset,
 	float PlayTime, float PlayRate, bool Loop, bool Reverse)
 {

@@ -102,11 +102,16 @@ bool CPlayerObject::Init()
     mAnimation->AddSequence("PlayerRun", 0.7f, 1.f, true, false);
     mAnimation->AddSequence("PlayerWalk", 0.7f, 1.f, true, false);
     mAnimation->AddSequence("PlayerAttack", 1.f, 1.f, false, false);
+    mAnimation->AddSequence("PlayerReloading", 1.2f, 1.f, false, false);
 
     mAnimation->SetEndFunction<CPlayerObject>("PlayerAttack",
         this, &CPlayerObject::AttackEnd);
     mAnimation->AddNotify<CPlayerObject>("PlayerAttack",
         2, this, &CPlayerObject::AttackNotify);
+
+    // 장전 모션 끝난 후
+    mAnimation->SetEndFunction<CPlayerObject>("PlayerReloading",
+        this, &CPlayerObject::AttackEnd);
 
     mRoot->SetWorldPos(0.f, 0.f, 0.f);
     mRoot->SetWorldScale(100.f, 100.f, 1.f);
@@ -175,8 +180,10 @@ bool CPlayerObject::Init()
     mScene->GetInput()->AddBindKey("MoveLeft", 'A');;
     mScene->GetInput()->AddBindKey("MovePoint", VK_RBUTTON);
 
-
     mScene->GetInput()->AddBindKey("Fire", VK_SPACE);
+    mScene->GetInput()->AddBindKey("MouseFire", VK_LBUTTON);
+
+    mScene->GetInput()->AddBindKey("Reloading", 'R');
 
     mScene->GetInput()->AddBindKey("Skill1", '1');
     mScene->GetInput()->ChangeKeyCtrl("Skill1", true);
@@ -214,8 +221,14 @@ bool CPlayerObject::Init()
     mScene->GetInput()->AddBindFunction<CPlayerObject>("RotationZInv",
         EInputType::Hold, this, &CPlayerObject::RotationZInv);*/
 
+    mScene->GetInput()->AddBindFunction<CPlayerObject>("MouseFire",
+        EInputType::Down, this, &CPlayerObject::MouseFire);
+
     mScene->GetInput()->AddBindFunction<CPlayerObject>("Fire",
         EInputType::Down, this, &CPlayerObject::Fire);
+    
+    mScene->GetInput()->AddBindFunction<CPlayerObject>("Reloading",
+        EInputType::Down, this, &CPlayerObject::Reloading);
 
     mScene->GetInput()->AddBindFunction<CPlayerObject>("Skill1",
         EInputType::Hold, this, &CPlayerObject::Skill1);
@@ -447,6 +460,25 @@ void CPlayerObject::Fire(float DeltaTime)
 {
     // PlayerAttack 애니메이션으로 변경
     mAnimation->ChangeAnimation("PlayerAttack");
+
+    mAutoBasePose = false;
+}
+
+/// <summary>
+/// 공격 기능
+/// </summary>
+/// <param name="DeltaTime"></param>
+void CPlayerObject::MouseFire(float DeltaTime)
+{
+    // PlayerAttack 애니메이션으로 변경
+    mAnimation->ChangeAnimation("PlayerAttack");
+
+    mAutoBasePose = false;
+}
+
+void CPlayerObject::Reloading(float DeltaTime)
+{
+    mAnimation->ChangeAnimation("PlayerReloading");
 
     mAutoBasePose = false;
 }

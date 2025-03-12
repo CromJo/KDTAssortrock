@@ -17,7 +17,7 @@ private:
 	HWND			mhWnd;
 	FResolution		mRS;
 
-	bool			mWindowMode = true;
+	bool			mWindowMode = true;			// 윈도우 
 
 private:
 	ID2D1RenderTarget* m2DTarget = nullptr;

@@ -78,8 +78,10 @@ private:
     void MoveRight(float DeltaTime);
     void MoveLeft(float DeltaTime);
 
-
     void Fire(float DeltaTime);
+    void MouseFire(float DeltaTime);
+
+    void Reloading(float DeltaTime);
 
     void Skill1(float DeltaTime);
     void Skill1Fire(float DeltaTime);

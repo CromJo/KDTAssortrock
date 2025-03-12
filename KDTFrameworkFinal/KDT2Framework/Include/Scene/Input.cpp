@@ -71,49 +71,67 @@ bool CInput::InitInput()
             return false;
     }
 
-    // 키보드 장치를 획득한다.
+    // 키보드 장치를 획득한다. (실패 시 종료)
     if (FAILED(mkeyboard->Acquire()))
         return false;
 
 
-    // 마우스 장치 생성
+    // 마우스 장치 생성 (실패시 종료)
     if (FAILED(mInput->CreateDevice(GUID_SysMouse, &mMouse, nullptr)))
         return false;
 
-    // 마우스 데이터 형식 설정
+    // 마우스 데이터 형식 설정 (실패시 종료)
     if (FAILED(mMouse->SetDataFormat(&c_dfDIMouse)))
         return false;
 
+	// Device의 WindowMode를 가지고 왔을 경우
     if (CDevice::GetInst()->GetWindowMode())
     {
+		// 마우스 입력의 시스템 상호작용 수준을 설정
+		// 설정 : 백그라운드에서도 장치 획득, 다른 앱들과 충돌안함.
+		// 실패시 종료
         if (FAILED(mMouse->SetCooperativeLevel(mhWnd,
             DISCL_BACKGROUND | DISCL_NONEXCLUSIVE)))
             return false;
     }
-
+	// Device가 WindowMode를 못 가지고 왔다면
     else
     {
+		// 설정 : 백그라운드에서 장치 해제, 여러 앱에서 마우스 장치 획득
         if (FAILED(mMouse->SetCooperativeLevel(mhWnd,
             DISCL_FOREGROUND | DISCL_EXCLUSIVE)))
             return false;
     }
 
-    // 마우스 장치를 획득한다.
+    // 마우스 장치를 획득한다. (접근권한을 가지고 오는 함수)
     if (FAILED(mMouse->Acquire()))
         return false;
 
     return true;
 }
 
+/// <summary>
+/// 키보드 입력 업데이트
+/// </summary>
+/// <returns></returns>
 bool CInput::UpdateKeyboard()
 {
+	// 키보드 연결이 안되었다면 종료
     if (!mkeyboard)
         return false;
 
+	// 키보드 연결이 되어있다면 실행
+	// 키보드의 현재 상태 (mKeyState)를 가지고 옵니다. 
+	// (어떤 키를 눌렀는지에 대한 상태를 의미)
     HRESULT result = mkeyboard->GetDeviceState(256, (LPVOID)&mKeyState);
 
+	// 현재 상태를 못받아오면
     if (FAILED(result))
     {
+		// 현재 상태가
+		// INPUTLOST : 키보드 장치를 획득 못했을 때
+		// NOTACQUIRED : 있었으나, 접근 권한을 잃은 상태일 때
+		// 접근 권한을 받아오도록 설정함.
         if (result == DIERR_INPUTLOST || result == DIERR_NOTACQUIRED)
             mkeyboard->Acquire();
     }
@@ -128,13 +146,14 @@ bool CInput::UpdateMouse()
         return false;
 
     // MouseState는 x, y에는 마우스 좌표, z에는 휠값이 들어온다.
-	//  
     HRESULT result = mMouse->GetDeviceState(sizeof(mMouseState),
         (LPVOID)&mMouseState);
 
-	// 
+	// 마우스 연결이 안된 상태라면
     if (FAILED(result))
     {
+		// 마우스 장치를 획득 못했거나, 권한 잃은 상태였다면 
+		// 접근권한을 받아옴
         if (result == DIERR_INPUTLOST || result == DIERR_NOTACQUIRED)
             mMouse->Acquire();
     }
@@ -142,16 +161,29 @@ bool CInput::UpdateMouse()
     return true;
 }
 
+/// <summary>
+/// 키의 값을 반환하는 기능
+/// </summary>
+/// <param name="Key"></param>
+/// <returns></returns>
 FKeyState* CInput::FindKeyState(unsigned char Key)
 {
+	// 키 맵에 저장된 키값을 찾고,
     auto    iter = mKeyStateMap.find(Key);
 
+	// 못찾았으면 널 반환
     if (iter == mKeyStateMap.end())
         return nullptr;
 
+	// 찾았다면 값을 반환
     return iter->second;
 }
 
+/// <summary>
+/// 키 이름에 바인드된 키를 찾는 함수
+/// </summary>
+/// <param name="Name"></param>
+/// <returns></returns>
 FBindKey* CInput::FindBindKey(const std::string& Name)
 {
     auto    iter = mBindKeyMap.find(Name);
@@ -162,31 +194,44 @@ FBindKey* CInput::FindBindKey(const std::string& Name)
     return iter->second;
 }
 
+/// <summary>
+/// 바인드 키 추가하는 함수
+/// </summary>
+/// <param name="Name"></param>
+/// <param name="Key"></param>
 void CInput::AddBindKey(const std::string& Name, unsigned char Key)
 {
     // 중복된 이름이 있는지 판단한다.
     if (FindBindKey(Name))
         return;
 
+	// 새롭게 바인드할 키를 생성해준다.
     FBindKey* NewKey = new FBindKey;
 
+	// 받아온 키의 상태를 확인한다.
     FKeyState* State = FindKeyState(Key);
 
 	// 키가 등록된게 없다면 생성해서 등록해준다.
 	if (!State)
 	{
+		// 생성하고,
 		State = new FKeyState;
-
+		// 변환 해주고,
 		State->Key = ConvertKey(Key);
-
+		// 등록 해준다.
 		mKeyStateMap.insert(std::make_pair(Key, State));
 	}
-
+	// 바인드 해주고,
 	NewKey->Key = State;
-
+	// 바인드된 키 목록에 추가해준다. 
 	mBindKeyMap.insert(std::make_pair(Name, NewKey));
 }
 
+/// <summary>
+/// 바인드된 키값을 컨트롤키로 변경해주는 함수
+/// </summary>
+/// <param name="Name"></param>
+/// <param name="Ctrl"></param>
 void CInput::ChangeKeyCtrl(const std::string& Name, bool Ctrl)
 {
 	FBindKey* Key = FindBindKey(Name);
@@ -533,6 +578,11 @@ void CInput::UpdateBind(float DeltaTime)
 	}
 }
 
+/// <summary>
+/// Window키 이벤트를 DirectX 입력 이벤트로 변환해주는 함수
+/// </summary>
+/// <param name="Key"></param>
+/// <returns></returns>
 unsigned char CInput::ConvertKey(unsigned char Key)
 {
     if (mInputType == EInputSystem_Type::DInput)

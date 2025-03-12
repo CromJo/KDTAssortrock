@@ -294,8 +294,8 @@ enum class ERenderSortType
 
 enum class EAnimationTextureType
 {
-	SpriteSheet,
-	Frame
+	SpriteSheet,			// 1장에 이미지 N개 일경우 사용
+	Frame					// 1장에 이미지 1개 일경우 사용
 };
 
 struct FAnimationFrame
