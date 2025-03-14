@@ -94,16 +94,26 @@ public:
 		mEndFunction = std::bind(Func, Obj);
 	}
 
+	/// <summary>
+	/// 애니메이션의 추가 이벤트를 추가합니다.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="Name"></param>
+	/// <param name="Frame"></param>
+	/// <param name="Obj"></param>
+	/// <param name="Func"></param>
 	template <typename T>
 	void AddNotify(const std::string& Name,
 		int Frame, T* Obj, void(T::* Func)())
 	{
+		// 애니메이션 알림을 생성합니다.
 		FAnimation2DNotify* Notify = new FAnimation2DNotify;
-
+		// 초기 세팅을 합니다.
 		Notify->Name = Name;
 		Notify->Frame = Frame;
 		Notify->Function = std::bind(Func, Obj);
 
+		// 추가적인 이벤트 목록에 추가합니다.
 		mNotifyList.emplace_back(Notify);
 	}
 };

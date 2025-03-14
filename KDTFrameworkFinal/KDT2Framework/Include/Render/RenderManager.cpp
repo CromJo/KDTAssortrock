@@ -116,7 +116,8 @@ bool CRenderManager::Init()
 	// 이름을 바꾸든 파일을 바꾸든 둘중하나 택1
 	mMouseWidget = CSceneUIManager::CreateWidgetStatic<CMouseWidget>("Mouse");
 
-	ShowCursor(FALSE);
+	// 마우스 위젯 출력 구문
+	//ShowCursor(FALSE);
 
 	return true;
 }

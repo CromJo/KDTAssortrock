@@ -6,6 +6,7 @@
 #include "TornadoBullet.h"
 #include "TalonR.h"
 #include "GravityBullet.h"
+#include "HitScanBullet.h"
 #include "../Component/MovementComponent.h"
 #include "../Component/RotationComponent.h"
 #include "../Component/CameraComponent.h"
@@ -104,12 +105,14 @@ bool CPlayerObject::Init()
     mAnimation->AddSequence("PlayerAttack", 1.f, 1.f, false, false);
     mAnimation->AddSequence("PlayerReloading", 1.2f, 1.f, false, false);
 
+    // 애니메이션의 마지막 프레임 동작 후 부가적인 이벤트 실행 (부가적 이벤트 : AttackEnd)
     mAnimation->SetEndFunction<CPlayerObject>("PlayerAttack",
         this, &CPlayerObject::AttackEnd);
+    // 애니메이션의 부가적인 이벤트를 추가 및 실행. (부가적 이벤트 : AttackNotify함수)
     mAnimation->AddNotify<CPlayerObject>("PlayerAttack",
         2, this, &CPlayerObject::AttackNotify);
 
-    // 장전 모션 끝난 후
+    // 장전 모션 끝난 후 이벤트 설정
     mAnimation->SetEndFunction<CPlayerObject>("PlayerReloading",
         this, &CPlayerObject::AttackEnd);
 
@@ -133,10 +136,12 @@ bool CPlayerObject::Init()
     mLine->SetRelativePos(0.f, 50.f);
     mLine->SetLineDistance(300.f);
 
-    // 카메라 최종 세팅타입 : 원근 투영 방식 (현재 버그 있음 깊이 활성화해야함)
-    mCamera->SetProjectionType(ECameraProjectionType::Perspective);
+    // 카메라 최종 세팅타입 : 직교 투영 방식
+    // 원근 투영방식 다시는 보지말자 시부레 
+    mCamera->SetProjectionType(ECameraProjectionType::Ortho);
 
-    mCamera->SetRelativePos(0.f, 200.f, -400.f);
+    //mCamera->SetRelativePos(0.f, 200.f, -400.f);
+    mCamera->SetRelativePos(0.f, 0.f, 0.f);
 
     mRoot->AddChild(mCamera);
 
@@ -387,7 +392,7 @@ float CPlayerObject::Damage(float Attack, CSceneObject* Obj)
 
 void CPlayerObject::MoveUp(float DeltaTime)
 {
-    mMovement->AddMove(mRootComponent->GetAxis(EAxis::Z));
+    mMovement->AddMove(mRootComponent->GetAxis(EAxis::Y));
 
     mAnimation->ChangeAnimation("PlayerWalk");
 
@@ -396,7 +401,7 @@ void CPlayerObject::MoveUp(float DeltaTime)
 
 void CPlayerObject::MoveDown(float DeltaTime)
 {
-    mMovement->AddMove(mRootComponent->GetAxis(EAxis::Z) * -1.f);
+    mMovement->AddMove(mRootComponent->GetAxis(EAxis::Y) * -1.f);
 
     mAnimation->ChangeAnimation("PlayerWalk");
 
@@ -744,27 +749,62 @@ void CPlayerObject::UpdateSkill4(float DeltaTime)
 
 }
 
+/// <summary>
+/// 공격이 끝날 경우 실행되는 기능
+/// </summary>
 void CPlayerObject::AttackEnd()
 {
+    // 애니메이션 변경 및 로그 남김 
     CLog::PrintLog("AttackEnd");
     mAnimation->ChangeAnimation("PlayerIdle");
 }
 
+/// <summary>
+/// 공격 애니메이션 실행시 동시실행하는 함수
+/// (총알의 생성, 이동)
+/// </summary>
 void CPlayerObject::AttackNotify()
 {
-    CLog::PrintLog("Attack");
-    CBulletObject* Bullet = mScene->CreateObj<CBulletObject>("Bullet");
+    // 콜라이더 생성 말고 그냥 클릭한 곳에 Collider 존재 시 대미지를 주도록 하면 될까?
 
-    Bullet->SetBulletCollisionProfile("PlayerAttack");
-
-    CSceneComponent* Root = Bullet->GetRootComponent();
-
-    FVector3D Pos = mRoot->GetWorldPosition();
-    FVector3D Dir = mRoot->GetAxis(EAxis::Y);
-
-    Root->SetWorldScale(50.f, 50.f);
+    //CLog::PrintLog("Attack");
+    //CBulletObject* Bullet = mScene->CreateObj<CBulletObject>("Bullet");
+    //
+    //// 불렛에 콜라이더 설정
+    //Bullet->SetBulletCollisionProfile("PlayerAttack");
+    //
+    //// 불렛의 상위 컴포넌트는 이 씬의 컴포넌트로 만들고
+    //CSceneComponent* Root = Bullet->GetRootComponent();
+    //// 플레이어의 위치와 좌표값을 받아서
+    //FVector3D Pos = mRoot->GetWorldPosition();
+    //FVector3D Dir = mRoot->GetAxis(EAxis::Y);
+    //
+    //// 불렛의 이미지 트랜스폼값을 설정함
+    //Root->SetWorldScale(250.f, 250.f);
+    //Root->SetWorldRotation(mRoot->GetWorldRotation());
+    //Root->SetWorldPos(Pos + Dir * 75.f);
+    //
+    //// N초 뒤 제거
+    //Bullet->SetLifeTime(2.f);
+    
+    CHitScanBullet* HitScan = mScene->CreateObj<CHitScanBullet>("HitScan");
+    
+    CSceneComponent* Root = HitScan->GetRootComponent();
+    
+    // 마우스 좌표값을 받음
+    FVector2D Pos = mScene->GetInput()->GetMouseWorldPos2D();
+    
+    Root->SetWorldScale(100.f, 100.f);
     Root->SetWorldRotation(mRoot->GetWorldRotation());
-    Root->SetWorldPos(Pos + Dir * 75.f);
+    Root->SetWorldPos(Pos.x, Pos.y);
+    //
+    //std::string str;
+    //str += "<Mouse Position> x : ";
+    //str += std::to_string(Pos.x);
+    //str += ", y : ";
+    //str += std::to_string(Pos.y);
+    //CLog::PrintLog(str);
+    //
+    HitScan->SetLifeTime(2.f);
 
-    Bullet->SetLifeTime(2.f);
 }

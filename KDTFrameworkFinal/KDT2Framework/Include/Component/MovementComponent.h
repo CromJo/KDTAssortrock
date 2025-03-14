@@ -78,6 +78,8 @@ public:
 
 	void SetMovePoint(const FVector2D& Pos);
 
+	void SetMovePointZ(const FVector2D& Pos);
+
 public:
 	virtual bool Init();
 	virtual bool Init(const char* FileName);

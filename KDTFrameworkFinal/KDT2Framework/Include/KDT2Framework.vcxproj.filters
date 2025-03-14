@@ -582,6 +582,9 @@
     <ClCompile Include="Scene\ThreadNavigation.cpp">
       <Filter>05. Scene\06. Navigation</Filter>
     </ClCompile>
+    <ClCompile Include="Object\HitScanBullet.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -982,6 +985,9 @@
     </ClInclude>
     <ClInclude Include="Scene\ThreadNavigation.h">
       <Filter>05. Scene\06. Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\HitScanBullet.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

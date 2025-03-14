@@ -4,7 +4,7 @@
 
 enum class ECameraProjectionType
 {
-	Perspective,
+	Perspective, // 다신 보지말자 시부레
 	Ortho
 };
 
@@ -21,7 +21,7 @@ protected:
 	virtual ~CCameraComponent();
 
 protected:
-	ECameraProjectionType	mProjType = ECameraProjectionType::Perspective;
+	ECameraProjectionType	mProjType = ECameraProjectionType::Ortho;
 	FMatrix		mmatView;
 	FMatrix		mmatProj;
 	

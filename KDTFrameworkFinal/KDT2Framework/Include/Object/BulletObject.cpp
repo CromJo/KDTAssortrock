@@ -6,6 +6,7 @@
 #include "../Component/SpriteComponent.h"
 #include "SpriteEffect.h"
 #include "../Scene/Scene.h"
+#include "../Scene/Input.h"
 
 CBulletObject::CBulletObject()
 {
@@ -41,6 +42,7 @@ bool CBulletObject::Init()
     /*mRoot->SetMesh("CenterRect");
     mRoot->SetShader("ColorMeshShader");*/
 
+    // 이미지 및 중심 설정
     mRoot->SetTexture("Bullet", TEXT("Texture/block_ball.png"));
     mRoot->SetPivot(0.5f, 0.5f);
 
@@ -48,6 +50,7 @@ bool CBulletObject::Init()
 
     SetRootComponent(mRoot);
 
+    // 총알의 실제 충돌 범위 설정
     mBody->SetBoxSize(50.f, 50.f);
 
     mBody->SetCollisionBeginFunc<CBulletObject>(this,
@@ -55,9 +58,13 @@ bool CBulletObject::Init()
 
     mRoot->AddChild(mBody);
 
+    // 총알의 움직임 추가 
     mMovement->SetUpdateComponent(mRoot);
-
+    // 움직임 관련 설정 
+    // (MoveAxis를 마우스의 위치 값으로 깊이를 넣어줘야함.)
     mMovement->SetMoveAxis(EAxis::Y);
+    //FVector2D MoveBullet = mScene->GetInput()->GetMouseWorldPos2D();
+    //mMovement->SetMovePointZ(MoveBullet);
     mMovement->SetMoveSpeed(500.f);
 
     return true;
@@ -77,7 +84,7 @@ void CBulletObject::Update(float DeltaTime)
 void CBulletObject::CollisionBullet(const FVector3D& HitPoint,
     CColliderBase* Dest)
 {
-    //CLog::PrintLog("Collision");
+    CLog::PrintLog("Collision");
 
     Dest->GetOwner()->Damage(1.f, this);
 

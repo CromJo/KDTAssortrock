@@ -57,10 +57,18 @@ bool CNavigation::Init()
     return true;
 }
 
+/// <summary>
+/// 시작 -> 도착지점의 길 찾기 기능
+/// </summary>
+/// <param name="Start"></param>
+/// <param name="End"></param>
+/// <param name="PathList"></param>
+/// <returns></returns>
 bool CNavigation::FindPath(const FVector2D& Start,
     const FVector2D& End, 
     std::list<FVector2D>& PathList)
 {
+    // 타일맵 존재하지 않으면 길찾으려는 명령 지우고 종료
     if (!mTileMap)
     {
         PathList.clear();
@@ -68,18 +76,20 @@ bool CNavigation::FindPath(const FVector2D& Start,
         return false;
     }
 
+    // 시작지점을 가지고온다. (타일 범위에 벗어나져있으면 종료)
     int StartIndex = mTileMap->GetTileIndex(Start);
     if (StartIndex == -1)
         return false;
-
+    // 도착지점을 가지고온다. (타일 범위에 벗어나져있으면 종료)
     int EndIndex = mTileMap->GetTileIndex(End);
     if (EndIndex == -1)
         return false;
-
+    // 타일의 도착지점에 도달했다면 종료
     if (mTileMap->GetTileType(EndIndex) == 
         ETileType::UnableToMove)
         return false;
 
+    // 도착지점에 도달 못했다면,
     PathList.clear();
 
     // 기존에 사용했던 정보를 초기화해준다.

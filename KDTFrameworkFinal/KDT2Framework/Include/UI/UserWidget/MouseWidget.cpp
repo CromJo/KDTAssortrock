@@ -24,8 +24,9 @@ bool CMouseWidget::Init()
     mImage->SetTexture("MouseDefault", 
         TEXT("Texture\\Mouse\\Default\\MouseCrossHair.png"));
 
-    // 마우스 이미지 사이즈
+    // 마우스 이미지 및 중심 설정
     mImage->SetSize(32.f, 32.f);
+    mImage->SetPivot(0.5f, -0.5f);
 
     // 마우스 이미지로 위젯 추가.
     AddWidget(mImage);

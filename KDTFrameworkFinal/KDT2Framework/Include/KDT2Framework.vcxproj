@@ -193,6 +193,7 @@
     <ClCompile Include="Object\EditorPlayer.cpp" />
     <ClCompile Include="Object\GravityBullet.cpp" />
     <ClCompile Include="Object\GunnerMonster.cpp" />
+    <ClCompile Include="Object\HitScanBullet.cpp" />
     <ClCompile Include="Object\MonsterObject.cpp" />
     <ClCompile Include="Object\NearingMonster.cpp" />
     <ClCompile Include="Object\ObjectSpawnPoint.cpp" />
@@ -323,6 +324,7 @@
     <ClInclude Include="Object\EditorPlayer.h" />
     <ClInclude Include="Object\GravityBullet.h" />
     <ClInclude Include="Object\GunnerMonster.h" />
+    <ClInclude Include="Object\HitScanBullet.h" />
     <ClInclude Include="Object\MonsterObject.h" />
     <ClInclude Include="Object\NearingMonster.h" />
     <ClInclude Include="Object\ObjectSpawnPoint.h" />

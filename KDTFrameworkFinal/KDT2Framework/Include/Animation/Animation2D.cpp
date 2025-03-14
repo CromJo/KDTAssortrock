@@ -141,7 +141,7 @@ bool CAnimation2D::AddSequence(CAnimation2DData* Asset,
 	Sequence = new CAnimation2DSequence;
 
 	Sequence->mOwner = this;
-
+	
 	Sequence->SetAsset(Asset);
 	Sequence->SetPlayTime(PlayTime);
 	Sequence->SetPlayRate(PlayRate);

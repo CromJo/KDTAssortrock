@@ -19,11 +19,19 @@ CNavAgent::~CNavAgent()
 {
 }
 
+/// <summary>
+/// 길 찾기 기능
+/// </summary>
+/// <param name="Start"></param>
+/// <param name="End"></param>
+/// <returns></returns>
 bool CNavAgent::FindPath(const FVector2D& Start, 
 	const FVector2D& End)
 {
+	// 현재 씬을 받아와서
 	CScene* Scene = CSceneManager::GetInst()->GetCurrentScene();
-
+	
+	// 현재씬의 길찾기 기능ㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㅇ
 	return Scene->GetNavigation()->FindPath(Start, End, mPathList);
 }
 

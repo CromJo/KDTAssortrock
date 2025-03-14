@@ -55,26 +55,47 @@ private:
 		const std::string& Name);
 
 public:
+	/// <summary>
+	/// 애니메이션 마지막 프레임의 추가 이벤트 추가.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="Name"></param>
+	/// <param name="Obj"></param>
+	/// <param name="Func"></param>
 	template <typename T>
 	void SetEndFunction(const std::string& Name, T* Obj, void(T::* Func)())
 	{
+		// 시퀀스 찾고
 		CAnimation2DSequence* Sequence = FindSequence(Name);
 
+		// 없으면 종료
 		if (!Sequence)
 			return;
 
+		// 있으면 추가적인 이벤트를 추가.
 		Sequence->SetEndFunction<T>(Obj, Func);
 	}
 
+	/// <summary>
+	/// 애니메이션 추가 알림
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="Name"></param>
+	/// <param name="Frame"></param>
+	/// <param name="Obj"></param>
+	/// <param name="Func"></param>
 	template <typename T>
 	void AddNotify(const std::string& Name,
 		int Frame, T* Obj, void(T::* Func)())
 	{
+		// 시퀀스를 찾아서 대입
 		CAnimation2DSequence* Sequence = FindSequence(Name);
 
+		// 시퀀스 없으면 종료
 		if (!Sequence)
 			return;
 
+		// 시퀀스의 추가 동작할 기능을 추가. 
 		Sequence->AddNotify<T>(Name, Frame, Obj, Func);
 	}
 };
