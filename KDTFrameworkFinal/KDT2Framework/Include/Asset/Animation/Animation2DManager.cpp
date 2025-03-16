@@ -385,6 +385,10 @@ CAnimation2DData* CAnimation2DManager::FindAnimation(
     return iter->second;
 }
 
+/// <summary>
+/// 애니메이션 해제 함수
+/// </summary>
+/// <param name="Animation"></param>
 void CAnimation2DManager::ReleaseAnimation(
     CAsset* Animation)
 {

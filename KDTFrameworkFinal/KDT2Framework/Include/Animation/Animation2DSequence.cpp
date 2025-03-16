@@ -45,32 +45,47 @@ void CAnimation2DSequence::SetPlayTime(float PlayTime)
 		mFrameTime = mPlayTime / mAsset->GetFrameCount();
 }
 
+/// <summary>
+/// 애니메이션 시퀀스 업데이트 구문
+/// </summary>
+/// <param name="DeltaTime"></param>
 void CAnimation2DSequence::Update(float DeltaTime)
 {
+	// 시간 증가
 	mTime += DeltaTime * mPlayRate;
 
+	// 시간 넘기면 실행
 	if (mTime >= mFrameTime)
 	{
+		// 오차 분만큼 빼줌
 		mTime -= mFrameTime;
 
+		// 역방향 실행
 		if (mReverse)
 		{
+			// 프레임 감소
 			--mFrame;
 
+			// 프레임이 
 			if (mFrame < 0)
 			{
+				// 마지막 프레임이고, 
+				// 마지막 프레임에 대한 이벤트가 활성화가 되어있으면 실행
 				if (mEndFunction && mEndFunctionEnable)
 				{
+					// 이벤트가 반복 되지 않도록 끈 후, 이벤트 실행
 					mEndFunctionEnable = false;
 					mEndFunction();
 				}
-
+				// 반복 실행이 가능한 이벤트면
 				if (mLoop)
-				{
+				{	
+					// 이벤트가 반복되도록 설정 후,
+					// 전 프레임으로 돌려주기
 					mEndFunctionEnable = true;
 					mFrame = mAsset->GetFrameCount() - 1;
 				}
-
+				// 반복 실행이 불가능하면 끝내도록 설정
 				else
 					mFrame = 0;
 			}

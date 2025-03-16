@@ -98,5 +98,20 @@ public:
 		// 시퀀스의 추가 동작할 기능을 추가. 
 		Sequence->AddNotify<T>(Name, Frame, Obj, Func);
 	}
+
+	template <typename T>
+	void AddNotifyUpdate(const std::string& Name,
+		int Frame, T* Obj, void(T::* Func)())
+	{
+		// 시퀀스를 찾아서 대입
+		CAnimation2DSequence* Sequence = FindSequence(Name);
+
+		// 시퀀스 없으면 종료
+		if (!Sequence)
+			return;
+
+		// 시퀀스의 추가 동작할 기능을 추가. 
+		Sequence->AddNotify<T>(Name, Frame, Obj, Func);
+	}
 };
 

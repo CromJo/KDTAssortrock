@@ -348,81 +348,87 @@ void CInput::UpdateInput(float DeltaTime)
 {
     switch (mInputType)
     {
+	// 다이렉트 입력 기능을 사용 중이면 실행 할 구문
     case EInputSystem_Type::DInput:
+		// 왼쪽 컨트롤 키 입력이 들어왔을 경우
 		if (mKeyState[DIK_LCONTROL] & 0x80)
 		{
+			// 처음 왼쪽 컨트롤키를 눌렀다면 (안누른 상태에서)
 			if (!mCtrl[EInputType::Down] && !mCtrl[EInputType::Hold])
 			{
 				mCtrl[EInputType::Down] = true;
 				mCtrl[EInputType::Hold] = true;
 			}
-
+			// 이전 프레임에도 눌렀고 지금도 누른 상태라면
 			else
 				mCtrl[EInputType::Down] = false;
 		}
-
+		// 컨트롤 키를 누르고 있는 상태라면
 		else if (mCtrl[EInputType::Hold])
 		{
 			mCtrl[EInputType::Down] = false;
 			mCtrl[EInputType::Hold] = false;
 			mCtrl[EInputType::Up] = true;
 		}
-
+		// 컨트롤 키를 떼었다면
 		else if (mCtrl[EInputType::Up])
 		{
 			mCtrl[EInputType::Up] = false;
 		}
-
+		// 왼쪽 알트 키를 눌렀다면
 		if (mKeyState[DIK_LALT] & 0x80)
 		{
+			// 처음 누른 상태라면 (안누른 상태에서)
 			if (!mAlt[EInputType::Down] && !mAlt[EInputType::Hold])
 			{
 				mAlt[EInputType::Down] = true;
 				mAlt[EInputType::Hold] = true;
 			}
-
+			// 이전 프레임에도 눌렀고 지금도 누른 상태라면
 			else
 				mAlt[EInputType::Down] = false;
 		}
-
+		// 알트 키를 누르고 있는 상태라면
 		else if (mAlt[EInputType::Hold])
 		{
 			mAlt[EInputType::Down] = false;
 			mAlt[EInputType::Hold] = false;
 			mAlt[EInputType::Up] = true;
 		}
-
+		// 알트 키를 떼었다면
 		else if (mAlt[EInputType::Up])
 		{
 			mAlt[EInputType::Up] = false;
 		}
-
+		// 왼쪽 쉬프트 키를 눌렀다면
 		if (mKeyState[DIK_LSHIFT] & 0x80)
 		{
+			// 처음 누른 상태라면 (안누른 상태에서)
 			if (!mShift[EInputType::Down] && !mShift[EInputType::Hold])
 			{
 				mShift[EInputType::Down] = true;
 				mShift[EInputType::Hold] = true;
 			}
-
+			// 이전 프레임에도 눌렀고 지금도 누른 상태라면
 			else
 				mShift[EInputType::Down] = false;
 		}
-
+		// 쉬프트 키를 누르고 있는 상태라면
 		else if (mShift[EInputType::Hold])
 		{
 			mShift[EInputType::Down] = false;
 			mShift[EInputType::Hold] = false;
 			mShift[EInputType::Up] = true;
 		}
-
+		// 쉬프트 키를 떼었다면
 		else if (mShift[EInputType::Up])
 		{
 			mShift[EInputType::Up] = false;
 		}
-
+		// 마우스 버튼 상태 업데이트
         for (int i = 0; i < EMouseButtonType::End; ++i)
         {
+			// 
             if (mMouseState.rgbButtons[i] & 0x80)
             {
                 // Down이 false인 경우는 처음 누르는 경우이다.
@@ -453,24 +459,42 @@ void CInput::UpdateInput(float DeltaTime)
     case EInputSystem_Type::Window:
         break;
     }
-
+	// 키 상태 업데이트
 	auto	iter = mKeyStateMap.begin();
 	auto	iterEnd = mKeyStateMap.end();
-
+	// 키 상태가 존재하는 만큼 반복
 	for (; iter != iterEnd; ++iter)
 	{
 		bool	KeyPush = false;
 
 		switch (iter->second->Key)
 		{
+		// 마우스 왼쪽 버튼
 		case DIK_MOUSELBUTTON:
-			if (mMouseState.rgbButtons[EMouseButtonType::LButton] & 0x80)
+			// 마우스 왼쪽 버튼을 누른 상태면
+			if ((mMouseState.rgbButtons[EMouseButtonType::LButton] & 0x80))
+			{
+				// 시부럴 왜 안되는건지 고쳐보자꾸나
+				//mMouseHold[iter->second->Hold] = true;
 				KeyPush = true;
+			}
+			//else if (mMouseHold[iter->second->Hold])
+			//{
+			//	KeyPush = true;
+			//}
+			//else
+			//{
+			//	mMouseHold[iter->second->Hold] = false;
+			//	mMouseHold[iter->second->Down] = false;
+			//	KeyPush = false;
+			//}
 			break;
+		// 마우스 오른쪽 버튼
 		case DIK_MOUSERBUTTON:
 			if (mMouseState.rgbButtons[EMouseButtonType::RButton] & 0x80)
 				KeyPush = true;
 			break;
+		// 마우스 휠 버튼
 		case DIK_MOUSEWHEEL:
 			break;
 		default:
@@ -482,12 +506,13 @@ void CInput::UpdateInput(float DeltaTime)
 		// 현재 해당 키를 누르고 있을 경우
 		if (KeyPush)
 		{
+			// 처음 누른 상태라면
 			if (!iter->second->Down && !iter->second->Hold)
 			{
 				iter->second->Down = true;
 				iter->second->Hold = true;
 			}
-
+			// 이전 프레임에도 눌렀고 지금도 누르고 있다면
 			else
 				iter->second->Down = false;
 		}

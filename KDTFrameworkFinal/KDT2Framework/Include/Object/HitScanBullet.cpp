@@ -37,14 +37,16 @@ bool CHitScanBullet::Init()
     // 이미지 및 중심 설정
     mRoot->SetTexture("HitScan", TEXT("Texture/HitMarker.png"));
     mRoot->SetPivot(0.5f, 0.5f);
-
-    mRoot->SetWorldScale(100.f, 100.f, 1.f);
+    
+	// 이미지 크기 설정
+    mRoot->SetWorldScale(50.f, 50.f, 1.f);
 
     SetRootComponent(mRoot);
 
     // 총알의 실제 충돌 범위 설정
-    mBody->SetBoxSize(100.f, 100.f);
+    mBody->SetBoxSize(50.f, 50.f);
 
+	// 충돌 시작 함수 설정
     mBody->SetCollisionBeginFunc<CHitScanBullet>(this,
         &CHitScanBullet::CollisionBullet);
 
@@ -58,12 +60,17 @@ void CHitScanBullet::Update(float DeltaTime)
     CSceneObject::Update(DeltaTime);
 }
 
+/// <summary>
+/// 충돌 시 실행할 함수 
+/// </summary>
+/// <param name="HitPoint"></param>
+/// <param name="Dest"></param>
 void CHitScanBullet::CollisionBullet(const FVector3D& HitPoint, CColliderBase* Dest)
 {
     CLog::PrintLog("Hit Scan");
 
     Dest->GetOwner()->Damage(1.f, this);
-
+    
     CSpriteEffect* Effect = mScene->CreateObj<CSpriteEffect>("HitEffect");
 
     Effect->SetAnimation("HitScan");

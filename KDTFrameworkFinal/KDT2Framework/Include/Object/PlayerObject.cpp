@@ -102,15 +102,17 @@ bool CPlayerObject::Init()
     mAnimation->AddSequence("PlayerIdle", 1.f, 1.f, true, false);
     mAnimation->AddSequence("PlayerRun", 0.7f, 1.f, true, false);
     mAnimation->AddSequence("PlayerWalk", 0.7f, 1.f, true, false);
-    mAnimation->AddSequence("PlayerAttack", 1.f, 1.f, false, false);
+    mAnimation->AddSequence("PlayerAttack", 0.1f, 1.f, false, false);
     mAnimation->AddSequence("PlayerReloading", 1.2f, 1.f, false, false);
 
     // 애니메이션의 마지막 프레임 동작 후 부가적인 이벤트 실행 (부가적 이벤트 : AttackEnd)
-    mAnimation->SetEndFunction<CPlayerObject>("PlayerAttack",
-        this, &CPlayerObject::AttackEnd);
+    //mAnimation->SetEndFunction<CPlayerObject>("PlayerAttack",
+    //    this, &CPlayerObject::AttackEnd);
     // 애니메이션의 부가적인 이벤트를 추가 및 실행. (부가적 이벤트 : AttackNotify함수)
+    mAnimation->SetLoop("PlayerAttack", true);
     mAnimation->AddNotify<CPlayerObject>("PlayerAttack",
         2, this, &CPlayerObject::AttackNotify);
+    // 반복 실행
 
     // 장전 모션 끝난 후 이벤트 설정
     mAnimation->SetEndFunction<CPlayerObject>("PlayerReloading",
@@ -787,6 +789,16 @@ void CPlayerObject::AttackNotify()
     //// N초 뒤 제거
     //Bullet->SetLifeTime(2.f);
     
+    // 왼쪽 클릭 안하고 있으면 대기모션으로 변경 후 종료
+    if(!mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton))
+    {
+        AttackEnd();
+
+        return;
+    }
+
+    // 왼쪽 버튼을 누르고 있다면
+    // 총알을 생성.
     CHitScanBullet* HitScan = mScene->CreateObj<CHitScanBullet>("HitScan");
     
     CSceneComponent* Root = HitScan->GetRootComponent();
@@ -794,9 +806,12 @@ void CPlayerObject::AttackNotify()
     // 마우스 좌표값을 받음
     FVector2D Pos = mScene->GetInput()->GetMouseWorldPos2D();
     
-    Root->SetWorldScale(100.f, 100.f);
+    // 크기 조정은 HitScan Init에서 하는 중.
+    //Root->SetWorldScale(50.f, 50.f);
     Root->SetWorldRotation(mRoot->GetWorldRotation());
     Root->SetWorldPos(Pos.x, Pos.y);
+    HitScan->SetLifeTime(0.1f);
+    
     //
     //std::string str;
     //str += "<Mouse Position> x : ";
@@ -805,6 +820,4 @@ void CPlayerObject::AttackNotify()
     //str += std::to_string(Pos.y);
     //CLog::PrintLog(str);
     //
-    HitScan->SetLifeTime(2.f);
-
 }
