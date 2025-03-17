@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "SceneObject.h"
 
 class CHitScanBullet :
@@ -26,4 +26,3 @@ private:
     void CollisionBullet(const FVector3D& HitPoint,
         class CColliderBase* Dest);
 };
-

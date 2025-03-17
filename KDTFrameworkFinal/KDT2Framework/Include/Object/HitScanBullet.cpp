@@ -1,4 +1,4 @@
-#include "HitScanBullet.h"
+ï»¿#include "HitScanBullet.h"
 #include "../Scene/Scene.h"
 #include "../Component/SpriteComponent.h"
 #include "../Component/ColliderAABB2D.h"
@@ -34,19 +34,19 @@ bool CHitScanBullet::Init()
     mRoot = CreateComponent<CSpriteComponent>();
     mBody = CreateComponent<CColliderAABB2D>();
 
-    // ÀÌ¹ÌÁö ¹× Áß½É ¼³Á¤
+    // ì´ë¯¸ì§€ ë° ì¤‘ì‹¬ ì„¤ì •
     mRoot->SetTexture("HitScan", TEXT("Texture/HitMarker.png"));
     mRoot->SetPivot(0.5f, 0.5f);
     
-	// ÀÌ¹ÌÁö Å©±â ¼³Á¤
+	// ì´ë¯¸ì§€ í¬ê¸° ì„¤ì •
     mRoot->SetWorldScale(50.f, 50.f, 1.f);
 
     SetRootComponent(mRoot);
 
-    // ÃÑ¾ËÀÇ ½ÇÁ¦ Ãæµ¹ ¹üÀ§ ¼³Á¤
+    // ì´ì•Œì˜ ì‹¤ì œ ì¶©ëŒ ë²”ìœ„ ì„¤ì •
     mBody->SetBoxSize(50.f, 50.f);
 
-	// Ãæµ¹ ½ÃÀÛ ÇÔ¼ö ¼³Á¤
+	// ì¶©ëŒ ì‹œì‘ í•¨ìˆ˜ ì„¤ì •
     mBody->SetCollisionBeginFunc<CHitScanBullet>(this,
         &CHitScanBullet::CollisionBullet);
 
@@ -61,7 +61,7 @@ void CHitScanBullet::Update(float DeltaTime)
 }
 
 /// <summary>
-/// Ãæµ¹ ½Ã ½ÇÇàÇÒ ÇÔ¼ö 
+/// ì¶©ëŒ ì‹œ ì‹¤í–‰í•  í•¨ìˆ˜ 
 /// </summary>
 /// <param name="HitPoint"></param>
 /// <param name="Dest"></param>
