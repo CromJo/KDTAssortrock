@@ -298,16 +298,22 @@ void CSceneObject::Destroy()
     }
 }
 
+/// <summary>
+/// 씬오브젝트의 마지막 프레임에 대한 기능입니다.
+/// </summary>
 void CSceneObject::EndFrame()
 {
+    // 컴포넌트가 아닌 목록들을 불러옵니다.
     auto    iter = mNonComponentList.begin();
     auto    iterEnd = mNonComponentList.end();
 
+    // 컴포넌트가 아닌 오브젝트들의 마지막 프레임의 기능을 실행합니다.
     for (; iter != iterEnd; ++iter)
     {
         (*iter)->EndFrame();
     }
 
+    // 최상위 컴포넌트의 마지막 프레임 기능을 실행합니다.
     mRootComponent->EndFrame();
 }
 

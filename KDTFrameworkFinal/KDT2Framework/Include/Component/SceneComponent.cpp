@@ -293,35 +293,51 @@ void CSceneComponent::EraseOwner()
     }
 }
 
+/// <summary>
+/// 씬 컴포넌트의 마지막 프레임을 담당합니다.
+/// 
+/// </summary>
 void CSceneComponent::EndFrame()
 {
+    // 컴포넌트들의 엔드 프레임도 담당 (하지만 아무것도 없음)
     CComponent::EndFrame();
 
+    // 씬 컴포넌트의 자식 목록들을 불러옵니다.
     std::vector<CSharedPtr<CSceneComponent>>::iterator  iter;
     std::vector<CSharedPtr<CSceneComponent>>::iterator  iterEnd = mChildList.end();
 
+    // 모든 자식 목록의 마지막 프레임을 체크합니다.
     for (iter = mChildList.begin(); iter != iterEnd; ++iter)
     {
         (*iter)->EndFrame();
     }
 }
 
+/// <summary>
+/// 로컬좌표계로 크기를 설정합니다.
+/// </summary>
+/// <param name="Scale"></param>
 void CSceneComponent::SetRelativeScale(const FVector3D& Scale)
 {
+    // 받아온 크기를 로컬크기가  값에 대입합니다.
     mRelativeScale = Scale;
 
+    // 부모가 존재하면 월드 좌표계로 대입합니다.
     if (mParent)
     {
         mWorldScale = mRelativeScale * mParent->mWorldScale;
     }
-
+    // 부모가 존재하지 않으면 로컬스케일을 월드 스케일로 변경합니다.
     else
     {
         mWorldScale = mRelativeScale;
     }
 
+    // 자식목록에서 몇개가 있는지 체크합니다.
     size_t  Size = mChildList.size();
 
+    // 갯수만큼 돌립니다.
+    // 월드좌표계 : 수식으로 크기를 변경합니다.
     for (size_t i = 0; i < Size; ++i)
     {
         mChildList[i]->mWorldPos = mChildList[i]->mRelativePos * mWorldScale +

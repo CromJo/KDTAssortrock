@@ -2,10 +2,6 @@
 #include "../Component/StaticMeshComponent.h"
 #include "../Scene/Scene.h"
 #include "../Scene/Input.h"
-#include "BulletObject.h"
-#include "TornadoBullet.h"
-#include "TalonR.h"
-#include "GravityBullet.h"
 #include "HitScanBullet.h"
 #include "../Component/MovementComponent.h"
 #include "../Component/RotationComponent.h"
@@ -14,8 +10,6 @@
 #include "../Component/ColliderSphere2D.h"
 #include "../Component/ColliderOBB2D.h"
 #include "../Component/ColliderLine2D.h"
-#include "BulletDot.h"
-#include "PenetrationBullet.h"
 #include "../Component/SpriteComponent.h"
 #include "../Animation/Animation2D.h"
 #include "../Share/Log.h"
@@ -29,6 +23,14 @@
 #include "../Asset/AssetManager.h"
 #include "../Asset/Texture/Texture.h"
 #include "../Asset/Texture/TextureManager.h"
+
+// 추후 삭제 전처리기
+#include "TornadoBullet.h"
+#include "TalonR.h"
+#include "GravityBullet.h"
+#include "BulletObject.h"
+#include "BulletDot.h"
+#include "PenetrationBullet.h"
 
 CPlayerObject::CPlayerObject()
 {

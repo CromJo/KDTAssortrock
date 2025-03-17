@@ -134,14 +134,15 @@ bool CAnimation2D::AddSequence(CAnimation2DData* Asset,
 	float PlayTime, float PlayRate, bool Loop, bool Reverse)
 {
 	CAnimation2DSequence* Sequence = FindSequence(Asset->GetName());
-
+	// 시퀀스를 찾았으면 종료
 	if (Sequence)
 		return false;
 
+	// 못찾았으면 생성
 	Sequence = new CAnimation2DSequence;
 
 	Sequence->mOwner = this;
-	
+	// 초기 세팅
 	Sequence->SetAsset(Asset);
 	Sequence->SetPlayTime(PlayTime);
 	Sequence->SetPlayRate(PlayRate);
@@ -216,7 +217,7 @@ void CAnimation2D::ChangeAnimation(const std::string& Name)
 	if (Name.empty())
 		return;
 
-	// 
+	// 현재 시퀀스가 아니면 종료 (이 부분에 대한 파악이 아직 안되었음)
 	else if (!mCurrentSequence)
 		return;
 

@@ -261,6 +261,10 @@ void CCollisionQuadTreeNode::Collision(float DeltaTime)
 	}
 }
 
+/// <summary>
+/// 0번째 자식을 4등분할 하는 기능
+/// </summary>
+/// <param name="NodePool"></param>
 void CCollisionQuadTreeNode::ReturnNodePool(
 	std::vector<CCollisionQuadTreeNode*>& NodePool)
 {
@@ -463,6 +467,9 @@ void CCollisionQuadTree::Render()
 #endif // _DEBUG
 }
 
+/// <summary>
+/// 최상위 객체의 노드풀을 수거한다
+/// </summary>
 void CCollisionQuadTree::ReturnNodePool()
 {
 	// 생성된 노드들을 노드 풀에 수거하고 다음 프레임에

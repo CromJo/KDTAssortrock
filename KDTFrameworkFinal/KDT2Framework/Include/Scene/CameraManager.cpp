@@ -56,17 +56,30 @@ void CCameraManager::SetViewTarget(CCameraComponent* ViewTarget)
 	mViewTarget = ViewTarget;
 }
 
+/// <summary>
+/// 카메라 초기화
+/// 1. 단위 행렬을 받아옵니다.
+/// </summary>
+/// <returns></returns>
 bool CCameraManager::Init()
 {
+	// 단위 행렬을 받아옵니다.
 	mIdentity = FMatrix::StaticIdentity();
 
 	return true;
 }
 
+/// <summary>
+/// 카메라 업데이트
+/// </summary>
+/// <param name="DeltaTime"></param>
 void CCameraManager::Update(float DeltaTime)
 {
+	// 바라볼 타겟이 존재하지만,
 	if (mViewTarget)
 	{
+		// 타겟이 활성화되어 있지 않다면,
+		// 바라볼게 없음을 인지하라.
 		if (!mViewTarget->IsActive())
 			mViewTarget = nullptr;
 	}
