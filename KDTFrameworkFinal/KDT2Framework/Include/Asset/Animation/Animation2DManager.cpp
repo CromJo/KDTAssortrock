@@ -165,11 +165,14 @@ bool CAnimation2DManager::Init()
     SetTexture("Explosion", "Explosion", FileNames);
     AddFrameCount("Explosion", 89, 0.f, 0.f, 1.f, 1.f);
 
+    CreateAnimation("HitScan");
+    SetAnimationTextureType("HitScan", EAnimationTextureType::Frame);
+    
     // 히트마커 이미지 추가
     FileNames.clear();
     FileNames.emplace_back(TEXT("Texture\\HitMarker.png"));
     
-    SetTexture("HitScan", "HitMarker", FileNames);
+    SetTexture("HitScan", "HitScan", FileNames);
     AddFrameCount("HitScan", 1, 0.f, 0.f, 1.f, 1.f);
 
     return true;

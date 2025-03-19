@@ -16,13 +16,13 @@ protected:
     CSharedPtr<class CSpriteComponent>  mRoot;
     CSharedPtr<class CColliderAABB2D>       mBody;
 
-    void SetBulletCollisionProfile(const std::string& Name);
 
 public:
     virtual bool Init();
     virtual void Update(float DeltaTime);
+    void SetBulletCollisionProfile(const std::string& Name);
 
 private:
-    void CollisionBullet(const FVector3D& HitPoint,
+    void CollisionHitScan(const FVector3D& HitPoint,
         class CColliderBase* Dest);
 };

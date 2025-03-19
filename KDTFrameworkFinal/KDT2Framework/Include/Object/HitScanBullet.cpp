@@ -27,6 +27,7 @@ CHitScanBullet::~CHitScanBullet()
 
 void CHitScanBullet::SetBulletCollisionProfile(const std::string& Name)
 {
+    mBody->SetCollisionProfile(Name);
 }
 
 bool CHitScanBullet::Init()
@@ -35,7 +36,8 @@ bool CHitScanBullet::Init()
     mBody = CreateComponent<CColliderAABB2D>();
 
     // 이미지 및 중심 설정
-    mRoot->SetTexture("HitScan", TEXT("Texture/HitMarker.png"));
+    mRoot->SetTexture("Miss", TEXT("Texture/HitMarker.png"));
+    
     mRoot->SetPivot(0.5f, 0.5f);
     
 	// 이미지 크기 설정
@@ -48,7 +50,7 @@ bool CHitScanBullet::Init()
 
 	// 충돌 시작 함수 설정
     mBody->SetCollisionBeginFunc<CHitScanBullet>(this,
-        &CHitScanBullet::CollisionBullet);
+        &CHitScanBullet::CollisionHitScan);
 
     mRoot->AddChild(mBody);
 
@@ -65,7 +67,7 @@ void CHitScanBullet::Update(float DeltaTime)
 /// </summary>
 /// <param name="HitPoint"></param>
 /// <param name="Dest"></param>
-void CHitScanBullet::CollisionBullet(const FVector3D& HitPoint, CColliderBase* Dest)
+void CHitScanBullet::CollisionHitScan(const FVector3D& HitPoint, CColliderBase* Dest)
 {
     CLog::PrintLog("Hit Scan");
 
@@ -74,7 +76,7 @@ void CHitScanBullet::CollisionBullet(const FVector3D& HitPoint, CColliderBase* D
     CSpriteEffect* Effect = mScene->CreateObj<CSpriteEffect>("HitEffect");
 
     Effect->SetAnimation("HitScan");
-
+    
     Effect->SetWorldPos(HitPoint);
     Effect->SetWorldScale(100.f, 100.f);
 

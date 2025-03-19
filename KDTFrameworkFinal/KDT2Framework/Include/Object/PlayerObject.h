@@ -58,6 +58,10 @@ protected:
 
     int             mHP = 10;
 
+    int             mAmmoMax = 60;      // 최대 60발
+    int             mAmmo = mAmmoMax;   // 초기 60발
+    bool            isReloading = false;// 재장전중인가?
+    
 public:
     virtual bool Init();
     virtual void Update(float DeltaTime);
@@ -102,13 +106,15 @@ private:
 
     void Skill9(float DeltaTime);
 
-
 private:
     void UpdateSkill2(float DeltaTime);
     void UpdateSkill4(float DeltaTime);
+    void UpdateReloading(float DeltaTime);
 
 public:
-    void AttackEnd();
-    void AttackNotify();
+    void AttackEnd();       // 공격이 끝났을때 
+    void AttackNotify();    // 공격 중일 때
+
+    void ReloadingEnd();
 };
 

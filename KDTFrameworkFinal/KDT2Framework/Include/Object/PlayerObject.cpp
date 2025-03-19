@@ -113,12 +113,12 @@ bool CPlayerObject::Init()
     // 애니메이션의 부가적인 이벤트를 추가 및 실행. (부가적 이벤트 : AttackNotify함수)
     mAnimation->SetLoop("PlayerAttack", true);
     mAnimation->AddNotify<CPlayerObject>("PlayerAttack",
-        2, this, &CPlayerObject::AttackNotify);
+        1, this, &CPlayerObject::AttackNotify);
     // 반복 실행
 
     // 장전 모션 끝난 후 이벤트 설정
     mAnimation->SetEndFunction<CPlayerObject>("PlayerReloading",
-        this, &CPlayerObject::AttackEnd);
+        this, &CPlayerObject::ReloadingEnd);
 
     mRoot->SetWorldPos(0.f, 0.f, 0.f);
     mRoot->SetWorldScale(100.f, 100.f, 1.f);
@@ -292,6 +292,11 @@ void CPlayerObject::Update(float DeltaTime)
     if (mSkill4Enable)
     {
         UpdateSkill4(DeltaTime);
+    }
+
+    if (mAmmo <= 0)
+    {
+        UpdateReloading(DeltaTime);
     }
 
     // 움직이지 않고, 디폴트 자세로 돌아가는 것이 켜져있다면, 
@@ -485,8 +490,22 @@ void CPlayerObject::MouseFire(float DeltaTime)
     mAutoBasePose = false;
 }
 
+/// <summary>
+/// 재장전 기능 
+/// 1. R버튼을 누를 때 실행
+/// 2. 탄알이 0발 남았을 때 실행.
+/// </summary>
+/// <param name="DeltaTime"></param>
 void CPlayerObject::Reloading(float DeltaTime)
 {
+    // 최대 장탄수 일경우 재장전 안함
+    if (mAmmo == mAmmoMax)
+        return;
+    // 재장전을 하고 있는 상태라면 종료
+    if (isReloading)
+        return;
+
+    // 모든 조건이 부합하면 재장전 애니메이션을 실행
     mAnimation->ChangeAnimation("PlayerReloading");
 
     mAutoBasePose = false;
@@ -753,6 +772,10 @@ void CPlayerObject::UpdateSkill4(float DeltaTime)
 
 }
 
+void CPlayerObject::UpdateReloading(float DeltaTime)
+{
+}
+
 /// <summary>
 /// 공격이 끝날 경우 실행되는 기능
 /// </summary>
@@ -769,39 +792,25 @@ void CPlayerObject::AttackEnd()
 /// </summary>
 void CPlayerObject::AttackNotify()
 {
-    // 콜라이더 생성 말고 그냥 클릭한 곳에 Collider 존재 시 대미지를 주도록 하면 될까?
-
-    //CLog::PrintLog("Attack");
-    //CBulletObject* Bullet = mScene->CreateObj<CBulletObject>("Bullet");
-    //
-    //// 불렛에 콜라이더 설정
-    //Bullet->SetBulletCollisionProfile("PlayerAttack");
-    //
-    //// 불렛의 상위 컴포넌트는 이 씬의 컴포넌트로 만들고
-    //CSceneComponent* Root = Bullet->GetRootComponent();
-    //// 플레이어의 위치와 좌표값을 받아서
-    //FVector3D Pos = mRoot->GetWorldPosition();
-    //FVector3D Dir = mRoot->GetAxis(EAxis::Y);
-    //
-    //// 불렛의 이미지 트랜스폼값을 설정함
-    //Root->SetWorldScale(250.f, 250.f);
-    //Root->SetWorldRotation(mRoot->GetWorldRotation());
-    //Root->SetWorldPos(Pos + Dir * 75.f);
-    //
-    //// N초 뒤 제거
-    //Bullet->SetLifeTime(2.f);
-    
-    // 왼쪽 클릭 안하고 있으면 대기모션으로 변경 후 종료
-    if(!mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton))
+    // 왼쪽 클릭 안하고 있거나,
+    // 총알이 다떨어진 상태면,
+    // 대기모션으로 변경 후 종료
+    if(!mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton) ||
+        mAmmo <= 0)
     {
         AttackEnd();
 
         return;
     }
 
+    // 왼쪽클릭하고 있고, 총알이 1발 이상 있을 경우
+    // 1발 사용
+    --mAmmo;
+
     // 왼쪽 버튼을 누르고 있다면
     // 총알을 생성.
     CHitScanBullet* HitScan = mScene->CreateObj<CHitScanBullet>("HitScan");
+    HitScan->SetBulletCollisionProfile("PlayerAttack");
     
     CSceneComponent* Root = HitScan->GetRootComponent();
     
@@ -812,9 +821,9 @@ void CPlayerObject::AttackNotify()
     //Root->SetWorldScale(50.f, 50.f);
     Root->SetWorldRotation(mRoot->GetWorldRotation());
     Root->SetWorldPos(Pos.x, Pos.y);
-    HitScan->SetLifeTime(0.1f);
+    HitScan->SetLifeTime(0.25f);
     
-    //
+    // 출력
     //std::string str;
     //str += "<Mouse Position> x : ";
     //str += std::to_string(Pos.x);
@@ -822,4 +831,8 @@ void CPlayerObject::AttackNotify()
     //str += std::to_string(Pos.y);
     //CLog::PrintLog(str);
     //
+}
+
+void CPlayerObject::ReloadingEnd()
+{
 }
