@@ -16,6 +16,7 @@ struct VS_Output_Tex
 cbuffer Sprite : register(b3)
 {
     float4 gSpriteTint;
+    float4 gSpriteIgnoreColor;
 }
 
 VS_Output_Tex SpriteVS(VS_Input_Tex input)
@@ -36,8 +37,16 @@ PS_Output_Single SpritePS(VS_Output_Tex input)
     PS_Output_Single output = (PS_Output_Single) 0;
     
     float4 Color = gBaseTexture.Sample(gBaseSampler, input.UV);
+   
+    if ((gSpriteIgnoreColor.x - Color).x == 0.00f &&
+        (gSpriteIgnoreColor.y - Color).y == 0.00f &&
+        (gSpriteIgnoreColor.z - Color).z == 0.00f)
+    {        
+        discard;    
+    }
     
     output.Color = Color * gSpriteTint;
+    
     
     return output;
 }

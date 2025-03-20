@@ -44,21 +44,30 @@ CTileMapComponent::~CTileMapComponent()
     SAFE_DELETE(mLineTransformCBuffer);
 }
 
+/// <summary>
+/// 타일맵 컴포넌트의 타일 외곽선 세팅 기능
+/// 1. True : 왼쪽 및 하단의 외곽선을 그려준다.
+/// 2. False: 외곽선을 그려주지 않는다.
+/// </summary>
+/// <param name="Render"></param>
 void CTileMapComponent::SetTileOutLineRender(bool Render)
 {
+    // 외곽선 그려줄지에 대한 불값
     mTileOutLineRender = Render;
 
+    // 외곽선을 그려줄 것이라면,
     if (mTileOutLineRender)
     {
+        // 외곽선 쉐이더를 대입해준다
         mOutLineShader = CShaderManager::GetInst()->FindShader("FrameMeshShader");
-
+        // 현재 씬이 존재할 경우, 왼쪽 및 하단의 외곽선의 데이터를 넣어준다.
         if (mScene)
             mOutLineMesh = mScene->GetAssetManager()->FindMesh("FrameLBRect");
-
+        // 현재 씬이 존재하지 않는다면, 에셋매니저에서 찾아와서 데이터를 넣어준다.
         else
             mOutLineMesh = CAssetManager::GetInst()->GetMeshManager()->FindMesh("FrameLBRect");
     }
-
+    // 외곽선을 안그려줄 것이라면 무시하도록 설정한다.
     else
     {
         mOutLineMesh = nullptr;
@@ -66,12 +75,19 @@ void CTileMapComponent::SetTileOutLineRender(bool Render)
     }
 }
 
+/// <summary>
+/// 타일맵컴포넌트의 타일 텍스쳐 설정 해주는 기능
+/// 1. 존재하면 타일 텍스쳐 설정
+/// </summary>
+/// <param name="Name"></param>
 void CTileMapComponent::SetTileTexture(
     const std::string& Name)
 {
+    // 타일맵렌더컴포넌트가 상위개체에 있다면
     CTileMapRendererComponent* Renderer =
         mOwnerObject->FindSceneComponent<CTileMapRendererComponent>();
-
+    
+    // 타일 텍스쳐를 설정해준다.
     if (Renderer)
         Renderer->SetTileTexture(Name);
 }

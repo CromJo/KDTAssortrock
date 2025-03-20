@@ -120,20 +120,29 @@ public:
 		return nullptr;
 	}
 
+	/// <summary>
+	/// 씬 컴포넌트를 찾는 기능
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <returns></returns>
 	template <typename T>
 	T* FindSceneComponent()
 	{
+		// 씬 컴포넌트들의 데이터를 불러옵니다.
 		auto	iter = mSceneComponentList.begin();
 		auto	iterEnd = mSceneComponentList.end();
 
+		// 씬 컴포넌트들을 검색해봅니다.
 		for (; iter != iterEnd; ++iter)
 		{
+			// 받고자하는 컴포넌트의 자료형이 존재한다면
 			T* Com = dynamic_cast<T*>((*iter).Get());
 
+			// 반환시켜줌
 			if (Com)
 				return Com;
 		}
-
+		// 존재하지 않으면 실패
 		return nullptr;
 	}
 

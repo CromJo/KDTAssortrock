@@ -48,6 +48,9 @@ CPlayerObject::~CPlayerObject()
 
 bool CPlayerObject::Init()
 {
+    //__super::Init();
+    CSceneObject::Init();
+
     //mRoot = CreateComponent<CStaticMeshComponent>();
     mRoot = CreateComponent<CSpriteComponent>("Player");
     //mBody = CreateComponent<CColliderAABB2D>();

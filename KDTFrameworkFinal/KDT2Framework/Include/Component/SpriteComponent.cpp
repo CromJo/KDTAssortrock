@@ -16,6 +16,11 @@ CSpriteComponent::CSpriteComponent()
 {
     mRenderType = EComponentRender::Render;
     mRenderLayerName = "Object";
+
+    mIgnoreColor = FVector4D((float)0x2E / 0xFF,
+        (float)0x34 / 0xFF,
+        (float)0x39 / 0xFF,
+        (float)0xFF / 0xFF);
 }
 
 CSpriteComponent::CSpriteComponent(const CSpriteComponent& Com) :
@@ -194,6 +199,7 @@ void CSpriteComponent::Render()
     }
 
     mSpriteCBuffer->SetTint(mTint);
+    mSpriteCBuffer->SetIgnoreColor(mIgnoreColor);
 
     mSpriteCBuffer->UpdateBuffer();
 

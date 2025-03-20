@@ -33,6 +33,7 @@ struct FColliderCBufferInfo
 struct FSpriteCBufferInfo
 {
     FVector4D   Tint;
+    FVector4D   IgnoreColor;
 };
 
 struct FAnimation2DCBufferInfo

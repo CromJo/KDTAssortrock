@@ -28,7 +28,7 @@ bool CStartWidget::Init()
     mEditorButton = mScene->GetUIManager()->CreateWidget<CButton>("EditorButton");
     mExitButton = mScene->GetUIManager()->CreateWidget<CButton>("ExitButton");
 
-    Back->SetTexture("StartBack", TEXT("Texture\\Back.png"));
+    Back->SetTexture("StartBack", TEXT("Texture\\Background\\Nikke_Background.png"));
     Back->SetSize((float)RS.Width, (float)RS.Height);
 
     AddWidget(Back);

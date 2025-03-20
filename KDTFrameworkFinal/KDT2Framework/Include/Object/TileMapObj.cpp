@@ -27,10 +27,11 @@ bool CTileMapObj::Init()
     mTileMapRenderer = CreateComponent<CTileMapRendererComponent>();
     mTileMap = CreateComponent<CTileMapComponent>();
 
+    // 외곽선 그려주도록 설정
     mTileMap->SetTileOutLineRender(true);
-
-    mTileMapRenderer->SetBackTexture("TileMapBack",
-        TEXT("Texture\\MapBackGround.png"));
+    
+    //mTileMapRenderer->SetBackTexture("TileMapBack",
+    //    TEXT("Texture\\Background\\Nikke_Background.png"));
 
     mTileMapRenderer->SetTileTexture("Tile",
         TEXT("Texture\\Floors.png"));
@@ -47,6 +48,7 @@ bool CTileMapObj::Init()
         }
     }*/
 
+    // Floor 텍스쳐 자른 것 추가 해주는? 그런 기능인 느낌
     mTileMap->AddTileTextureFrame(0.f, 0.f, 64.f, 64.f);
     mTileMap->AddTileTextureFrame(0.f, 64.f, 64.f, 64.f);
     mTileMap->AddTileTextureFrame(0.f, 128.f, 64.f, 64.f);

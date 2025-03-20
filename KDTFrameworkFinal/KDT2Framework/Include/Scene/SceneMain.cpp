@@ -18,6 +18,12 @@ CSceneMain::~CSceneMain()
 {
 }
 
+/// <summary>
+/// 에셋관련한 기능을 메인씬에서 초기세팅 해주는 기능
+/// 1. 마테리얼, 쉐이더, 텍스쳐, 사운드 등
+///     Asset관련한 기능을 초기화 시켜줍니다.
+/// </summary>
+/// <returns></returns>
 bool CSceneMain::InitAsset()
 {
     mAssetManager->CreateMaterial("Monster1");
@@ -45,12 +51,13 @@ bool CSceneMain::InitObject()
     TCHAR	FullPath[MAX_PATH] = {};
 
 	// gRootPath의 값을 FullPath에 넣어준다. 
-    lstrcpy(FullPath, gRootPath);
+    //lstrcpy(FullPath, gRootPath);
 	// FullPath + TileMap 주소의 값으로 FullPath값이 변경 된다.
-    lstrcat(FullPath, TEXT("Asset\\Data\\TileMap.tlm"));
+    //lstrcat(FullPath, TEXT("Asset\\Data\\TileMap.tlm"));
 
 	// 타일맵오브젝트 주소값으로 불러온다.
-    TileMapObj->Load(FullPath);
+    //TileMapObj->Load(FullPath);
+
 
     // 플레이어 오브젝트 생성
     CPlayerObject* Player = CreateObj<CPlayerObject>("Player");

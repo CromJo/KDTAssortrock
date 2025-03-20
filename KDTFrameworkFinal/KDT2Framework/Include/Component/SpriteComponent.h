@@ -21,6 +21,8 @@ protected:
 	CSharedPtr<class CTexture>		mTexture;
 	CAnimation2D* mAnimation = nullptr;
 	FVector4D	mTint = FVector4D::White;
+	FVector4D	mIgnoreColor = FVector4D::Black;
+
 	int			mTextureIndex = 0;
 
 	class CSpriteCBuffer* mSpriteCBuffer;

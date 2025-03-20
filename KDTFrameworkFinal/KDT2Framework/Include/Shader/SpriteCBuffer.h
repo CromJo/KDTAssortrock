@@ -24,5 +24,10 @@ public:
 	{
 		mData.Tint = Color;
 	}
+	void SetIgnoreColor(const FVector4D& Color)
+	{
+		mData.IgnoreColor = Color;
+
+	}
 };
 
