@@ -9,6 +9,9 @@
 
 CAnimation2DCBuffer* CAnimation2D::mAnimCBuffer = nullptr;
 
+/// <summary>
+/// 그려줄 static 애니메이션 생성 및 초기화 
+/// </summary>
 void CAnimation2D::CreateCBuffer()
 {
 	mAnimCBuffer = new CAnimation2DCBuffer;
@@ -16,11 +19,18 @@ void CAnimation2D::CreateCBuffer()
 	mAnimCBuffer->Init();
 }
 
+/// <summary>
+/// 생성된 static 애니메이션 해제
+/// </summary>
 void CAnimation2D::DestroyCBuffer()
 {
 	SAFE_DELETE(mAnimCBuffer);
 }
 
+/// <summary>
+/// 애니메이션 비활성화
+/// 1. 그리고있는 애니메이션을 비활성화 해준뒤 업데이트 합니다.
+/// </summary>
 void CAnimation2D::DisableAnimation()
 {
 	mAnimCBuffer->SetAnimation2DEnable(false);
@@ -36,6 +46,7 @@ CAnimation2D::CAnimation2D(const CAnimation2D& Anim)
 {
 	*this = Anim;
 }
+
 
 CAnimation2D::~CAnimation2D()
 {
@@ -60,6 +71,13 @@ void CAnimation2D::Update(float DeltaTime)
 
 /// <summary>
 /// Name으로 애니메이션 시퀀스 추가
+/// 1. 시퀀스를 찾아서 없으면 데이터를 새로 생성합니다.
+/// 2. 씬이 있다면 씬에서 애니메이션을 찾고, 
+///		없으면 에셋매니저에서 애니메이션을 찾아서 데이터에 넣습니다.
+/// 3. 데이터에 정상적으로 애니메이션이 들어갔다면,
+///		시퀀스를 생성하여 시퀀스 초기세팅을 해줍니다.
+/// 4. 현재 시퀀스가 없다면 생성한 시퀀스를 넣어 업데이트해주고,
+///		현재 시퀀스가 있다면 시퀀스 목록에 추가만 해줍니다.
 /// </summary>
 /// <param name="Name"></param>
 /// <param name="PlayTime : 동작 시간 설정"></param>
@@ -163,6 +181,11 @@ bool CAnimation2D::AddSequence(CAnimation2DData* Asset,
 	return true;
 }
 
+/// <summary>
+/// 애니메이션을 실행할 시간을 설정하는 기능
+/// </summary>
+/// <param name="Name : 찾을 시퀀스의 키값"></param>
+/// <param name="PlayTime : 설정할 시간 값"></param>
 void CAnimation2D::SetPlayTime(const std::string& Name,
 	float PlayTime)
 {
@@ -174,6 +197,11 @@ void CAnimation2D::SetPlayTime(const std::string& Name,
 	Sequence->SetPlayTime(PlayTime);
 }
 
+/// <summary>
+/// 애니메이션의 재생속도 배율을 설정하는 기능
+/// </summary>
+/// <param name="Name : 찾을 시퀀스의 키"></param>
+/// <param name="PlayRate : 애니메이션의 재생속도 설정 값"></param>
 void CAnimation2D::SetPlayRate(const std::string& Name,
 	float PlayRate)
 {
@@ -185,6 +213,11 @@ void CAnimation2D::SetPlayRate(const std::string& Name,
 	Sequence->SetPlayRate(PlayRate);
 }
 
+/// <summary>
+/// 애니메이션 반복 설정 기능
+/// </summary>
+/// <param name="Name : 찾을 시퀀스의 키"></param>
+/// <param name="Loop : 애니메이션 반복설정 (true : 반복 | false : 한번)"></param>
 void CAnimation2D::SetLoop(const std::string& Name,
 	bool Loop)
 {
@@ -209,6 +242,11 @@ void CAnimation2D::SetReverse(const std::string& Name,
 
 /// <summary>
 /// 현재 실행중인 애니메이션을 변경해주는 함수
+/// 1. 변경할 애니메이션 이름이 존재하는지 체크
+/// 2. 현재 시퀀스가 아니면 종료 (이 부분에 대한 파악이 아직 안되었음)
+/// 3. 현재 실행중인 애니메이션이 받아오려는 애니메이션이면 종료
+/// 4. 현재 애니메이션을 초기화 및 시퀀스를 찾기. (있으면 변경 없으면 종료)
+/// 5. 현재 애니메이션으로 텍스쳐를 변경
 /// </summary>
 /// <param name="Name"></param>
 void CAnimation2D::ChangeAnimation(const std::string& Name)

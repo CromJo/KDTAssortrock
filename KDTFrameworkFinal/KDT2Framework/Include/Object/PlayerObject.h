@@ -9,6 +9,13 @@ enum class ESkill4State
     Reduction
 };
 
+enum class EReloadingState
+{
+    Check,      // 장전 조건
+    Animation,  // 애니메이션 불러오기
+    Complete    // 완료 후 값 세팅 
+};
+
 class CPlayerObject :
     public CSceneObject
 {
@@ -39,37 +46,22 @@ protected:
     CSharedPtr<class CBulletObject> mSkill1Object;
 
     class CAnimation2D* mAnimation = nullptr;
-    bool                mAutoBasePose = true;
-
-    bool            mSkill2Enable = false;
-    float           mSkill2Time = 3.f;
-    float           mSkill2TimeAcc = 0.f;
-    float           mSkill2TimeInterval = 0.2f;
-
-    bool            mSkill4Enable = false;
-    float           mSkill4Time = 5.f;
-    float           mSkill4TimeAcc = 0.f;
-    float           mSkill4ReadyTime = 2.f;
-    float           mSkill4MaxRange = 4.f;
-    float           mSkill4Range = 100.f;
-    float           mSkill4RangeLength = 2.f;
-    float           mPivotRotationSpeed = 180.f;
-    ESkill4State    mSkill4State = ESkill4State::Expansion;
+    bool                mAutoBasePose = true;   // 디폴트 (아이들)모션이 아닌지 체크
 
     int             mHP = 10;
 
     int             mAmmoMax = 60;      // 최대 60발
     int             mAmmo = mAmmoMax;   // 초기 60발
     bool            isReloading = false;// 재장전중인가?
-    
+    EReloadingState mReloadingState = EReloadingState::Check;
+
 public:
     virtual bool Init();
     virtual void Update(float DeltaTime);
     virtual void Render();
     virtual void Damage(int Dmg);
     virtual float Damage(float Attack, CSceneObject* Obj);
-
-
+    
 private:
     void MoveUp(float DeltaTime);
     void MoveDown(float DeltaTime);
@@ -87,32 +79,9 @@ private:
 
     void Reloading(float DeltaTime);
 
-    void Skill1(float DeltaTime);
-    void Skill1Fire(float DeltaTime);
-
-    void Skill2(float DeltaTime);
-
-    void Skill3(float DeltaTime);
-
-    void Skill4(float DeltaTime);
-
-    void Skill5(float DeltaTime);
-
-    void Skill6(float DeltaTime);
-
-    void Skill7(float DeltaTime);
-
     void Skill8(float DeltaTime);
-
-    void Skill9(float DeltaTime);
-
-private:
-    void UpdateSkill2(float DeltaTime);
-    void UpdateSkill4(float DeltaTime);
-    void UpdateReloading(float DeltaTime);
-
 public:
-    void AttackEnd();       // 공격이 끝났을때 
+    void ActionEnd();       // 공격이 끝났을때 
     void AttackNotify();    // 공격 중일 때
 
     void ReloadingEnd();

@@ -25,12 +25,8 @@
 #include "../Asset/Texture/TextureManager.h"
 
 // 추후 삭제 전처리기
-#include "TornadoBullet.h"
-#include "TalonR.h"
-#include "GravityBullet.h"
 #include "BulletObject.h"
 #include "BulletDot.h"
-#include "PenetrationBullet.h"
 
 CPlayerObject::CPlayerObject()
 {
@@ -66,20 +62,6 @@ bool CPlayerObject::Init()
 
     mHPBar->SetRelativePos(-50.f, 50.f);
 
-    //CProgressBar* HPBar = mScene->GetUIManager()->CreateWidget<CProgressBar>("HPBar");
-
-    ////HPBar->SetPos(0.f, 100.f);
-    ////HPBar->SetSize(50.f, 200.f);
-    //HPBar->SetSize(200.f, 50.f);
-    //HPBar->SetTint(EProgressBarImageType::Back, 0.3f, 0.3f, 0.3f);
-    ////HPBar->SetOpacity(EProgressBarImageType::Fill, 0.4f);
-    //HPBar->SetTexture(EProgressBarImageType::Fill, "HPBar",
-    //    TEXT("Texture\\HPBar.png"));
-    ////HPBar->SetBarDir(EProgressBarDir::TopToBottom);
-
-    //HPBar->SetPercent(0.7f);
-
-    //mHPBar->SetWidget(HPBar);
     CHeadInfo* HeadInfo = mScene->GetUIManager()->CreateWidget<CHeadInfo>("HeadInfo");
 
     mHPBar->SetWidget(HeadInfo);
@@ -92,12 +74,6 @@ bool CPlayerObject::Init()
 
     mRoot->SetTexture("Teemo", TEXT("Texture/teemo.png"));
     mRoot->SetPivot(0.5f, 0.5f);
-    //mRoot->SetTint(1.f, 0.f, 0.f);
-    //mRoot->SetMesh("CenterTexRect");
-    //mRoot->AddTexture(0, "Teemo", TEXT("Texture/teemo.png"), 0);
-    //mRoot->SetOpacity(0, 0.5f);
-    //mRoot->SetBaseColor(0, 1.f, 0.f, 0.f, 1.f);
-    //mRoot->SetShader("ColorMeshShader");
 
     mAnimation = mRoot->CreateAnimation2D<CAnimation2D>();
 
@@ -109,13 +85,12 @@ bool CPlayerObject::Init()
 
     // 애니메이션의 마지막 프레임 동작 후 부가적인 이벤트 실행 (부가적 이벤트 : AttackEnd)
     //mAnimation->SetEndFunction<CPlayerObject>("PlayerAttack",
-    //    this, &CPlayerObject::AttackEnd);
+    //    this, &CPlayerObject::ActionEnd);
     // 애니메이션의 부가적인 이벤트를 추가 및 실행. (부가적 이벤트 : AttackNotify함수)
     mAnimation->SetLoop("PlayerAttack", true);
     mAnimation->AddNotify<CPlayerObject>("PlayerAttack",
         1, this, &CPlayerObject::AttackNotify);
-    // 반복 실행
-
+    
     // 장전 모션 끝난 후 이벤트 설정
     mAnimation->SetEndFunction<CPlayerObject>("PlayerReloading",
         this, &CPlayerObject::ReloadingEnd);
@@ -162,22 +137,15 @@ bool CPlayerObject::Init()
     mRotationPivot->AddChild(mSub);
     mRotationPivot->AddChild(mSub2);
 
-    /*mSub->SetMesh("CenterRect");
-    mSub->SetShader("ColorMeshShader");*/
     mSub->SetTexture("Teemo", TEXT("Texture/teemo.png"));
     mSub->SetPivot(0.5f, 0.5f);
-
-    //mSub->SetRelativeScale(0.5f, 0.5f, 1.f);
     mSub->SetWorldScale(50.f, 50.f, 1.f);
-    mSub->SetRelativePos(-mSkill4Range, 0.f, 0.f);
+    mSub->SetRelativePos(100.f, 0.f, 0.f);
 
     mSub2->SetTexture("Teemo", TEXT("Texture/teemo.png"));
     mSub2->SetPivot(0.5f, 0.5f);
-    /*mSub2->SetMesh("CenterRect");
-    mSub2->SetShader("ColorMeshShader");*/
-
     mSub2->SetRelativeScale(0.5f, 0.5f, 1.f);
-    mSub2->SetRelativePos(mSkill4Range, 0.f, 0.f);
+    mSub2->SetRelativePos(-100.f, 0.f, 0.f);
 
     mScene->GetInput()->AddBindKey("MoveUp", 'W');
     mScene->GetInput()->AddBindKey("MoveDown", 'S');
@@ -193,19 +161,7 @@ bool CPlayerObject::Init()
     mScene->GetInput()->AddBindKey("MouseFire", VK_LBUTTON);
 
     mScene->GetInput()->AddBindKey("Reloading", 'R');
-
-    mScene->GetInput()->AddBindKey("Skill1", '1');
-    mScene->GetInput()->ChangeKeyCtrl("Skill1", true);
-    mScene->GetInput()->ChangeKeyShift("Skill1", true);
-
-    mScene->GetInput()->AddBindKey("Skill2", '2');
-    mScene->GetInput()->AddBindKey("Skill3", '3');
-    mScene->GetInput()->AddBindKey("Skill4", '4');
-    mScene->GetInput()->AddBindKey("Skill5", '5');
-    mScene->GetInput()->AddBindKey("Skill6", '6');
-    mScene->GetInput()->AddBindKey("Skill7", '7');
     mScene->GetInput()->AddBindKey("Skill8", '8');
-    mScene->GetInput()->AddBindKey("Skill9", '9');
 
     mScene->GetInput()->AddBindFunction<CPlayerObject>("MoveUp",
         EInputType::Hold, this, &CPlayerObject::MoveUp);
@@ -222,8 +178,6 @@ bool CPlayerObject::Init()
     mScene->GetInput()->AddBindFunction<CPlayerObject>("MovePoint",
         EInputType::Down, this, &CPlayerObject::MovePoint);
 
-
-
    /* mScene->GetInput()->AddBindFunction<CPlayerObject>("RotationZ",
         EInputType::Hold, this, &CPlayerObject::RotationZ);
 
@@ -231,7 +185,7 @@ bool CPlayerObject::Init()
         EInputType::Hold, this, &CPlayerObject::RotationZInv);*/
 
     mScene->GetInput()->AddBindFunction<CPlayerObject>("MouseFire",
-        EInputType::Down, this, &CPlayerObject::MouseFire);
+        EInputType::Hold, this, &CPlayerObject::MouseFire);
 
     mScene->GetInput()->AddBindFunction<CPlayerObject>("Fire",
         EInputType::Down, this, &CPlayerObject::Fire);
@@ -239,37 +193,8 @@ bool CPlayerObject::Init()
     mScene->GetInput()->AddBindFunction<CPlayerObject>("Reloading",
         EInputType::Down, this, &CPlayerObject::Reloading);
 
-    mScene->GetInput()->AddBindFunction<CPlayerObject>("Skill1",
-        EInputType::Hold, this, &CPlayerObject::Skill1);
-
-    mScene->GetInput()->AddBindFunction<CPlayerObject>("Skill1",
-        EInputType::Up, this, &CPlayerObject::Skill1Fire);
-
-
-    mScene->GetInput()->AddBindFunction<CPlayerObject>("Skill2",
-        EInputType::Down, this, &CPlayerObject::Skill2);
-
-
-    mScene->GetInput()->AddBindFunction<CPlayerObject>("Skill3",
-        EInputType::Down, this, &CPlayerObject::Skill3);
-
-    mScene->GetInput()->AddBindFunction<CPlayerObject>("Skill4",
-        EInputType::Down, this, &CPlayerObject::Skill4);
-
-    mScene->GetInput()->AddBindFunction<CPlayerObject>("Skill5",
-        EInputType::Down, this, &CPlayerObject::Skill5);
-
-    mScene->GetInput()->AddBindFunction<CPlayerObject>("Skill6",
-        EInputType::Down, this, &CPlayerObject::Skill6);
-
-    mScene->GetInput()->AddBindFunction<CPlayerObject>("Skill7",
-        EInputType::Down, this, &CPlayerObject::Skill7);
-
     mScene->GetInput()->AddBindFunction<CPlayerObject>("Skill8",
         EInputType::Down, this, &CPlayerObject::Skill8);
-
-    mScene->GetInput()->AddBindFunction<CPlayerObject>("Skill9",
-        EInputType::Down, this, &CPlayerObject::Skill9);
 
     return true;
 }
@@ -278,31 +203,18 @@ void CPlayerObject::Update(float DeltaTime)
 {
     CSceneObject::Update(DeltaTime);
 
-    /*FVector3D Rot = mRotationPivot->GetRelativeRotation();
-
-    Rot.z += DeltaTime * mPivotRotationSpeed;
-
-    mRotationPivot->SetRelativeRotationZ(Rot.z);*/
-
-    if (mSkill2Enable)
+    // 총알이 0발이고 대기모션인지 체크
+    if (mAmmo <= 0 && mAutoBasePose)
     {
-        UpdateSkill2(DeltaTime);
-    }
+        //mAnimation->ChangeAnimation("PlayerReloading");
+        Reloading(DeltaTime);
 
-    if (mSkill4Enable)
-    {
-        UpdateSkill4(DeltaTime);
+        //UpdateReloading(DeltaTime);
     }
-
-    if (mAmmo <= 0)
-    {
-        UpdateReloading(DeltaTime);
-    }
-
     // 움직이지 않고, 디폴트 자세로 돌아가는 것이 켜져있다면, 
     // 기본자세로 돌려라
-    if (mMovement->GetVelocityLength() == 0.f && mAutoBasePose)
-        mAnimation->ChangeAnimation("PlayerIdle");
+    else if (mMovement->GetVelocityLength() == 0.f && mAutoBasePose)
+        ActionEnd();
 
     static bool ItemTest = false;
 
@@ -484,6 +396,18 @@ void CPlayerObject::Fire(float DeltaTime)
 /// <param name="DeltaTime"></param>
 void CPlayerObject::MouseFire(float DeltaTime)
 {
+    // 왼쪽 클릭 안하고 있거나,
+    // 총알이 다떨어진 상태면,
+    // 대기모션으로 변경 후 종료
+    // !mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton) ||
+    if (mAmmo <= 0)
+    {
+        Reloading(DeltaTime);
+
+        return;
+    }
+
+
     // PlayerAttack 애니메이션으로 변경
     mAnimation->ChangeAnimation("PlayerAttack");
 
@@ -498,150 +422,15 @@ void CPlayerObject::MouseFire(float DeltaTime)
 /// <param name="DeltaTime"></param>
 void CPlayerObject::Reloading(float DeltaTime)
 {
-    // 최대 장탄수 일경우 재장전 안함
     if (mAmmo == mAmmoMax)
         return;
-    // 재장전을 하고 있는 상태라면 종료
-    if (isReloading)
-        return;
+
+    CLog::PrintLog("리로딩!!!");
 
     // 모든 조건이 부합하면 재장전 애니메이션을 실행
     mAnimation->ChangeAnimation("PlayerReloading");
 
-    mAutoBasePose = false;
-}
-
-void CPlayerObject::Skill1(float DeltaTime)
-{
-    if (!mSkill1Object)
-    {
-        mSkill1Object = mScene->CreateObj<CBulletObject>("Bullet");
-        mSkill1Object->SetSpeed(0.f);
-    }
-
-    FVector3D Pos = mRoot->GetWorldPosition();
-    FVector3D   Dir = mRoot->GetAxis(EAxis::Y);
-
-    mSkill1Object->GetRootComponent()->SetWorldRotation(mRoot->GetWorldRotation());
-    mSkill1Object->GetRootComponent()->SetWorldPos(Pos + Dir);
-
-    FVector3D   Scale = mSkill1Object->GetRootComponent()->GetWorldScale();
-
-    Scale.x += DeltaTime * 0.5f;
-    Scale.y += DeltaTime * 0.5f;
-
-    if (Scale.x >= 4.f)
-        Scale.x = 4.f;
-
-    if (Scale.y >= 4.f)
-        Scale.y = 4.f;
-
-    mSkill1Object->GetRootComponent()->SetWorldScale(Scale);
-}
-
-void CPlayerObject::Skill1Fire(float DeltaTime)
-{
-    mSkill1Object->SetSpeed(2.f);
-
-    mSkill1Object->SetLifeTime(1.f);
-
-    mSkill1Object = nullptr;
-}
-
-void CPlayerObject::Skill2(float DeltaTime)
-{
-    // 스킬 2번이 비활성화일 경우 활성화한다.
-    if (!mSkill2Enable)
-    {
-        mSkill2Enable = true;
-        mSkill2Time = 3.f;
-        mSkill2TimeAcc = 0.f;
-        mSkill2TimeInterval = 0.2f;
-    }
-}
-
-void CPlayerObject::Skill3(float DeltaTime)
-{
-    CTornadoBullet* Bullet = mScene->CreateObj<CTornadoBullet>("Bullet");
-
-    CSceneComponent* Root = Bullet->GetRootComponent();
-
-    FVector3D Pos = mRoot->GetWorldPosition();
-    FVector3D   Dir = mRoot->GetAxis(EAxis::Y);
-
-    Root->SetWorldRotation(mRoot->GetWorldRotation());
-    Root->SetWorldPos(Pos + Dir);
-
-    Bullet->SetLifeTime(10.f);
-}
-
-void CPlayerObject::Skill4(float DeltaTime)
-{
-    if (!mSkill4Enable)
-    {
-        mSkill4Enable = true;
-        mSkill4Time = 5.f;
-        mSkill4TimeAcc = 0.f;
-        mSkill4ReadyTime = 2.f;
-
-        mPivotRotationSpeed = 360.f;
-        mSkill4State = ESkill4State::Expansion;
-    }
-}
-
-void CPlayerObject::Skill5(float DeltaTime)
-{
-    // 8개 방향에 총알을 생성한다.
-    FVector3D   Dir = mRoot->GetAxis(EAxis::Y);
-    FVector3D   Rot = mRoot->GetWorldRotation();
-
-    FMatrix matRot;
-    matRot.RotationZ(45.f);
-
-    for (int i = 0; i < 8; ++i)
-    {
-        CTalonR* Bullet = mScene->CreateObj<CTalonR>("Bullet");
-
-        Bullet->SetTarget(this);
-
-        CSceneComponent* Root = Bullet->GetRootComponent();
-
-        FVector3D Pos = mRoot->GetWorldPosition();
-
-        Root->SetWorldRotation(Rot);
-        Root->SetWorldPos(Pos + Dir);
-
-        Rot.z += 45.f;
-
-        Dir = Dir.TransformNormal(matRot);
-        Dir.Normalize();
-    }
-}
-
-void CPlayerObject::Skill6(float DeltaTime)
-{
-    CGravityBullet* Bullet = mScene->CreateObj<CGravityBullet>("Bullet");
-
-    FVector3D Pos = mRoot->GetWorldPosition();
-    FVector3D Dir = mRoot->GetAxis(EAxis::Y);
-
-    Bullet->SetWorldScale(50.f, 50.f);
-    Bullet->SetWorldRotation(mRoot->GetWorldRotation());
-    Bullet->SetWorldPos(Pos + Dir * 75.f);
-}
-
-void CPlayerObject::Skill7(float DeltaTime)
-{
-    CGravityBullet* Bullet = mScene->CreateObj<CGravityBullet>("Bullet");
-
-    Bullet->SetGravityType(EGravityType::Push);
-
-    FVector3D Pos = mRoot->GetWorldPosition();
-    FVector3D Dir = mRoot->GetAxis(EAxis::Y);
-
-    Bullet->SetWorldScale(50.f, 50.f);
-    Bullet->SetWorldRotation(mRoot->GetWorldRotation());
-    Bullet->SetWorldPos(Pos + Dir * 75.f);
+    mAutoBasePose = false;              
 }
 
 void CPlayerObject::Skill8(float DeltaTime)
@@ -662,128 +451,17 @@ void CPlayerObject::Skill8(float DeltaTime)
     Bullet->SetBoxSize(300.f, 300.f);
 }
 
-void CPlayerObject::Skill9(float DeltaTime)
-{
-    CPenetrationBullet* Bullet =
-        mScene->CreateObj<CPenetrationBullet>("Bullet");
-
-    Bullet->SetBulletCollisionProfile("PlayerAttack");
-
-    CSceneComponent* Root = Bullet->GetRootComponent();
-
-    FVector3D Pos = mRoot->GetWorldPosition();
-    FVector3D Dir = mRoot->GetAxis(EAxis::Y);
-
-    Root->SetWorldScale(50.f, 50.f);
-    Root->SetWorldRotation(mRoot->GetWorldRotation());
-    Root->SetWorldPos(Pos + Dir * 75.f);
-}
-
-void CPlayerObject::UpdateSkill2(float DeltaTime)
-{
-    mSkill2TimeAcc += DeltaTime;
-
-    if (mSkill2TimeAcc >= mSkill2TimeInterval)
-    {
-        mSkill2TimeAcc -= mSkill2TimeInterval;
-
-        CBulletObject* Bullet = mScene->CreateObj<CBulletObject>("Bullet");
-
-        CSceneComponent* Root = Bullet->GetRootComponent();
-
-        FVector3D Pos = mSub->GetWorldPosition();
-        FVector3D   Dir = mSub->GetAxis(EAxis::Y);
-
-        Root->SetWorldRotation(mRoot->GetWorldRotation());
-        Root->SetWorldPos(Pos + Dir);
-
-        Bullet->SetLifeTime(1.f);
-
-        Bullet = mScene->CreateObj<CBulletObject>("Bullet");
-
-        Root = Bullet->GetRootComponent();
-
-        Pos = mSub2->GetWorldPosition();
-        Dir = mSub2->GetAxis(EAxis::Y);
-
-        Root->SetWorldRotation(mRoot->GetWorldRotation());
-        Root->SetWorldPos(Pos + Dir);
-
-        Bullet->SetLifeTime(1.f);
-    }
-
-    mSkill2Time -= DeltaTime;
-
-    if (mSkill2Time <= 0.f)
-    {
-        mSkill2Enable = false;
-    }
-}
-
-void CPlayerObject::UpdateSkill4(float DeltaTime)
-{
-    mSkill4TimeAcc += DeltaTime;
-
-    switch (mSkill4State)
-    {
-    case ESkill4State::Expansion:
-        // DeltaTime / mSkill4ReadyTime 을 하게 되면 확장되는 2초라는
-        // 시간에 대해서 현재 DeltaTime이 몇퍼센트의 시간이 흘렀는지를
-        // 구해낸다.
-        mSkill4Range += DeltaTime / mSkill4ReadyTime * 
-            mSkill4RangeLength;
-        if (mSkill4TimeAcc >= mSkill4ReadyTime)
-        {
-            mSkill4TimeAcc -= mSkill4ReadyTime;
-            mSkill4Range = mSkill4MaxRange;
-            mSkill4State = ESkill4State::Maintain;
-        }
-
-        mSub->SetRelativePos(-mSkill4Range, 0.f, 0.f);
-
-        mSub2->SetRelativePos(mSkill4Range, 0.f, 0.f);
-        break;
-    case ESkill4State::Maintain:
-
-        if (mSkill4TimeAcc >= mSkill4Time)
-        {
-            mSkill4TimeAcc = 0.f;
-            mSkill4State = ESkill4State::Reduction;
-        }
-        break;
-    case ESkill4State::Reduction:
-
-        mSkill4Range -= DeltaTime / mSkill4ReadyTime *
-            mSkill4RangeLength;
-        if (mSkill4TimeAcc >= mSkill4ReadyTime)
-        {
-            mSkill4Enable = false;
-            mSkill4TimeAcc = 0.f;
-            mSkill4Range = 2.f;
-            mSkill4State = ESkill4State::Expansion;
-            mPivotRotationSpeed = 180.f;
-        }
-
-        mSub->SetRelativePos(-mSkill4Range, 0.f, 0.f);
-
-        mSub2->SetRelativePos(mSkill4Range, 0.f, 0.f);
-        break;
-    }
-
-}
-
-void CPlayerObject::UpdateReloading(float DeltaTime)
-{
-}
-
 /// <summary>
-/// 공격이 끝날 경우 실행되는 기능
+/// 모든 행동이 끝날 경우 실행되는 기능
+/// 1. 대기모션으로 되돌립니다.
 /// </summary>
-void CPlayerObject::AttackEnd()
+void CPlayerObject::ActionEnd()
 {
     // 애니메이션 변경 및 로그 남김 
-    CLog::PrintLog("AttackEnd");
+    CLog::PrintLog("Action End");
     mAnimation->ChangeAnimation("PlayerIdle");
+
+    mAutoBasePose = true;
 }
 
 /// <summary>
@@ -792,13 +470,10 @@ void CPlayerObject::AttackEnd()
 /// </summary>
 void CPlayerObject::AttackNotify()
 {
-    // 왼쪽 클릭 안하고 있거나,
-    // 총알이 다떨어진 상태면,
-    // 대기모션으로 변경 후 종료
-    if(!mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton) ||
+    if (!mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton) ||
         mAmmo <= 0)
     {
-        AttackEnd();
+        ActionEnd();
 
         return;
     }
@@ -835,4 +510,7 @@ void CPlayerObject::AttackNotify()
 
 void CPlayerObject::ReloadingEnd()
 {
+    mAmmo = mAmmoMax;
+
+    ActionEnd();
 }
