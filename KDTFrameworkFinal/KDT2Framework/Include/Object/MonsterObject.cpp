@@ -69,8 +69,10 @@ void CMonsterObject::Update(float DeltaTime)
 {
     CSceneObject::Update(DeltaTime);
 
+    // 바라볼 대상이 있다면
     if (mTarget)
     {
+        // 바라볼 대상이 살아있지 않다면 대기해라
         if (!mTarget->IsActive())
         {
             mAI = EMonsterAI::Idle;
@@ -78,24 +80,28 @@ void CMonsterObject::Update(float DeltaTime)
         }
     }
 
+    // 몬스터 행동 패턴 알고리즘
     switch (mAI)
     {
-    case EMonsterAI::Idle:
+    case EMonsterAI::Idle:      // 대기
         AIIdle();
         break;
-    case EMonsterAI::Trace:
+    case EMonsterAI::Move:      // 이동
+        AIMove();
+        break;
+    case EMonsterAI::Trace:     // 추적 (바라봄)
         AITrace();
         break;
-    case EMonsterAI::Patrol:
+    case EMonsterAI::Patrol:    // 없음
         AIPatrol();
         break;
-    case EMonsterAI::Attack:
+    case EMonsterAI::Attack:    // 공격
         AIAttack();
         break;
-    case EMonsterAI::Death:
+    case EMonsterAI::Death:     // 쥬금
         AIDeath();
         break;
-    case EMonsterAI::Skill:
+    case EMonsterAI::Skill:     // 스킬사용
         AISkill();
         break;
     case EMonsterAI::Custom:
@@ -137,9 +143,15 @@ void CMonsterObject::CollisionMonsterEnd(
     //CLog::PrintLog("CollisionEnd");
 }
 
+/// <summary>
+/// 몬스터가 타겟을 감지하는 기능
+/// </summary>
+/// <param name="HitPoint"></param>
+/// <param name="Dest"></param>
 void CMonsterObject::CollisionMonsterDetect(const FVector3D& HitPoint, 
     CColliderBase* Dest)
 {
+    // 타겟을 설정 후 
     mTarget = Dest->GetOwner();
     mAI = EMonsterAI::Trace;
     DetectTarget();
@@ -164,6 +176,14 @@ void CMonsterObject::AIPatrol()
 
 void CMonsterObject::AITrace()
 {
+    if (mAnimation)
+        mAnimation->ChangeAnimation(mAIAnimationName[(int)EMonsterAI::Trace]);
+}
+
+void CMonsterObject::AIMove()
+{
+    if (mAnimation)
+        mAnimation->ChangeAnimation(mAIAnimationName[(int)EMonsterAI::Move]);
 }
 
 void CMonsterObject::AIAttack()

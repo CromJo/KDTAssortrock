@@ -80,9 +80,7 @@ bool CPlayerObject::Init()
 
     mAnimation = mRoot->CreateAnimation2D<CAnimation2D>();
 
-    mAnimation->AddSequence("PlayerIdle", 1.f, 1.f, true, false);
-    mAnimation->AddSequence("PlayerRun", 0.7f, 1.f, true, false);
-    mAnimation->AddSequence("PlayerWalk", 0.7f, 1.f, true, false);
+    mAnimation->AddSequence("PlayerIdle", 2.5f, 1.f, true, false);
     mAnimation->AddSequence("PlayerAttack", 0.1f, 1.f, false, false);
     mAnimation->AddSequence("PlayerReloading", 1.2f, 1.f, false, false);
 
@@ -318,7 +316,7 @@ void CPlayerObject::MoveUp(float DeltaTime)
 {
     mMovement->AddMove(mRootComponent->GetAxis(EAxis::Y));
 
-    mAnimation->ChangeAnimation("PlayerWalk");
+    mAnimation->ChangeAnimation("PlayerIdle");
 
     mAutoBasePose = true;
 }
@@ -327,7 +325,7 @@ void CPlayerObject::MoveDown(float DeltaTime)
 {
     mMovement->AddMove(mRootComponent->GetAxis(EAxis::Y) * -1.f);
 
-    mAnimation->ChangeAnimation("PlayerWalk");
+    mAnimation->ChangeAnimation("PlayerIdle");
 
     mAutoBasePose = true;
 }
@@ -345,7 +343,7 @@ void CPlayerObject::RotationZ(float DeltaTime)
 
     mMovement->AddMove(mRootComponent->GetAxis(EAxis::X));
 
-    mAnimation->ChangeAnimation("PlayerWalk");
+    mAnimation->ChangeAnimation("PlayerIdle");
 
     mAutoBasePose = true;
 
@@ -358,7 +356,7 @@ void CPlayerObject::RotationZInv(float DeltaTime)
 
     mMovement->AddMove(mRootComponent->GetAxis(EAxis::X) * -1.f);
 
-    mAnimation->ChangeAnimation("PlayerWalk");
+    mAnimation->ChangeAnimation("PlayerIdle");
     mAutoBasePose = true;
 }
 
@@ -366,7 +364,7 @@ void CPlayerObject::MoveRight(float DeltaTime)
 {
     mMovement->AddMove(mRootComponent->GetAxis(EAxis::X));
 
-    mAnimation->ChangeAnimation("PlayerWalk");
+    mAnimation->ChangeAnimation("PlayerIdle");
 
     mAnimation->SetAnimationReverseX(false);
 
@@ -377,7 +375,7 @@ void CPlayerObject::MoveLeft(float DeltaTime)
 {
     mMovement->AddMove(mRootComponent->GetAxis(EAxis::X) * -1);
 
-    mAnimation->ChangeAnimation("PlayerWalk");
+    mAnimation->ChangeAnimation("PlayerIdle");
 
     mAnimation->SetAnimationReverseX(true);
 

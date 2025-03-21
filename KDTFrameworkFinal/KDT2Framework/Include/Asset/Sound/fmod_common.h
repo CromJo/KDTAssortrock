@@ -65,7 +65,7 @@ typedef unsigned int FMOD_DEBUG_FLAGS;
 #define FMOD_DEBUG_TYPE_MEMORY                      0x00000100
 #define FMOD_DEBUG_TYPE_FILE                        0x00000200
 #define FMOD_DEBUG_TYPE_CODEC                       0x00000400
-#define FMOD_DEBUG_TYPE_TRACE                       0x00000800
+#define FMOD_DEBUG_TYPE_Move                       0x00000800
 #define FMOD_DEBUG_DISPLAY_TIMESTAMPS               0x00010000
 #define FMOD_DEBUG_DISPLAY_LINENUMBERS              0x00020000
 #define FMOD_DEBUG_DISPLAY_THREAD                   0x00040000

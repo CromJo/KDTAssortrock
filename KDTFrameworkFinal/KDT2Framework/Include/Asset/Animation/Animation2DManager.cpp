@@ -14,147 +14,70 @@ CAnimation2DManager::~CAnimation2DManager()
 bool CAnimation2DManager::Init()
 {
     CAnimation2D::CreateCBuffer();
-
-    // 애니메이션 생성
-    CreateAnimation("PlayerIdle");
-    // 애니메이션 텍스쳐 타입 설정 (1장의 사진 N개의 이미지 사용)
-    SetAnimationTextureType("PlayerIdle",
-        EAnimationTextureType::SpriteSheet);
-    // 텍스쳐 설정 (설정할 이름, 파일 별명, 파일 경로 및 실제 이름
-    SetTexture("PlayerIdle", "PlayerSprite",
-        TEXT("Texture\\Player\\Player.png"));
-
-    // 오리는 작업
-    for (int i = 0; i < 2; ++i)
-    {
-        for (int j = 0; j < 7; ++j)
-        {
-            AddFrame("PlayerIdle", j * 50.f, 185.f + i * 37.f, 
-                50.f, 37.f);
-        }
-    }
-
-    CreateAnimation("PlayerRun");
-    SetAnimationTextureType("PlayerRun",
-        EAnimationTextureType::SpriteSheet);
-    SetTexture("PlayerRun", "PlayerSprite");
-    // 2, 8
-    for (int i = 0; i < 5; ++i)
-    {
-        AddFrame("PlayerRun", (2 + i) * 50.f, 8 * 37.f,
-            50.f, 37.f);
-    }
-
-    // PlayerWalk란 이름으로 애니메이션 생성 
-    CreateAnimation("PlayerWalk");
-    SetAnimationTextureType("PlayerWalk",
-        EAnimationTextureType::Frame);
+    
+    // 파일 경로에 있는 이미지를 받아올 데이터
+    TCHAR   Path[89][MAX_PATH] = {};
 
     std::vector<const TCHAR*>   FileNames;
-    FileNames.emplace_back(TEXT("Texture\\Player\\PlayerFrame\\adventurer-walk-00.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\PlayerFrame\\adventurer-walk-01.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\PlayerFrame\\adventurer-walk-02.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\PlayerFrame\\adventurer-walk-03.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\PlayerFrame\\adventurer-walk-04.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\PlayerFrame\\adventurer-walk-05.png"));
-    SetTexture("PlayerWalk", "PlayerWalk",
-        FileNames);
-    AddFrameCount("PlayerWalk", 6, 0.f, 0.f, 1.f, 1.f);
 
-    // adventurer-punch-00, 6개
+#pragma region Player 애니메이션 모음
+#pragma region Idle 애니메이션
+    CreateAnimation("PlayerIdle");
+    SetAnimationTextureType("PlayerIdle",
+        EAnimationTextureType::Frame);
+
+    FileNames.clear();
+
+    for (int i = 0; i < 58; ++i)
+    {
+        wsprintf(Path[i], TEXT("Texture\\Player\\Novel_Cover_Idle\\Nikke_%d.png"), i);
+        FileNames.emplace_back(Path[i]);
+    }
+
+    SetTexture("PlayerIdle", "PlayerIdle", FileNames);
+    AddFrameCount("PlayerIdle", 58, 0.f, 0.f, 1.f, 1.f);
+#pragma endregion
+
+#pragma region Reloading 애니메이션
+    CreateAnimation("PlayerReloading");
+    SetAnimationTextureType("PlayerReloading",
+        EAnimationTextureType::Frame);
+    
+    FileNames.clear();
+    
+    for (int i = 0; i < 37; ++i)
+    {
+        wsprintf(Path[i], TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_%d.png"), i);
+        FileNames.emplace_back(Path[i]);
+    }
+    
+    SetTexture("PlayerReloading", "PlayerReloading", FileNames);
+    AddFrameCount("PlayerReloading", 37, 0.f, 0.f, 1.f, 1.f);
+#pragma endregion
+
+#pragma region Attack 애니메이션
     CreateAnimation("PlayerAttack");
     SetAnimationTextureType("PlayerAttack",
         EAnimationTextureType::Frame);
 
     FileNames.clear();
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Stance_Fire\\Nikke_0.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Stance_Fire\\Nikke_1.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Stance_Fire\\Nikke_2.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Stance_Fire\\Nikke_3.png"));
-    SetTexture("PlayerAttack", "PlayerAttack",
-        FileNames);
+
+    for (int i = 0; i < 4; ++i)
+    {
+        wsprintf(Path[i], TEXT("Texture\\Player\\Novel_Stance_Fire\\Nikke_%d.png"), i);
+        FileNames.emplace_back(Path[i]);
+    }
+
+    SetTexture("PlayerAttack", "PlayerAttack", FileNames);
     AddFrameCount("PlayerAttack", 4, 0.f, 0.f, 1.f, 1.f);
+#pragma endregion
 
-    // Reloading란 이름으로 애니메이션 생성 
-    CreateAnimation("PlayerReloading");
-    SetAnimationTextureType("PlayerReloading",
-        EAnimationTextureType::Frame);
-
-    FileNames.clear();
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_0.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_1.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_2.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_3.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_4.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_5.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_6.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_7.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_8.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_9.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_10.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_11.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_12.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_13.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_14.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_15.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_16.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_17.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_18.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_19.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_20.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_21.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_22.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_23.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_24.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_25.png"));
-    FileNames.emplace_back(TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_26.png"));
-    
-    SetTexture("PlayerReloading", "PlayerReloading",
-        FileNames);
-    AddFrameCount("PlayerReloading", 27, 0.f, 0.f, 1.f, 1.f);
-
-
-    CreateAnimation("GunnerIdle");
-    SetAnimationTextureType("GunnerIdle",
-        EAnimationTextureType::SpriteSheet);
-    SetTexture("GunnerIdle", "GunnerSprite",
-        TEXT("Texture\\Monster.png"));
-    
-    for (int i = 0; i < 14; ++i)
-    {
-        AddFrame("GunnerIdle", i * 45.f, 60.f,
-            45.f, 60.f);
-    }
-
-    CreateAnimation("GunnerAttack");
-    SetAnimationTextureType("GunnerAttack",
-        EAnimationTextureType::SpriteSheet);
-    SetTexture("GunnerAttack", "GunnerSprite");
-
-    for (int i = 0; i < 21; ++i)
-    {
-        AddFrame("GunnerAttack", i * 45.f, 180.f,
-            45.f, 60.f);
-    }
-
-    CreateAnimation("GunnerSkill");
-    SetAnimationTextureType("GunnerSkill",
-        EAnimationTextureType::SpriteSheet);
-    SetTexture("GunnerSkill", "GunnerSprite");
-
-    for (int i = 0; i < 5; ++i)
-    {
-        AddFrame("GunnerSkill", i * 45.f, 120.f,
-            45.f, 60.f);
-    }
-
+#pragma region 피격애니메이션
     CreateAnimation("Explosion");
     SetAnimationTextureType("Explosion",
         EAnimationTextureType::Frame);
 
     FileNames.clear();
-
-    TCHAR   Path[89][MAX_PATH] = {};
 
     for (int i = 1; i <= 89; ++i)
     {
@@ -164,16 +87,57 @@ bool CAnimation2DManager::Init()
 
     SetTexture("Explosion", "Explosion", FileNames);
     AddFrameCount("Explosion", 89, 0.f, 0.f, 1.f, 1.f);
+#pragma endregion
 
+#pragma region 발사 이펙트
     CreateAnimation("HitScan");
     SetAnimationTextureType("HitScan", EAnimationTextureType::Frame);
-    
+
     // 히트마커 이미지 추가
     FileNames.clear();
     FileNames.emplace_back(TEXT("Texture\\HitMarker.png"));
-    
+
     SetTexture("HitScan", "HitScan", FileNames);
     AddFrameCount("HitScan", 1, 0.f, 0.f, 1.f, 1.f);
+#pragma endregion
+#pragma endregion
+
+#pragma Enemy1 애니메이션 모음
+#pragma region Idle 애니메이션
+    CreateAnimation("EnemyIdle");
+    SetAnimationTextureType("EnemyIdle",
+        EAnimationTextureType::SpriteSheet);
+
+    SetTexture("EnemyIdle", "EnemySprite",
+        TEXT("Texture\\Enemy\\Enemy1&2.png"));
+
+    AddFrame("EnemyIdle", 0.f, 0.f, 150.f, 170.f);
+#pragma endregion
+
+#pragma region Move1 애니메이션
+    // 몬스터 이동 애니메이션 설정
+    CreateAnimation("EnemyMove1");
+    SetAnimationTextureType("EnemyMove1",
+        EAnimationTextureType::SpriteSheet);
+    SetTexture("EnemyMove1", "EnemySprite");
+    
+    // 0번째 사진 제외하고 1,2,3사진 이미지 추가
+    for (int i = 1; i < 4; ++i)
+    {
+        AddFrame("EnemyMove1", i * 150.f, 0.f,
+            150.f, 170.f);
+    }
+#pragma endregion
+
+#pragma region Attack 애니메이션
+    CreateAnimation("EnemyAttack");
+    SetAnimationTextureType("EnemyAttack",
+        EAnimationTextureType::SpriteSheet);
+    SetTexture("EnemyAttack", "EnemySprite");
+    
+    AddFrame("EnemyAttack", 0.f, 0.f, 150.f, 170.f);
+#pragma endregion
+#pragma endregion
 
     return true;
 }
@@ -203,11 +167,14 @@ bool CAnimation2DManager::CreateAnimation(
 bool CAnimation2DManager::SetAnimationTextureType(
     const std::string& Name, EAnimationTextureType Type)
 {
+    // 애니메이션 데이터가 존재하는지 찾는다.
     CAnimation2DData* Animation = FindAnimation(Name);
 
+    // 없으면 종료
     if (!Animation)
         return false;
 
+    // 텍스쳐 타입을 설정해준다.
     Animation->SetAnimationTextureType(Type);
 
     return true;

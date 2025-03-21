@@ -30,27 +30,31 @@ bool CGunnerMonster::Init()
 
     mRoot->SetPivot(0.5f, 0.5f);
 
+    // 자기자신에 애니메이션 컴포넌트 추가
     mAnimation = mRoot->CreateAnimation2D<CAnimation2D>();
 
-    mAnimation->AddSequence("GunnerIdle", 1.f, 1.f, true, false);
-    mAnimation->AddSequence("GunnerAttack", 1.f, 1.f, true, false);
+    mAnimation->AddSequence("EnemyIdle", 1.f, 1.f, true, false);
+    mAnimation->AddSequence("EnemyMove1", 1.f, 1.f, true, false);
+    mAnimation->AddSequence("EnemyAttack", 1.f, 1.f, true, false);
     mAnimation->AddSequence("GunnerSkill", 1.f, 1.f, true, false);
 
-    mAIAnimationName[(int)EMonsterAI::Idle] = "GunnerIdle";
-    mAIAnimationName[(int)EMonsterAI::Attack] = "GunnerAttack";
+    mAIAnimationName[(int)EMonsterAI::Idle] = "EnemyIdle";
+    mAIAnimationName[(int)EMonsterAI::Move] = "EnemyMove1";
+    mAIAnimationName[(int)EMonsterAI::Attack] = "EnemyAttack";
     mAIAnimationName[(int)EMonsterAI::Skill] = "GunnerSkill";
 
-    mAnimation->AddNotify<CGunnerMonster>("GunnerAttack",
-        8, this, &CGunnerMonster::AttackNotify);
+    // N프레임 (설정한 값 : 0)로 애니메이션이 변경되면 지정된 함수 실행
+    mAnimation->AddNotify<CGunnerMonster>("EnemyAttack",
+        0, this, &CGunnerMonster::AttackNotify);
 
-    mAnimation->SetEndFunction<CGunnerMonster>("GunnerAttack",
+    mAnimation->SetEndFunction<CGunnerMonster>("EnemyAttack",
         this, &CGunnerMonster::AttackEnd);
 
-    mAnimation->AddNotify<CGunnerMonster>("GunnerSkill",
-        2, this, &CGunnerMonster::SkillNotify);
-
-    mAnimation->SetEndFunction<CGunnerMonster>("GunnerSkill",
-        this, &CGunnerMonster::SkillEnd);
+    //mAnimation->AddNotify<CGunnerMonster>("GunnerSkill",
+    //    0, this, &CGunnerMonster::SkillNotify);
+    //
+    //mAnimation->SetEndFunction<CGunnerMonster>("GunnerSkill",
+    //    this, &CGunnerMonster::SkillEnd);
 
 
     //mRoot->SetTexture("Monster1Tex", TEXT("Texture/block_wall.png"));
@@ -197,6 +201,10 @@ void CGunnerMonster::AttackNotify()
     ++mFireCount;
 }
 
+/// <summary>
+/// 공격 애니메이션 끝난 후 실행
+/// 1. 4번 공격 시 스킬 발동
+/// </summary>
 void CGunnerMonster::AttackEnd()
 {
     if (mFireCount == 4)

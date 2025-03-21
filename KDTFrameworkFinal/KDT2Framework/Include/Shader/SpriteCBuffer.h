@@ -27,7 +27,6 @@ public:
 	void SetIgnoreColor(const FVector4D& Color)
 	{
 		mData.IgnoreColor = Color;
-
 	}
 };
 

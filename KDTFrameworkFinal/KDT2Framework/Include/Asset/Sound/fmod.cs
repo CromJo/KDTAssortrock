@@ -232,7 +232,7 @@ namespace FMOD
         TYPE_MEMORY             = 0x00000100,
         TYPE_FILE               = 0x00000200,
         TYPE_CODEC              = 0x00000400,
-        TYPE_TRACE              = 0x00000800,
+        TYPE_Move              = 0x00000800,
 
         DISPLAY_TIMESTAMPS      = 0x00010000,
         DISPLAY_LINENUMBERS     = 0x00020000,

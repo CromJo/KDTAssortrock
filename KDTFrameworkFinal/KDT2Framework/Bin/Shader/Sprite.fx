@@ -38,15 +38,14 @@ PS_Output_Single SpritePS(VS_Output_Tex input)
     
     float4 Color = gBaseTexture.Sample(gBaseSampler, input.UV);
    
-    if ((gSpriteIgnoreColor.x - Color).x == 0.00f &&
-        (gSpriteIgnoreColor.y - Color).y == 0.00f &&
-        (gSpriteIgnoreColor.z - Color).z == 0.00f)
+    if ((gSpriteIgnoreColor.x - Color).x == 0.f &&
+        (gSpriteIgnoreColor.y - Color).y == 0.f &&
+        (gSpriteIgnoreColor.z - Color).z == 0.f)
     {        
         discard;    
     }
     
     output.Color = Color * gSpriteTint;
-    
     
     return output;
 }

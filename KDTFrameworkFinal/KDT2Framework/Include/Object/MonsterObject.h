@@ -6,6 +6,7 @@ enum class EMonsterAI : unsigned char
 {
     Idle,
     Trace,
+    Move,
     Patrol,
     Attack,
     Death,
@@ -71,6 +72,7 @@ protected:  // ============ AI Virtual Function ===============
     virtual void AIIdle();
     virtual void AIPatrol();
     virtual void AITrace();
+    virtual void AIMove();
     virtual void AIAttack();
     virtual void AIDeath();
     virtual void AISkill();

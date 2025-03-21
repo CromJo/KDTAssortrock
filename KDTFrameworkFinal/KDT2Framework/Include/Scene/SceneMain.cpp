@@ -9,6 +9,10 @@
 #include "../UI/UserWidget/MainWidget.h"
 #include "SceneUIManager.h"
 #include "../Object/TileMapObj.h"
+#include "../UI/Common/Image.h"
+#include "../Device.h"
+#include "../Component/SpriteComponent.h"
+#include "../Object/SceneObject.h"
 
 CSceneMain::CSceneMain()
 {
@@ -58,6 +62,11 @@ bool CSceneMain::InitObject()
 	// 타일맵오브젝트 주소값으로 불러온다.
     //TileMapObj->Load(FullPath);
 
+    FResolution RS = CDevice::GetInst()->GetResolution();
+    mRoot = CreateComponent<CSpriteComponent>();
+
+    mRoot->SetTexture("StartBack");
+    mRoot->SetSize((float)RS.Width, (float)RS.Height);
 
     // 플레이어 오브젝트 생성
     CPlayerObject* Player = CreateObj<CPlayerObject>("Player");
