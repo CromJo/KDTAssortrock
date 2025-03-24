@@ -17,6 +17,9 @@ bool CAnimation2DManager::Init()
     
     // 파일 경로에 있는 이미지를 받아올 데이터
     TCHAR   Path[89][MAX_PATH] = {};
+    // 첫시작은 Idle부터 시작해서 Idle로 설정
+    // 애니메이션마다 사이즈 조절 해줘야함.
+    int ImageSize = 60;
 
     std::vector<const TCHAR*>   FileNames;
 
@@ -27,15 +30,16 @@ bool CAnimation2DManager::Init()
         EAnimationTextureType::Frame);
 
     FileNames.clear();
+    
 
-    for (int i = 0; i < 58; ++i)
+    for (int i = 0; i < ImageSize; ++i)
     {
         wsprintf(Path[i], TEXT("Texture\\Player\\Novel_Cover_Idle\\Nikke_%d.png"), i);
         FileNames.emplace_back(Path[i]);
     }
 
     SetTexture("PlayerIdle", "PlayerIdle", FileNames);
-    AddFrameCount("PlayerIdle", 58, 0.f, 0.f, 1.f, 1.f);
+    AddFrameCount("PlayerIdle", ImageSize, 0.f, 0.f, 1.f, 1.f);
 #pragma endregion
 
 #pragma region Reloading 애니메이션
@@ -45,14 +49,16 @@ bool CAnimation2DManager::Init()
     
     FileNames.clear();
     
-    for (int i = 0; i < 37; ++i)
+    ImageSize = 37;
+
+    for (int i = 0; i < ImageSize; ++i)
     {
         wsprintf(Path[i], TEXT("Texture\\Player\\Novel_Cover_Reloading\\Nikke_%d.png"), i);
         FileNames.emplace_back(Path[i]);
     }
     
     SetTexture("PlayerReloading", "PlayerReloading", FileNames);
-    AddFrameCount("PlayerReloading", 37, 0.f, 0.f, 1.f, 1.f);
+    AddFrameCount("PlayerReloading", ImageSize, 0.f, 0.f, 1.f, 1.f);
 #pragma endregion
 
 #pragma region Attack 애니메이션
@@ -62,14 +68,15 @@ bool CAnimation2DManager::Init()
 
     FileNames.clear();
 
-    for (int i = 0; i < 4; ++i)
+    ImageSize = 4;
+    for (int i = 0; i < ImageSize; ++i)
     {
         wsprintf(Path[i], TEXT("Texture\\Player\\Novel_Stance_Fire\\Nikke_%d.png"), i);
         FileNames.emplace_back(Path[i]);
     }
 
     SetTexture("PlayerAttack", "PlayerAttack", FileNames);
-    AddFrameCount("PlayerAttack", 4, 0.f, 0.f, 1.f, 1.f);
+    AddFrameCount("PlayerAttack", ImageSize, 0.f, 0.f, 1.f, 1.f);
 #pragma endregion
 
 #pragma region 피격애니메이션
@@ -79,14 +86,15 @@ bool CAnimation2DManager::Init()
 
     FileNames.clear();
 
-    for (int i = 1; i <= 89; ++i)
+    ImageSize = 89;
+    for (int i = 1; i <= ImageSize; ++i)
     {
         wsprintf(Path[i - 1], TEXT("Texture\\Explosion\\Explosion%d.png"), i);
         FileNames.emplace_back(Path[i - 1]);
     }
 
     SetTexture("Explosion", "Explosion", FileNames);
-    AddFrameCount("Explosion", 89, 0.f, 0.f, 1.f, 1.f);
+    AddFrameCount("Explosion", ImageSize, 0.f, 0.f, 1.f, 1.f);
 #pragma endregion
 
 #pragma region 발사 이펙트
@@ -102,7 +110,8 @@ bool CAnimation2DManager::Init()
 #pragma endregion
 #pragma endregion
 
-#pragma Enemy1 애니메이션 모음
+#pragma region Enemy1 애니메이션 모음
+
 #pragma region Idle 애니메이션
     CreateAnimation("EnemyIdle");
     SetAnimationTextureType("EnemyIdle",
@@ -137,6 +146,7 @@ bool CAnimation2DManager::Init()
     
     AddFrame("EnemyAttack", 0.f, 0.f, 150.f, 170.f);
 #pragma endregion
+
 #pragma endregion
 
     return true;
