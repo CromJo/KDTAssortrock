@@ -15,16 +15,16 @@ enum class EMonsterAI : unsigned char
     End
 };
 
-class CMonsterObject :
+class CEnemyObject :
     public CSceneObject
 {
     friend class CScene;
 
 protected:
-    CMonsterObject();
-    CMonsterObject(const CMonsterObject& Obj);
-    CMonsterObject(CMonsterObject&& Obj);
-    virtual ~CMonsterObject();
+    CEnemyObject();
+    CEnemyObject(const CEnemyObject& Obj);
+    CEnemyObject(CEnemyObject&& Obj);
+    virtual ~CEnemyObject();
 
 protected:
     CSharedPtr<class CSpriteComponent>  mRoot;

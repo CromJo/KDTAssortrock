@@ -61,9 +61,9 @@ void CGravityBullet::Update(float DeltaTime)
 
         mMovement->SetEnable(false);
 
-        std::list<CSharedPtr<CMonsterObject>>   MonsterList;
+        std::list<CSharedPtr<CEnemyObject>>   MonsterList;
 
-        mScene->FindObjectsFromType<CMonsterObject>(MonsterList);
+        mScene->FindObjectsFromType<CEnemyObject>(MonsterList);
 
         auto    iter = MonsterList.begin();
         auto    iterEnd = MonsterList.end();

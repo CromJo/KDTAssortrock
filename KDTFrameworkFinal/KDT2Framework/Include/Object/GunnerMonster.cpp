@@ -11,12 +11,12 @@ CGunnerMonster::CGunnerMonster()
 }
 
 CGunnerMonster::CGunnerMonster(const CGunnerMonster& Obj) :
-    CMonsterObject(Obj)
+    CEnemyObject(Obj)
 {
 }
 
 CGunnerMonster::CGunnerMonster(CGunnerMonster&& Obj) :
-    CMonsterObject(Obj)
+    CEnemyObject(Obj)
 {
 }
 
@@ -26,7 +26,7 @@ CGunnerMonster::~CGunnerMonster()
 
 bool CGunnerMonster::Init()
 {
-    CMonsterObject::Init();
+    CEnemyObject::Init();
 
     mRoot->SetPivot(0.5f, 0.5f);
 
@@ -71,7 +71,7 @@ bool CGunnerMonster::Init()
 
 void CGunnerMonster::Update(float DeltaTime)
 {
-    CMonsterObject::Update(DeltaTime);
+    CEnemyObject::Update(DeltaTime);
 
     //if (mTarget)
     //{
@@ -162,7 +162,7 @@ void CGunnerMonster::DetectTarget()
 
 void CGunnerMonster::AIAttack()
 {
-    CMonsterObject::AIAttack();
+    CEnemyObject::AIAttack();
 
     if (mTarget)
     {

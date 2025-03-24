@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "MonsterObject.h"
 class CGunnerMonster :
-    public CMonsterObject
+    public CEnemyObject
 {
     friend class CScene;
 

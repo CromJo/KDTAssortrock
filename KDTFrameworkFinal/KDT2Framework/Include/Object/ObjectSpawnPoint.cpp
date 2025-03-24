@@ -75,8 +75,6 @@ bool CObjectSpawnPoint::ComputeSpawnTime(float DeltaTime)
     {
         Spawn();
 
-        
-
         return true;
     }
 
@@ -140,8 +138,8 @@ void CObjectSpawnPoint::Spawn()
 
     mSpawnObject->SetWorldRotation(GetWorldRotation());
     //mSpawnObject->SetWorldPos(0.f,0.f,-10.f);
-    FVector3D A = FVector3D(GetWorldPosition().x, GetWorldPosition().y, -10.f);
-    mSpawnObject->SetWorldPos(GetWorldPosition() - A);
+    //FVector3D A = FVector3D(GetWorldPosition().x, GetWorldPosition().y, -200.f);
+    mSpawnObject->SetWorldPos(GetWorldPosition());
     mSpawnObject->GetRootComponent()->SetRenderLayerName("Monster");
 
     mSpawnObject->SetSpawnPoint(this);

@@ -8,25 +8,29 @@
 #include "../Share/Log.h"
 #include "../Component/SpriteComponent.h"
 
-CMonsterObject::CMonsterObject()
+CEnemyObject::CEnemyObject()
 {
 }
 
-CMonsterObject::CMonsterObject(const CMonsterObject& Obj)   :
+CEnemyObject::CEnemyObject(const CEnemyObject& Obj)   :
     CSceneObject(Obj)
 {
 }
 
-CMonsterObject::CMonsterObject(CMonsterObject&& Obj) :
+CEnemyObject::CEnemyObject(CEnemyObject&& Obj) :
     CSceneObject(Obj)
 {
 }
 
-CMonsterObject::~CMonsterObject()
+CEnemyObject::~CEnemyObject()
 {
 }
 
-bool CMonsterObject::Init()
+/// <summary>
+/// 적의 기본적인 초기화 기능
+/// </summary>
+/// <returns></returns>
+bool CEnemyObject::Init()
 {
     //mRoot = CreateComponent<CStaticMeshComponent>();
     mRoot = CreateComponent<CSpriteComponent>();
@@ -45,27 +49,27 @@ bool CMonsterObject::Init()
     mBody->SetCollisionProfile("Monster");
     mBody->SetRadius(50.f);
     //mBody->SetBoxSize(100.f, 100.f);
-    mBody->SetCollisionBeginFunc<CMonsterObject>(this,
-        &CMonsterObject::CollisionMonster);
-    mBody->SetCollisionEndFunc<CMonsterObject>(this,
-        &CMonsterObject::CollisionMonsterEnd);
+    mBody->SetCollisionBeginFunc<CEnemyObject>(this,
+        &CEnemyObject::CollisionMonster);
+    mBody->SetCollisionEndFunc<CEnemyObject>(this,
+        &CEnemyObject::CollisionMonsterEnd);
 
     mRoot->AddChild(mBody);
 
     mDetect->SetCollisionProfile("MonsterDetect");
     mDetect->SetRadius(500.f);
     //mBody->SetBoxSize(100.f, 100.f);
-    mDetect->SetCollisionBeginFunc<CMonsterObject>(this,
-        &CMonsterObject::CollisionMonsterDetect);
-    mDetect->SetCollisionEndFunc<CMonsterObject>(this,
-        &CMonsterObject::CollisionMonsterDetectEnd);
+    mDetect->SetCollisionBeginFunc<CEnemyObject>(this,
+        &CEnemyObject::CollisionMonsterDetect);
+    mDetect->SetCollisionEndFunc<CEnemyObject>(this,
+        &CEnemyObject::CollisionMonsterDetectEnd);
 
     mRoot->AddChild(mDetect);
 
     return true;
 }
 
-void CMonsterObject::Update(float DeltaTime)
+void CEnemyObject::Update(float DeltaTime)
 {
     CSceneObject::Update(DeltaTime);
 
@@ -110,7 +114,7 @@ void CMonsterObject::Update(float DeltaTime)
     }
 }
 
-float CMonsterObject::Damage(float Attack,
+float CEnemyObject::Damage(float Attack,
     CSceneObject* Obj)
 {
     float Dmg = CSceneObject::Damage(Attack, Obj);
@@ -123,21 +127,21 @@ float CMonsterObject::Damage(float Attack,
     return Dmg;
 }
 
-void CMonsterObject::DetectTarget()
+void CEnemyObject::DetectTarget()
 {
 }
 
-void CMonsterObject::DetectTargetRelease()
+void CEnemyObject::DetectTargetRelease()
 {
 }
 
-void CMonsterObject::CollisionMonster(
+void CEnemyObject::CollisionMonster(
     const FVector3D& HitPoint, CColliderBase* Dest)
 {
     //CLog::PrintLog("Collision");
 }
 
-void CMonsterObject::CollisionMonsterEnd(
+void CEnemyObject::CollisionMonsterEnd(
     CColliderBase* Dest)
 {
     //CLog::PrintLog("CollisionEnd");
@@ -148,7 +152,7 @@ void CMonsterObject::CollisionMonsterEnd(
 /// </summary>
 /// <param name="HitPoint"></param>
 /// <param name="Dest"></param>
-void CMonsterObject::CollisionMonsterDetect(const FVector3D& HitPoint, 
+void CEnemyObject::CollisionMonsterDetect(const FVector3D& HitPoint, 
     CColliderBase* Dest)
 {
     // 타겟을 설정 후 
@@ -157,51 +161,51 @@ void CMonsterObject::CollisionMonsterDetect(const FVector3D& HitPoint,
     DetectTarget();
 }
 
-void CMonsterObject::CollisionMonsterDetectEnd(CColliderBase* Dest)
+void CEnemyObject::CollisionMonsterDetectEnd(CColliderBase* Dest)
 {
     mTarget = nullptr;
     mAI = EMonsterAI::Idle;
     DetectTargetRelease();
 }
 
-void CMonsterObject::AIIdle()
+void CEnemyObject::AIIdle()
 {
     if (mAnimation)
         mAnimation->ChangeAnimation(mAIAnimationName[(int)EMonsterAI::Idle]);
 }
 
-void CMonsterObject::AIPatrol()
+void CEnemyObject::AIPatrol()
 {
 }
 
-void CMonsterObject::AITrace()
+void CEnemyObject::AITrace()
 {
     if (mAnimation)
         mAnimation->ChangeAnimation(mAIAnimationName[(int)EMonsterAI::Trace]);
 }
 
-void CMonsterObject::AIMove()
+void CEnemyObject::AIMove()
 {
     if (mAnimation)
         mAnimation->ChangeAnimation(mAIAnimationName[(int)EMonsterAI::Move]);
 }
 
-void CMonsterObject::AIAttack()
+void CEnemyObject::AIAttack()
 {
     if (mAnimation)
         mAnimation->ChangeAnimation(mAIAnimationName[(int)EMonsterAI::Attack]);
 }
 
-void CMonsterObject::AIDeath()
+void CEnemyObject::AIDeath()
 {
 }
 
-void CMonsterObject::AISkill()
+void CEnemyObject::AISkill()
 {
     if (mAnimation)
         mAnimation->ChangeAnimation(mAIAnimationName[(int)EMonsterAI::Skill]);
 }
 
-void CMonsterObject::AICustom()
+void CEnemyObject::AICustom()
 {
 }
