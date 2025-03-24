@@ -226,6 +226,9 @@
     <Filter Include="01. GameManager\04. Thread">
       <UniqueIdentifier>{2f65c7f1-f8f1-49c6-82f7-3b89f9e93623}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. Object\06. Background">
+      <UniqueIdentifier>{aa3818d0-c964-4172-b1bb-4b1088c472ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -324,7 +327,7 @@
     <ClCompile Include="Scene\CameraManager.cpp">
       <Filter>05. Scene\02. Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Object\MonsterObject.cpp">
+    <ClCompile Include="Object\EnemyObject.cpp">
       <Filter>06. Object\03. Monster</Filter>
     </ClCompile>
     <ClCompile Include="Object\GunnerMonster.cpp">
@@ -585,6 +588,9 @@
     <ClCompile Include="Object\HitScanBullet.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Object\BackgroundObject.cpp">
+      <Filter>06. Object\06. Background</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -701,7 +707,7 @@
     <ClInclude Include="Scene\CameraManager.h">
       <Filter>05. Scene\02. Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Object\MonsterObject.h">
+    <ClInclude Include="Object\EnemyObject.h">
       <Filter>06. Object\03. Monster</Filter>
     </ClInclude>
     <ClInclude Include="Object\GunnerMonster.h">
@@ -988,6 +994,9 @@
     </ClInclude>
     <ClInclude Include="Object\HitScanBullet.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\BackgroundObject.h">
+      <Filter>06. Object\06. Background</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
