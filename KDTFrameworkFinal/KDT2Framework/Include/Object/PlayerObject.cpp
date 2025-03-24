@@ -63,10 +63,8 @@ bool CPlayerObject::Init()
     mCamera = CreateComponent<CCameraComponent>();
     mHPBar = CreateComponent<CWidgetComponent>();
 
-    mHPBar->SetRelativePos(-50.f, 50.f);
-
+    mHPBar->SetRelativePos(-75.f, 150.f);
     CHeadInfo* HeadInfo = mScene->GetUIManager()->CreateWidget<CHeadInfo>("HeadInfo");
-
     mHPBar->SetWidget(HeadInfo);
 
     mRoot->AddChild(mHPBar);
@@ -96,13 +94,13 @@ bool CPlayerObject::Init()
     mAnimation->SetEndFunction<CPlayerObject>("PlayerReloading",
         this, &CPlayerObject::ReloadingEnd);
 
-    mRoot->SetWorldPos(0.f, 0.f, 0.f);
-    mRoot->SetWorldScale(100.f, 100.f, 1.f);
+    mRoot->SetWorldPos(0.f, -200.f, 0.f);
+    mRoot->SetWorldScale(300.f, 300.f, 1.f);
 
     SetRootComponent(mRoot);
     
     mBody->SetCollisionProfile("Player");
-    mBody->SetBoxSize(100.f, 100.f);
+    mBody->SetBoxSize(200.f, 300.f);
     //mBody->SetRadius(50.f);
 
     mRoot->AddChild(mBody);
@@ -121,7 +119,7 @@ bool CPlayerObject::Init()
     mCamera->SetProjectionType(ECameraProjectionType::Ortho);
 
     //mCamera->SetRelativePos(0.f, 200.f, -400.f);
-    mCamera->SetRelativePos(0.f, 0.f, 0.f);
+    mCamera->SetRelativePos(0.f, 200.f, 0.f);
 
     mRoot->AddChild(mCamera);
 
@@ -134,6 +132,7 @@ bool CPlayerObject::Init()
 
     mRotation->SetMoveZ(360.f);
 
+    /*
     mRoot->AddChild(mRotationPivot);
     mRotationPivot->AddChild(mSub);
     mRotationPivot->AddChild(mSub2);
@@ -151,12 +150,13 @@ bool CPlayerObject::Init()
     mScene->GetInput()->AddBindKey("MoveUp", 'W');
     mScene->GetInput()->AddBindKey("MoveDown", 'S');
 
-    /*mScene->GetInput()->AddBindKey("RotationZ", 'D');
-    mScene->GetInput()->AddBindKey("RotationZInv", 'A');*/
+    mScene->GetInput()->AddBindKey("RotationZ", 'D');
+    mScene->GetInput()->AddBindKey("RotationZInv", 'A');
 
     mScene->GetInput()->AddBindKey("MoveRight", 'D');
-    mScene->GetInput()->AddBindKey("MoveLeft", 'A');;
+    mScene->GetInput()->AddBindKey("MoveLeft", 'A');
     mScene->GetInput()->AddBindKey("MovePoint", VK_RBUTTON);
+    */
 
     mScene->GetInput()->AddBindKey("Fire", VK_SPACE);
     mScene->GetInput()->AddBindKey("MouseFire", VK_LBUTTON);
@@ -164,6 +164,7 @@ bool CPlayerObject::Init()
     mScene->GetInput()->AddBindKey("Reloading", 'R');
     mScene->GetInput()->AddBindKey("Skill8", '8');
 
+    /*
     mScene->GetInput()->AddBindFunction<CPlayerObject>("MoveUp",
         EInputType::Hold, this, &CPlayerObject::MoveUp);
 
@@ -178,8 +179,8 @@ bool CPlayerObject::Init()
 
     mScene->GetInput()->AddBindFunction<CPlayerObject>("MovePoint",
         EInputType::Down, this, &CPlayerObject::MovePoint);
-
-   /* mScene->GetInput()->AddBindFunction<CPlayerObject>("RotationZ",
+        
+    mScene->GetInput()->AddBindFunction<CPlayerObject>("RotationZ",
         EInputType::Hold, this, &CPlayerObject::RotationZ);
 
     mScene->GetInput()->AddBindFunction<CPlayerObject>("RotationZInv",

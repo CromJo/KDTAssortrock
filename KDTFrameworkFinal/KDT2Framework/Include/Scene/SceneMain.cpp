@@ -51,7 +51,7 @@ bool CSceneMain::InitObject()
     // 파일 경로를 저장해줄 데이터 생성
     TCHAR	FullPath[MAX_PATH] = {};
 
-    //FResolution RS = CDevice::GetInst()->GetResolution();
+    // 배경 이미지 세팅
     CBackgroundObject* Background = CreateObj<CBackgroundObject>("BackGround");
 
     // 플레이어 오브젝트 생성
@@ -65,7 +65,7 @@ bool CSceneMain::InitObject()
     MonsterPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     MonsterPoint->SetSpawnTime(3.f);
     MonsterPoint->SetImmediateSpawn(true);
-    MonsterPoint->SetWorldPos(400.f, 200.f);
+    MonsterPoint->SetWorldPos(400.f, 300.f);
 
     MonsterPoint =
         CreateObj<CObjectSpawnPoint>("Monster2");
@@ -88,7 +88,7 @@ bool CSceneMain::InitObject()
     MonsterPoint->SetWorldPos(400.f, -300.f);
 
     MonsterPoint =
-        CreateObj<CObjectSpawnPoint>("Monster4");
+        CreateObj<CObjectSpawnPoint>("Monster3");
 
     MonsterPoint->SetSpawnType(EObjectSpawnType::GunnerMonster);
     MonsterPoint->SetSpawnLoopType(EObjectSpawnLoopType::Once);
@@ -98,24 +98,24 @@ bool CSceneMain::InitObject()
     MonsterPoint->SetImmediateSpawn(true);
     MonsterPoint->SetWorldPos(-400.f, -300.f);
 
-    CMonsterObject* Monster = CreateObj<CGunnerMonster>("Monster");
+    CEnemyObject* Monster = CreateObj<CGunnerMonster>("Monster");
 
-    Monster->SetWorldPos(900.f, 700.f);
+    Monster->SetWorldPos(400.f, 250.f);
 
     Monster = CreateObj<CNearingMonster>("Monster");
 
     Monster->SetTarget(Player);
 
-    Monster->SetWorldPos(-400.f, 0.f);
+    Monster->SetWorldPos(-200.f, 0.f);
 
     return true;
 }
 
 bool CSceneMain::InitWidget()
 {
-    CMainWidget* Widget = mUIManager->CreateWidget<CMainWidget>("Main");
+    //CMainWidget* Widget = mUIManager->CreateWidget<CMainWidget>("Main");
 
-    mUIManager->AddToViewport(Widget);
+    //mUIManager->AddToViewport(Widget);
 
     return true;
 }

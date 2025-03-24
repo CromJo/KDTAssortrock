@@ -3,7 +3,7 @@
 #include "MonsterObject.h"
 
 class CNearingMonster :
-    public CMonsterObject
+    public CEnemyObject
 {
     friend class CScene;
 

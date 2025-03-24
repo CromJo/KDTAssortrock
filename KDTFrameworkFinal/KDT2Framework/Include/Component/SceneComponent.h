@@ -240,8 +240,6 @@ public:
 	void AddWorldPos(const FVector2D& Pos);
 	void AddWorldPos(float x, float y);
 
-
-
 private:
 	void ComputeTransform();
 };

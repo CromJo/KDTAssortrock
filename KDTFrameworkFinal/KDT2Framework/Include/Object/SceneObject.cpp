@@ -41,6 +41,9 @@ void CSceneObject::SetRootComponent(CSceneComponent* Root)
 
 bool CSceneObject::Init()
 {
+    mRootComponent = CreateComponent<CSceneComponent>("BackgroundImage");
+    SetRootComponent(mRootComponent);
+
 	return true;
 }
 

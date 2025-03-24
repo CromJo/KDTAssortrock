@@ -10,12 +10,12 @@ CNearingMonster::CNearingMonster()
 }
 
 CNearingMonster::CNearingMonster(const CNearingMonster& Obj) :
-    CMonsterObject(Obj)
+    CEnemyObject(Obj)
 {
 }
 
 CNearingMonster::CNearingMonster(CNearingMonster&& Obj) :
-    CMonsterObject(Obj)
+    CEnemyObject(Obj)
 {
 }
 
@@ -25,7 +25,7 @@ CNearingMonster::~CNearingMonster()
 
 bool CNearingMonster::Init()
 {
-    CMonsterObject::Init();
+    CEnemyObject::Init();
 
     mRoot->SetTexture("Monster1Tex", TEXT("Texture/block_wall.png"));
     mRoot->SetPivot(0.5f, 0.5f);
@@ -39,7 +39,7 @@ bool CNearingMonster::Init()
 
 void CNearingMonster::Update(float DeltaTime)
 {
-    CMonsterObject::Update(DeltaTime);
+    CEnemyObject::Update(DeltaTime);
 
     if (mTarget)
     {
