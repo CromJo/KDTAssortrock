@@ -1,4 +1,4 @@
-#include "SceneMain.h"
+ï»¿#include "SceneMain.h"
 #include "../Object/PlayerObject.h"
 #include "../Object/GunnerMonster.h"
 #include "../Object/NearingMonster.h"
@@ -13,6 +13,7 @@
 #include "../Device.h"
 #include "../Component/SpriteComponent.h"
 #include "../Object/SceneObject.h"
+#include "../Object/BackgroundObject.h"
 
 CSceneMain::CSceneMain()
 {
@@ -23,9 +24,9 @@ CSceneMain::~CSceneMain()
 }
 
 /// <summary>
-/// ¿¡¼Â°ü·ÃÇÑ ±â´ÉÀ» ¸ŞÀÎ¾À¿¡¼­ ÃÊ±â¼¼ÆÃ ÇØÁÖ´Â ±â´É
-/// 1. ¸¶Å×¸®¾ó, ½¦ÀÌ´õ, ÅØ½ºÃÄ, »ç¿îµå µî
-///     Asset°ü·ÃÇÑ ±â´ÉÀ» ÃÊ±âÈ­ ½ÃÄÑÁİ´Ï´Ù.
+/// ì—ì…‹ê´€ë ¨í•œ ê¸°ëŠ¥ì„ ë©”ì¸ì”¬ì—ì„œ ì´ˆê¸°ì„¸íŒ… í•´ì£¼ëŠ” ê¸°ëŠ¥
+/// 1. ë§ˆí…Œë¦¬ì–¼, ì‰ì´ë”, í…ìŠ¤ì³, ì‚¬ìš´ë“œ ë“±
+///     Assetê´€ë ¨í•œ ê¸°ëŠ¥ì„ ì´ˆê¸°í™” ì‹œì¼œì¤ë‹ˆë‹¤.
 /// </summary>
 /// <returns></returns>
 bool CSceneMain::InitAsset()
@@ -47,28 +48,13 @@ bool CSceneMain::InitAsset()
 
 bool CSceneMain::InitObject()
 {
-	// Å¸ÀÏ¸Ê¿ÀºêÁ§Æ® µ¥ÀÌÅÍ Ãß°¡ ¹× »ı¼º
-    CTileMapObj* TileMapObj = 
-        CreateObj<CTileMapObj>("TileMap");
-
-	// ÆÄÀÏ °æ·Î¸¦ ÀúÀåÇØÁÙ µ¥ÀÌÅÍ »ı¼º
+    // íŒŒì¼ ê²½ë¡œë¥¼ ì €ì¥í•´ì¤„ ë°ì´í„° ìƒì„±
     TCHAR	FullPath[MAX_PATH] = {};
 
-	// gRootPathÀÇ °ªÀ» FullPath¿¡ ³Ö¾îÁØ´Ù. 
-    //lstrcpy(FullPath, gRootPath);
-	// FullPath + TileMap ÁÖ¼ÒÀÇ °ªÀ¸·Î FullPath°ªÀÌ º¯°æ µÈ´Ù.
-    //lstrcat(FullPath, TEXT("Asset\\Data\\TileMap.tlm"));
+    //FResolution RS = CDevice::GetInst()->GetResolution();
+    CBackgroundObject* Background = CreateObj<CBackgroundObject>("BackGround");
 
-	// Å¸ÀÏ¸Ê¿ÀºêÁ§Æ® ÁÖ¼Ò°ªÀ¸·Î ºÒ·¯¿Â´Ù.
-    //TileMapObj->Load(FullPath);
-
-    FResolution RS = CDevice::GetInst()->GetResolution();
-    mRoot = CreateComponent<CSpriteComponent>();
-
-    mRoot->SetTexture("StartBack");
-    mRoot->SetSize((float)RS.Width, (float)RS.Height);
-
-    // ÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ® »ı¼º
+    // í”Œë ˆì´ì–´ ì˜¤ë¸Œì íŠ¸ ìƒì„±
     CPlayerObject* Player = CreateObj<CPlayerObject>("Player");
 
     CObjectSpawnPoint* MonsterPoint =

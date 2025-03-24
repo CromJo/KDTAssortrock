@@ -2,6 +2,9 @@
 
 #include "../Share/Object.h"
 
+/// <summary>
+/// 메인씬 (게임 스테이지) 관련 클래스
+/// </summary>
 class CSceneObject :
     public CObject
 {

@@ -15,7 +15,7 @@ bool CHeadInfo::Init()
     mHPBar = mScene->GetUIManager()->CreateWidget<CProgressBar>("HPBar");
     mNameText = mScene->GetUIManager()->CreateWidget<CTextBlock>("NameText");
 
-    mHPBar->SetSize(100.f, 20.f);
+    mHPBar->SetSize(150.f, 20.f);
     mHPBar->SetTint(EProgressBarImageType::Back, 0.3f, 0.3f, 0.3f);
     mHPBar->SetTexture(EProgressBarImageType::Fill, "HPBar",
         TEXT("Texture\\HPBar.png"));
@@ -24,7 +24,7 @@ bool CHeadInfo::Init()
 
     AddWidget(mHPBar);
 
-    mNameText->SetText(TEXT("이름"));
+    //mNameText->SetText(TEXT("이름"));
     mNameText->SetTextColor(255, 255, 255, 255);
     mNameText->SetAlignH(ETextAlignH::Center);
     mNameText->SetFontSize(20.f);

@@ -8,9 +8,6 @@ class CSceneMain :
 	friend class CSceneManager;
 
 private:
-	CSharedPtr<class CSpriteComponent>  mRoot;
-
-private:
 	CSceneMain();
 	virtual ~CSceneMain();
 

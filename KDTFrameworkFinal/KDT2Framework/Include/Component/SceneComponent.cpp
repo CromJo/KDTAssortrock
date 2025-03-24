@@ -2,7 +2,7 @@
 #include "../Shader/TransformCBuffer.h"
 #include "../Render/RenderManager.h"
 
-// 생성자
+// 씬의 생성자
 CSceneComponent::CSceneComponent()
 {
     // 생성
@@ -24,10 +24,12 @@ CSceneComponent::CSceneComponent(CSceneComponent&& Com) :
     Com.mTransformCBuffer = nullptr;
 }
 
+// 메모리 해제
 CSceneComponent::~CSceneComponent()
 {
     SAFE_DELETE(mTransformCBuffer);
 
+    // 자식들 전체 해제
     size_t  Size = mChildList.size();
 
     for (size_t i = 0; i < Size; ++i)
@@ -36,12 +38,19 @@ CSceneComponent::~CSceneComponent()
     }
 }
 
+/// <summary>
+/// 자식 객체를 추가하는 기능
+/// </summary>
+/// <param name="Child"></param>
 void CSceneComponent::AddChild(CSceneComponent* Child)
 {
+    // 불러온 자식객체의 부모를 설정해주고
     Child->mParent = this;
 
+    // 자식객체를 목록에 추가해준다.
     mChildList.emplace_back(Child);
 
+    // 자식객체의 위치를 설정해준다.
     Child->ComputeTransform();
 }
 
@@ -836,8 +845,12 @@ void CSceneComponent::AddWorldPos(float x, float y)
     AddWorldPos(FVector3D(x, y, 0.f));
 }
 
+/// <summary>
+/// 위치를 계산해주는 함수.
+/// </summary>
 void CSceneComponent::ComputeTransform()
 {
+    // 씬에서의 위치, 회전, 크기를 설정해준다.
     SetWorldScale(mRelativeScale * mParent->mWorldScale);
     SetWorldRotation(mRelativeRot + mParent->mWorldRot);
     SetWorldPos(mRelativePos + mParent->mWorldPos);
