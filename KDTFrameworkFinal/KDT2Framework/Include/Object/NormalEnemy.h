@@ -1,15 +1,15 @@
 ﻿#pragma once
-#include "MonsterObject.h"
-class CGunnerMonster :
+#include "EnemyObject.h"
+class CNormalEnemy :
     public CEnemyObject
 {
     friend class CScene;
 
 protected:
-    CGunnerMonster();
-    CGunnerMonster(const CGunnerMonster& Obj);
-    CGunnerMonster(CGunnerMonster&& Obj);
-    virtual ~CGunnerMonster();
+    CNormalEnemy();
+    CNormalEnemy(const CNormalEnemy& Obj);
+    CNormalEnemy(CNormalEnemy&& Obj);
+    virtual ~CNormalEnemy();
 
 protected:
     float       mFireTime = 1.f;
@@ -30,5 +30,7 @@ protected:
     void AttackEnd();
     void SkillNotify();
     void SkillEnd();
+
+    virtual FVector3D MovePoint() override;
 };
 

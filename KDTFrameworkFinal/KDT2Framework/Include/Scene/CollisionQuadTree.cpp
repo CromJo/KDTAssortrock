@@ -11,6 +11,7 @@
 #include "../Shader/ShaderManager.h"
 #include "../Shader/TransformCBuffer.h"
 #include "../Shader/ColliderCBuffer.h"
+#include "../Component/SceneComponent.h"
 
 CCollisionQuadTreeNode::CCollisionQuadTreeNode()
 {
@@ -303,7 +304,8 @@ void CCollisionQuadTreeNode::Render(CMesh* Mesh, CShader* Shader)
 	mTransformCBuffer->SetProjMatrix(matProj);
 
 	mTransformCBuffer->UpdateBuffer();
-
+	//mScene->SetRenderLayerName("QuadTree");
+	
 	Shader->SetShader();
 
 	Mesh->Render();

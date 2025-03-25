@@ -2,13 +2,13 @@
 
 #include "SceneObject.h"
 
-enum class EMonsterAI : unsigned char
+enum class EEnemyAI : unsigned char
 {
     Idle,
     Trace,
     Move,
     Patrol,
-    Attack,
+    AttackAAAAAAAAAAAAA,
     Death,
     Skill,
     Custom,
@@ -27,6 +27,8 @@ protected:
     virtual ~CEnemyObject();
 
 protected:
+    std::list<CSharedPtr<CSceneObject>>	mObjList;
+
     CSharedPtr<class CSpriteComponent>  mRoot;
     //CSharedPtr<class CStaticMeshComponent>  mRoot;
     //CSharedPtr<class CColliderAABB2D>       mBody;
@@ -35,12 +37,16 @@ protected:
     CSharedPtr<class CColliderSphere2D>       mDetect;
     CSharedPtr<CSceneObject>  mTarget;
     class CAnimation2D* mAnimation = nullptr;
-    EMonsterAI          mAI = EMonsterAI::Idle;
-    std::string         mAIAnimationName[(int)EMonsterAI::End];
+    EEnemyAI          mAI = EEnemyAI::Idle;
+    std::string         mAIAnimationName[(int)EEnemyAI::End];
 
     float           mDetectDistance = 0.f;
 
     int             mHP = 5;
+
+    float           mLogicTime = 0.f;    // 로직 랜덤 체인지를 위한 시간
+
+    CSharedPtr<class CMovementComponent>    mMovement;
 
 public:
     void SetTarget(class CSceneObject* Target)
@@ -60,13 +66,17 @@ protected:
     virtual void DetectTargetRelease();
 
 private:
-    void CollisionMonster(const FVector3D& HitPoint,
+    void CollisionEnemy(const FVector3D& HitPoint,
         class CColliderBase* Dest);
-    void CollisionMonsterEnd(class CColliderBase* Dest);
+    void CollisionEnemyEnd(class CColliderBase* Dest);
 
-    void CollisionMonsterDetect(const FVector3D& HitPoint,
+    void CollisionEnemyDetect(const FVector3D& HitPoint,
         class CColliderBase* Dest);
-    void CollisionMonsterDetectEnd(class CColliderBase* Dest);
+    void CollisionEnemyDetectEnd(class CColliderBase* Dest);
+
+protected:
+    virtual FVector3D MovePoint();
+    
 
 protected:  // ============ AI Virtual Function ===============
     virtual void AIIdle();
@@ -77,5 +87,7 @@ protected:  // ============ AI Virtual Function ===============
     virtual void AIDeath();
     virtual void AISkill();
     virtual void AICustom();
+
+    //virtual FVector3D Test() { return FVector3D::Zero; }
 };
 

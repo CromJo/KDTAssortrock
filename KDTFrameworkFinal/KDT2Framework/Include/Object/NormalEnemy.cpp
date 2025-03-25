@@ -1,4 +1,4 @@
-﻿#include "GunnerMonster.h"
+﻿#include "NormalEnemy.h"
 #include "../Component/StaticMeshComponent.h"
 #include "../Component/SpriteComponent.h"
 #include "../Scene/Scene.h"
@@ -6,25 +6,25 @@
 #include "PlayerObject.h"
 #include "../Animation/Animation2D.h"
 
-CGunnerMonster::CGunnerMonster()
+CNormalEnemy::CNormalEnemy()
 {
 }
 
-CGunnerMonster::CGunnerMonster(const CGunnerMonster& Obj) :
+CNormalEnemy::CNormalEnemy(const CNormalEnemy& Obj) :
     CEnemyObject(Obj)
 {
 }
 
-CGunnerMonster::CGunnerMonster(CGunnerMonster&& Obj) :
+CNormalEnemy::CNormalEnemy(CNormalEnemy&& Obj) :
     CEnemyObject(Obj)
 {
 }
 
-CGunnerMonster::~CGunnerMonster()
+CNormalEnemy::~CNormalEnemy()
 {
 }
 
-bool CGunnerMonster::Init()
+bool CNormalEnemy::Init()
 {
     CEnemyObject::Init();
 
@@ -38,38 +38,22 @@ bool CGunnerMonster::Init()
     mAnimation->AddSequence("EnemyAttack", 1.f, 1.f, true, false);
     mAnimation->AddSequence("GunnerSkill", 1.f, 1.f, true, false);
 
-    mAIAnimationName[(int)EMonsterAI::Idle] = "EnemyIdle";
-    mAIAnimationName[(int)EMonsterAI::Move] = "EnemyMove1";
-    mAIAnimationName[(int)EMonsterAI::Attack] = "EnemyAttack";
-    mAIAnimationName[(int)EMonsterAI::Skill] = "GunnerSkill";
+    mAIAnimationName[(int)EEnemyAI::Idle] = "EnemyIdle";
+    mAIAnimationName[(int)EEnemyAI::Move] = "EnemyMove1";
+    mAIAnimationName[(int)EEnemyAI::Attack] = "EnemyAttack";
+    mAIAnimationName[(int)EEnemyAI::Skill] = "GunnerSkill";
 
     // N프레임 (설정한 값 : 0)로 애니메이션이 변경되면 지정된 함수 실행
-    mAnimation->AddNotify<CGunnerMonster>("EnemyAttack",
-        0, this, &CGunnerMonster::AttackNotify);
+    mAnimation->AddNotify<CNormalEnemy>("EnemyAttack",
+        0, this, &CNormalEnemy::AttackNotify);
 
-    mAnimation->SetEndFunction<CGunnerMonster>("EnemyAttack",
-        this, &CGunnerMonster::AttackEnd);
-
-    //mAnimation->AddNotify<CGunnerMonster>("GunnerSkill",
-    //    0, this, &CGunnerMonster::SkillNotify);
-    //
-    //mAnimation->SetEndFunction<CGunnerMonster>("GunnerSkill",
-    //    this, &CGunnerMonster::SkillEnd);
-
-
-    //mRoot->SetTexture("Monster1Tex", TEXT("Texture/block_wall.png"));
-    //mRoot->SetMesh("CenterTexRect");
-    //mRoot->AddTexture(0, "Teemo", TEXT("Texture/teemo.png"), 0);
-    //mRoot->SetMaterial(0, "Monster1");
-    //mRoot->SetShader("StaticMeshShader");
-    //mRoot->SetOpacity(0, 0.5f);
-
-    //SetTarget(mScene->FindObjectFromType<CPlayerObject>());
+    mAnimation->SetEndFunction<CNormalEnemy>("EnemyAttack",
+        this, &CNormalEnemy::AttackEnd);
 
     return true;
 }
 
-void CGunnerMonster::Update(float DeltaTime)
+void CNormalEnemy::Update(float DeltaTime)
 {
     CEnemyObject::Update(DeltaTime);
 
@@ -103,7 +87,7 @@ void CGunnerMonster::Update(float DeltaTime)
 
         CBulletObject* Bullet = mScene->CreateObj<CBulletObject>("Bullet");
 
-        Bullet->SetBulletCollisionProfile("MonsterAttack");
+        Bullet->SetBulletCollisionProfile("EnemyAttack");
 
         CSceneComponent* Root = Bullet->GetRootComponent();
 
@@ -121,7 +105,7 @@ void CGunnerMonster::Update(float DeltaTime)
             mFireCount = 0;
             Bullet = mScene->CreateObj<CBulletObject>("Bullet");
 
-            Bullet->SetBulletCollisionProfile("MonsterAttack");
+            Bullet->SetBulletCollisionProfile("EnemyAttack");
 
             Root = Bullet->GetRootComponent();
 
@@ -138,7 +122,7 @@ void CGunnerMonster::Update(float DeltaTime)
 
             Bullet = mScene->CreateObj<CBulletObject>("Bullet");
 
-            Bullet->SetBulletCollisionProfile("MonsterAttack");
+            Bullet->SetBulletCollisionProfile("EnemyAttack");
 
             Root = Bullet->GetRootComponent();
 
@@ -155,12 +139,15 @@ void CGunnerMonster::Update(float DeltaTime)
     }*/
 }
 
-void CGunnerMonster::DetectTarget()
+/// <summary>
+/// 타겟을 찾았다면 실행되는 기능
+/// </summary>
+void CNormalEnemy::DetectTarget()
 {
-    mAI = EMonsterAI::Attack;
+    mAI = EEnemyAI::Attack;
 }
 
-void CGunnerMonster::AIAttack()
+void CNormalEnemy::AIAttack()
 {
     CEnemyObject::AIAttack();
 
@@ -181,11 +168,11 @@ void CGunnerMonster::AIAttack()
     }
 }
 
-void CGunnerMonster::AttackNotify()
+void CNormalEnemy::AttackNotify()
 {
     CBulletObject* Bullet = mScene->CreateObj<CBulletObject>("Bullet");
 
-    Bullet->SetBulletCollisionProfile("MonsterAttack");
+    Bullet->SetBulletCollisionProfile("EnemyAttack");
 
     CSceneComponent* Root = Bullet->GetRootComponent();
 
@@ -205,20 +192,20 @@ void CGunnerMonster::AttackNotify()
 /// 공격 애니메이션 끝난 후 실행
 /// 1. 4번 공격 시 스킬 발동
 /// </summary>
-void CGunnerMonster::AttackEnd()
+void CNormalEnemy::AttackEnd()
 {
     if (mFireCount == 4)
     {
-        mAI = EMonsterAI::Skill;
+        mAI = EEnemyAI::Skill;
     }
 }
 
-void CGunnerMonster::SkillNotify()
+void CNormalEnemy::SkillNotify()
 {
     mFireCount = 0;
     CBulletObject* Bullet = mScene->CreateObj<CBulletObject>("Bullet");
 
-    Bullet->SetBulletCollisionProfile("MonsterAttack");
+    Bullet->SetBulletCollisionProfile("EnemyAttack");
 
     CSceneComponent* Root = Bullet->GetRootComponent();
 
@@ -233,7 +220,7 @@ void CGunnerMonster::SkillNotify()
 
     Bullet = mScene->CreateObj<CBulletObject>("Bullet");
 
-    Bullet->SetBulletCollisionProfile("MonsterAttack");
+    Bullet->SetBulletCollisionProfile("EnemyAttack");
 
     Root = Bullet->GetRootComponent();
 
@@ -250,7 +237,7 @@ void CGunnerMonster::SkillNotify()
 
     Bullet = mScene->CreateObj<CBulletObject>("Bullet");
 
-    Bullet->SetBulletCollisionProfile("MonsterAttack");
+    Bullet->SetBulletCollisionProfile("EnemyAttack");
 
     Root = Bullet->GetRootComponent();
 
@@ -265,7 +252,18 @@ void CGunnerMonster::SkillNotify()
     Bullet->SetLifeTime(2.f);
 }
 
-void CGunnerMonster::SkillEnd()
+void CNormalEnemy::SkillEnd()
 {
-    mAI = EMonsterAI::Attack;
+    mAI = EEnemyAI::Attack;
+}
+
+//FVector3D CNormalEnemy::MovePoint()
+//{
+//    return FVector3D();
+//}
+
+FVector3D CNormalEnemy::MovePoint()
+{
+    CEnemyObject::MovePoint();
+    return FVector3D();
 }

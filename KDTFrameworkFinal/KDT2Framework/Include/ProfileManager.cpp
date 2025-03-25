@@ -25,16 +25,16 @@ bool CProfileManager::Init()
 	CreateProfile("Player", ECollisionChannel::Player, true,
 		ECollisionInteraction::Collision);
 
-	CreateProfile("Monster", ECollisionChannel::Monster, true,
+	CreateProfile("Enemy", ECollisionChannel::Enemy, true,
 		ECollisionInteraction::Collision);
 
 	CreateProfile("PlayerAttack", ECollisionChannel::PlayerAttack, true,
 		ECollisionInteraction::Ignore);
 
-	CreateProfile("MonsterAttack", ECollisionChannel::MonsterAttack, true,
+	CreateProfile("EnemyAttack", ECollisionChannel::EnemyAttack, true,
 		ECollisionInteraction::Ignore);
 
-	CreateProfile("MonsterDetect", ECollisionChannel::MonsterDetect, true,
+	CreateProfile("EnemyDetect", ECollisionChannel::EnemyDetect, true,
 		ECollisionInteraction::Ignore);
 
 	SetInteraction("Player", ECollisionChannel::Player,
@@ -44,22 +44,22 @@ bool CProfileManager::Init()
 	/*SetInteraction("Player", ECollisionChannel::Default,
 		ECollisionInteraction::Ignore);*/
 
-	SetInteraction("Monster", ECollisionChannel::Monster,
+	SetInteraction("Enemy", ECollisionChannel::Enemy,
 		ECollisionInteraction::Ignore);
-	SetInteraction("Monster", ECollisionChannel::MonsterAttack,
+	SetInteraction("Enemy", ECollisionChannel::EnemyAttack,
 		ECollisionInteraction::Ignore);
 
 	SetInteraction("PlayerAttack", ECollisionChannel::Default,
 		ECollisionInteraction::Collision);
-	SetInteraction("PlayerAttack", ECollisionChannel::Monster,
+	SetInteraction("PlayerAttack", ECollisionChannel::Enemy,
 		ECollisionInteraction::Collision);
 
-	SetInteraction("MonsterAttack", ECollisionChannel::Default,
+	SetInteraction("EnemyAttack", ECollisionChannel::Default,
 		ECollisionInteraction::Collision);
-	SetInteraction("MonsterAttack", ECollisionChannel::Player,
+	SetInteraction("EnemyAttack", ECollisionChannel::Player,
 		ECollisionInteraction::Collision);
 
-	SetInteraction("MonsterDetect", ECollisionChannel::Player,
+	SetInteraction("EnemyDetect", ECollisionChannel::Player,
 		ECollisionInteraction::Collision);
 
 	return true;

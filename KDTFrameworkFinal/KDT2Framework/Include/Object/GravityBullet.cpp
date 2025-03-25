@@ -1,7 +1,7 @@
 ﻿#include "GravityBullet.h"
 #include "../Component/StaticMeshComponent.h"
 #include "../Component/MovementComponent.h"
-#include "MonsterObject.h"
+#include "EnemyObject.h"
 #include "../Scene/Scene.h"
 #include "../Component/SpriteComponent.h"
 
@@ -61,12 +61,12 @@ void CGravityBullet::Update(float DeltaTime)
 
         mMovement->SetEnable(false);
 
-        std::list<CSharedPtr<CEnemyObject>>   MonsterList;
+        std::list<CSharedPtr<CEnemyObject>>   EnemyList;
 
-        mScene->FindObjectsFromType<CEnemyObject>(MonsterList);
+        mScene->FindObjectsFromType<CEnemyObject>(EnemyList);
 
-        auto    iter = MonsterList.begin();
-        auto    iterEnd = MonsterList.end();
+        auto    iter = EnemyList.begin();
+        auto    iterEnd = EnemyList.end();
 
         for (; iter != iterEnd; ++iter)
         {

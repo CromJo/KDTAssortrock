@@ -209,10 +209,10 @@ namespace ECollisionChannel
 	{
 		Default,
 		Player,
-		Monster,
+		Enemy,
 		PlayerAttack,
-		MonsterAttack,
-		MonsterDetect,
+		EnemyAttack,
+		EnemyDetect,
 		End
 	};
 }
@@ -238,18 +238,18 @@ Channel : Player
 Enable : true
 Iteraction[Default] = Collision;
 Iteraction[Player] = Collision;
-Iteraction[Monster] = Collision;
+Iteraction[Enemy] = Collision;
 Iteraction[PlayerAttack] = Ignore;
-Iteraction[MonsterAttack] = Ignore;
+Iteraction[EnemyAttack] = Ignore;
 
 2번프로파일 정보
-Channel : MonsterAttack
+Channel : EnemyAttack
 Enable : true
 Iteraction[Default] = Collision;
 Iteraction[Player] = Collision;
-Iteraction[Monster] = Ignore;
+Iteraction[Enemy] = Ignore;
 Iteraction[PlayerAttack] = Ignore;
-Iteraction[MonsterAttack] = Ignore;
+Iteraction[EnemyAttack] = Ignore;
 */
 struct FCollisionProfile
 {

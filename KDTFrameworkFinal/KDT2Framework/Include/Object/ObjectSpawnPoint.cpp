@@ -5,8 +5,8 @@
 #include "GravityBullet.h"
 #include "TalonR.h"
 #include "TornadoBullet.h"
-#include "GunnerMonster.h"
-#include "NearingMonster.h"
+#include "NormalEnemy.h"
+#include "NearingEnemy.h"
 #include "../Scene/Scene.h"
 
 CObjectSpawnPoint::CObjectSpawnPoint()
@@ -109,6 +109,13 @@ void CObjectSpawnPoint::ComputeSpawnCountType()
     }
 }
 
+/// <summary>
+/// 오브젝트 생성 기능
+/// 1. 특정 오브젝트를 받아서,
+///     그 오브젝트의 리스폰지점에
+///     생성해주는 기능
+/// 2. 위치, 회전, 그려줄 순위를 지정해준다.
+/// </summary>
 void CObjectSpawnPoint::Spawn()
 {
     switch (mSpawnType)
@@ -128,20 +135,21 @@ void CObjectSpawnPoint::Spawn()
     case EObjectSpawnType::TornadoBullet:
         mSpawnObject = mScene->CreateObj<CTornadoBullet>("TornadoBullet");
         break;
-    case EObjectSpawnType::GunnerMonster:
-        mSpawnObject = mScene->CreateObj<CGunnerMonster>("GunnerMonster");
+    case EObjectSpawnType::NormalEnemy:
+        mSpawnObject = mScene->CreateObj<CNormalEnemy>("NormalEnemy");
         break;
-    case EObjectSpawnType::NearingMonster:
-        mSpawnObject = mScene->CreateObj<CNearingMonster>("NearingMonster");
+    case EObjectSpawnType::NearingEnemy:
+        mSpawnObject = mScene->CreateObj<CNearingEnemy>("NearingEnemy");
         break;
     }
 
+    // Transform값 세팅 및 Layer 설정
     mSpawnObject->SetWorldRotation(GetWorldRotation());
     //mSpawnObject->SetWorldPos(0.f,0.f,-10.f);
     //FVector3D A = FVector3D(GetWorldPosition().x, GetWorldPosition().y, -200.f);
     mSpawnObject->SetWorldPos(GetWorldPosition());
-    mSpawnObject->GetRootComponent()->SetRenderLayerName("Monster");
-
+    mSpawnObject->GetRootComponent()->SetRenderLayerName(mSpawnObject->GetName());
+    
     mSpawnObject->SetSpawnPoint(this);
 
     ComputeSpawnCountType();

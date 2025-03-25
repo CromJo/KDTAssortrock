@@ -1,7 +1,8 @@
-﻿
-#include "GameManager.h"
+﻿#include "GameManager.h"
 #include "Share/SharedPtr.h"
 #include "Share/Object.h"
+
+#include <random>
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,

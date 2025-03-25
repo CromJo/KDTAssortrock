@@ -26,7 +26,7 @@ struct FVector2D
 	{
 	}
 
-	FVector2D(FVector2D&& v)	:
+	FVector2D(FVector2D&& v):
 		x(v.x),
 		y(v.y)
 	{

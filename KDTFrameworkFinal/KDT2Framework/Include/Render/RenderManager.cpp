@@ -85,7 +85,7 @@ bool CRenderManager::Init()
 {
 	CreateRenderLayer("BackGround", INT_MIN);
 	CreateRenderLayer("Object", 0);
-	CreateRenderLayer("Monster", 1);
+	CreateRenderLayer("Enemy", 1);
 
 	mStateManager = new CRenderStateManager;
 

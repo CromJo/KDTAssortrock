@@ -1,33 +1,33 @@
-﻿#include "NearingMonster.h"
+﻿#include "NearingEnemy.h"
 #include "../Component/StaticMeshComponent.h"
 #include "../Component/SpriteComponent.h"
 #include "../Scene/Scene.h"
 #include "BulletObject.h"
 #include "PlayerObject.h"
 
-CNearingMonster::CNearingMonster()
+CNearingEnemy::CNearingEnemy()
 {
 }
 
-CNearingMonster::CNearingMonster(const CNearingMonster& Obj) :
+CNearingEnemy::CNearingEnemy(const CNearingEnemy& Obj) :
     CEnemyObject(Obj)
 {
 }
 
-CNearingMonster::CNearingMonster(CNearingMonster&& Obj) :
+CNearingEnemy::CNearingEnemy(CNearingEnemy&& Obj) :
     CEnemyObject(Obj)
 {
 }
 
-CNearingMonster::~CNearingMonster()
+CNearingEnemy::~CNearingEnemy()
 {
 }
 
-bool CNearingMonster::Init()
+bool CNearingEnemy::Init()
 {
     CEnemyObject::Init();
 
-    mRoot->SetTexture("Monster1Tex", TEXT("Texture/block_wall.png"));
+    mRoot->SetTexture("Enemy1Tex", TEXT("Texture/block_wall.png"));
     mRoot->SetPivot(0.5f, 0.5f);
 
     //SetTarget(mScene->FindObjectFromType<CPlayerObject>());
@@ -37,7 +37,7 @@ bool CNearingMonster::Init()
     return true;
 }
 
-void CNearingMonster::Update(float DeltaTime)
+void CNearingEnemy::Update(float DeltaTime)
 {
     CEnemyObject::Update(DeltaTime);
 

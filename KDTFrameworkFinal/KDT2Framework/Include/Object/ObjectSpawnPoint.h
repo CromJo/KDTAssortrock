@@ -10,8 +10,8 @@ enum class EObjectSpawnType : unsigned char
     GravityBullet,
     TalonR,
     TornadoBullet,
-    GunnerMonster,
-    NearingMonster
+    NormalEnemy,
+    NearingEnemy
 };
 
 enum class EObjectSpawnLoopType : unsigned char

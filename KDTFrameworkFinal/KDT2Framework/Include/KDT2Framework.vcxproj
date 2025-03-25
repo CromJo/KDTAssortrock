@@ -193,10 +193,10 @@
     <ClCompile Include="Object\BulletObject.cpp" />
     <ClCompile Include="Object\EditorPlayer.cpp" />
     <ClCompile Include="Object\GravityBullet.cpp" />
-    <ClCompile Include="Object\GunnerMonster.cpp" />
+    <ClCompile Include="Object\NormalEnemy.cpp" />
     <ClCompile Include="Object\HitScanBullet.cpp" />
     <ClCompile Include="Object\EnemyObject.cpp" />
-    <ClCompile Include="Object\NearingMonster.cpp" />
+    <ClCompile Include="Object\NearingEnemy.cpp" />
     <ClCompile Include="Object\ObjectSpawnPoint.cpp" />
     <ClCompile Include="Object\PenetrationBullet.cpp" />
     <ClCompile Include="Object\PlayerObject.cpp" />
@@ -325,10 +325,10 @@
     <ClInclude Include="Object\BulletObject.h" />
     <ClInclude Include="Object\EditorPlayer.h" />
     <ClInclude Include="Object\GravityBullet.h" />
-    <ClInclude Include="Object\GunnerMonster.h" />
+    <ClInclude Include="Object\NormalEnemy.h" />
     <ClInclude Include="Object\HitScanBullet.h" />
     <ClInclude Include="Object\EnemyObject.h" />
-    <ClInclude Include="Object\NearingMonster.h" />
+    <ClInclude Include="Object\NearingEnemy.h" />
     <ClInclude Include="Object\ObjectSpawnPoint.h" />
     <ClInclude Include="Object\PenetrationBullet.h" />
     <ClInclude Include="Object\PlayerObject.h" />

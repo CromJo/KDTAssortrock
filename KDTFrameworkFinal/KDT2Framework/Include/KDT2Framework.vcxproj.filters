@@ -330,10 +330,10 @@
     <ClCompile Include="Object\EnemyObject.cpp">
       <Filter>06. Object\03. Monster</Filter>
     </ClCompile>
-    <ClCompile Include="Object\GunnerMonster.cpp">
+    <ClCompile Include="Object\NormalEnemy.cpp">
       <Filter>06. Object\03. Monster</Filter>
     </ClCompile>
-    <ClCompile Include="Object\NearingMonster.cpp">
+    <ClCompile Include="Object\NearingEnemy.cpp">
       <Filter>06. Object\03. Monster</Filter>
     </ClCompile>
     <ClCompile Include="Share\Log.cpp">
@@ -710,10 +710,10 @@
     <ClInclude Include="Object\EnemyObject.h">
       <Filter>06. Object\03. Monster</Filter>
     </ClInclude>
-    <ClInclude Include="Object\GunnerMonster.h">
+    <ClInclude Include="Object\NormalEnemy.h">
       <Filter>06. Object\03. Monster</Filter>
     </ClInclude>
-    <ClInclude Include="Object\NearingMonster.h">
+    <ClInclude Include="Object\NearingEnemy.h">
       <Filter>06. Object\03. Monster</Filter>
     </ClInclude>
     <ClInclude Include="Share\Log.h">

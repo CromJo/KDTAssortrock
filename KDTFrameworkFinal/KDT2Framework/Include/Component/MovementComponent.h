@@ -18,6 +18,7 @@ protected:
 
 protected:
 	CSharedPtr<class CSceneComponent>	mUpdateComponent;
+	std::vector<CSharedPtr<CMovementComponent>>	mMovementList;
 	EAxis::Type		mMoveAxis = EAxis::None;
 
 protected:
@@ -77,8 +78,8 @@ public:
 	}
 
 	void SetMovePoint(const FVector2D& Pos);
+	void SetMoveRandomPoint(FVector2D& Pos);
 
-	void SetMovePointZ(const FVector2D& Pos);
 
 public:
 	virtual bool Init();

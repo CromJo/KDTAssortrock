@@ -1,7 +1,7 @@
 ﻿#include "SceneMain.h"
 #include "../Object/PlayerObject.h"
-#include "../Object/GunnerMonster.h"
-#include "../Object/NearingMonster.h"
+#include "../Object/NormalEnemy.h"
+#include "../Object/NearingEnemy.h"
 #include "../Object/ObjectSpawnPoint.h"
 #include "../Component/StaticMeshComponent.h"
 #include "SceneAssetManager.h"
@@ -31,14 +31,14 @@ CSceneMain::~CSceneMain()
 /// <returns></returns>
 bool CSceneMain::InitAsset()
 {
-    mAssetManager->CreateMaterial("Monster1");
+    mAssetManager->CreateMaterial("Enemy1");
 
     CMaterial* Material =
-        mAssetManager->FindMaterial("Monster1");
+        mAssetManager->FindMaterial("Enemy1");
 
     Material->SetPixelShader("DefaultMaterialShader");
     Material->SetSamplerType(ETextureSamplerType::Linear);
-    Material->AddTexture("Monster1", TEXT("Texture/block_wall.png"),
+    Material->AddTexture("Enemy1", TEXT("Texture/block_wall.png"),
         0);
 
     mAssetManager->LoadSound("Hit", "Effect", false, "Sound/Fire1.wav");
@@ -57,56 +57,56 @@ bool CSceneMain::InitObject()
     // 플레이어 오브젝트 생성
     CPlayerObject* Player = CreateObj<CPlayerObject>("Player");
 
-    CObjectSpawnPoint* MonsterPoint =
-        CreateObj<CObjectSpawnPoint>("Monster1");
+    CObjectSpawnPoint* EnemyPoint =
+        CreateObj<CObjectSpawnPoint>("Enemy1");
 
-    MonsterPoint->SetSpawnType(EObjectSpawnType::GunnerMonster);
-    MonsterPoint->SetSpawnLoopType(EObjectSpawnLoopType::Once);
-    MonsterPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
-    MonsterPoint->SetSpawnTime(3.f);
-    MonsterPoint->SetImmediateSpawn(true);
-    MonsterPoint->SetWorldPos(400.f, 300.f);
+    EnemyPoint->SetSpawnType(EObjectSpawnType::NormalEnemy);
+    EnemyPoint->SetSpawnLoopType(EObjectSpawnLoopType::Once);
+    EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
+    EnemyPoint->SetSpawnTime(3.f);
+    EnemyPoint->SetImmediateSpawn(true);
+    EnemyPoint->SetWorldPos(400.f, 300.f);
 
-    MonsterPoint =
-        CreateObj<CObjectSpawnPoint>("Monster2");
+    EnemyPoint =
+        CreateObj<CObjectSpawnPoint>("Enemy2");
 
-    MonsterPoint->SetSpawnType(EObjectSpawnType::GunnerMonster);
-    MonsterPoint->SetSpawnLoopType(EObjectSpawnLoopType::Once);
-    MonsterPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
-    MonsterPoint->SetSpawnTime(3.f);
-    MonsterPoint->SetImmediateSpawn(true);
-    MonsterPoint->SetWorldPos(-400.f, 300.f);
+    EnemyPoint->SetSpawnType(EObjectSpawnType::NormalEnemy);
+    EnemyPoint->SetSpawnLoopType(EObjectSpawnLoopType::Once);
+    EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
+    EnemyPoint->SetSpawnTime(3.f);
+    EnemyPoint->SetImmediateSpawn(true);
+    EnemyPoint->SetWorldPos(-400.f, 300.f);
 
-    MonsterPoint =
-        CreateObj<CObjectSpawnPoint>("Monster3");
+    EnemyPoint =
+        CreateObj<CObjectSpawnPoint>("Enemy3");
 
-    MonsterPoint->SetSpawnType(EObjectSpawnType::GunnerMonster);
-    MonsterPoint->SetSpawnLoopType(EObjectSpawnLoopType::Once);
-    MonsterPoint->SetSpawnCountType(EObjectSpawnCountType::OnceDestroy);
-    MonsterPoint->SetSpawnTime(3.f);
-    MonsterPoint->SetImmediateSpawn(true);
-    MonsterPoint->SetWorldPos(400.f, -300.f);
+    EnemyPoint->SetSpawnType(EObjectSpawnType::NormalEnemy);
+    EnemyPoint->SetSpawnLoopType(EObjectSpawnLoopType::Once);
+    EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::OnceDestroy);
+    EnemyPoint->SetSpawnTime(3.f);
+    EnemyPoint->SetImmediateSpawn(true);
+    EnemyPoint->SetWorldPos(400.f, -300.f);
 
-    MonsterPoint =
-        CreateObj<CObjectSpawnPoint>("Monster3");
+    EnemyPoint =
+        CreateObj<CObjectSpawnPoint>("Enemy3");
 
-    MonsterPoint->SetSpawnType(EObjectSpawnType::GunnerMonster);
-    MonsterPoint->SetSpawnLoopType(EObjectSpawnLoopType::Once);
-    MonsterPoint->SetSpawnCountType(EObjectSpawnCountType::CountDestroy);
-    MonsterPoint->SetDestroySpawnCount(3);
-    MonsterPoint->SetSpawnTime(3.f);
-    MonsterPoint->SetImmediateSpawn(true);
-    MonsterPoint->SetWorldPos(-400.f, -300.f);
+    EnemyPoint->SetSpawnType(EObjectSpawnType::NormalEnemy);
+    EnemyPoint->SetSpawnLoopType(EObjectSpawnLoopType::Once);
+    EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::CountDestroy);
+    EnemyPoint->SetDestroySpawnCount(3);
+    EnemyPoint->SetSpawnTime(3.f);
+    EnemyPoint->SetImmediateSpawn(true);
+    EnemyPoint->SetWorldPos(-400.f, -300.f);
 
-    CEnemyObject* Monster = CreateObj<CGunnerMonster>("Monster");
+    CEnemyObject* Enemy = CreateObj<CNormalEnemy>("Enemy");
 
-    Monster->SetWorldPos(400.f, 250.f);
+    Enemy->SetWorldPos(400.f, 250.f);
 
-    Monster = CreateObj<CNearingMonster>("Monster");
+    Enemy = CreateObj<CNearingEnemy>("Enemy");
 
-    Monster->SetTarget(Player);
+    Enemy->SetTarget(Player);
 
-    Monster->SetWorldPos(-200.f, 0.f);
+    Enemy->SetWorldPos(-200.f, 0.f);
 
     return true;
 }

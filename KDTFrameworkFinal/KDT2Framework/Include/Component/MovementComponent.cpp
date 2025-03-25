@@ -26,14 +26,21 @@ void CMovementComponent::SetUpdateComponent(CSceneComponent* Target)
     mUpdateComponent = Target;
 }
 
+/// <summary>
+/// 이동할 좌표를 설정
+/// </summary>
+/// <param name="Pos"></param>
 void CMovementComponent::SetMovePoint(const FVector2D& Pos)
 {
+    // 업데이트 컴포넌트가 있는지 체크
     if (mUpdateComponent)
     {
+        // 있다면
+        // 현재 월드 좌표를 받아온다.
         FVector2D   WorldPos;
         WorldPos.x = mUpdateComponent->GetWorldPosition().x;
         WorldPos.y = mUpdateComponent->GetWorldPosition().y;
-
+        // 위치를 찾는다.
         FindPath(WorldPos, Pos);
 
         if (!mPathList.empty())
@@ -43,24 +50,22 @@ void CMovementComponent::SetMovePoint(const FVector2D& Pos)
     }
 }
 
-/// <summary>
-/// 2D Z이동 함수
-/// </summary>
-/// <param name="Pos"></param>
-void CMovementComponent::SetMovePointZ(const FVector2D& Pos)
+void CMovementComponent::SetMoveRandomPoint(FVector2D& Pos)
 {
+    // 업데이트 컴포넌트가 있는지 체크
     if (mUpdateComponent)
     {
-        FVector2D   WorldPos;
-        WorldPos.x = mUpdateComponent->GetWorldPosition().x;
-        WorldPos.y = mUpdateComponent->GetWorldPosition().z;
+        // 있다면
+        // 현재 월드 좌표를 받아온다.
+        FVector3D   WorldPos;
+        WorldPos.x = mUpdateComponent->GetWorldPosition().x - Pos.x;
+        WorldPos.y = mUpdateComponent->GetWorldPosition().y - Pos.y;
+        WorldPos.z = mUpdateComponent->GetWorldPosition().z;
 
-        FindPath(WorldPos, Pos);
+        SetMove(WorldPos);
 
-        if (!mPathList.empty())
-        {
-            mTargetDist = WorldPos.Distance(mPathList.front());
-        }
+        Pos.x = WorldPos.x;
+        Pos.y = WorldPos.y;
     }
 }
 

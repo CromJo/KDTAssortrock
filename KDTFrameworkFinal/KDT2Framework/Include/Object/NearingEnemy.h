@@ -1,17 +1,17 @@
 ﻿#pragma once
 
-#include "MonsterObject.h"
+#include "EnemyObject.h"
 
-class CNearingMonster :
+class CNearingEnemy :
     public CEnemyObject
 {
     friend class CScene;
 
 protected:
-    CNearingMonster();
-    CNearingMonster(const CNearingMonster& Obj);
-    CNearingMonster(CNearingMonster&& Obj);
-    virtual ~CNearingMonster();
+    CNearingEnemy();
+    CNearingEnemy(const CNearingEnemy& Obj);
+    CNearingEnemy(CNearingEnemy&& Obj);
+    virtual ~CNearingEnemy();
 
 protected:
     float       mAttackTime = 0.5f;
