@@ -8,7 +8,7 @@ enum class EEnemyAI : unsigned char
     Trace,
     Move,
     Patrol,
-    AttackAAAAAAAAAAAAA,
+    Attack,
     Death,
     Skill,
     Custom,
