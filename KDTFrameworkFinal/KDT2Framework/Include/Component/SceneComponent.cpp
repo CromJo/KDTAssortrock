@@ -634,8 +634,13 @@ void CSceneComponent::SetWorldRotationAxis(float Angle, const FVector3D& Axis)
 {
 }
 
+/// <summary>
+/// 월드 위치를 설정하는 기능
+/// </summary>
+/// <param name="Pos"></param>
 void CSceneComponent::SetWorldPos(const FVector3D& Pos)
 {
+    // 위치 값을 설정해주고
     mWorldPos = Pos;
 
     if (mParent)

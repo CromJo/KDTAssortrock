@@ -15,6 +15,13 @@ enum class EEnemyAI : unsigned char
     End
 };
 
+enum class EEnemyMoveDirect : unsigned char
+{
+    None,       // 멈춘 상태
+    Left,       // 왼쪽으로 이동 해야하는 상태
+    Right       // 오른쪽으로 이동 해야하는 상태
+};
+
 class CEnemyObject :
     public CSceneObject
 {
@@ -27,7 +34,6 @@ protected:
     virtual ~CEnemyObject();
 
 protected:
-    std::list<CSharedPtr<CSceneObject>>	mObjList;
 
     CSharedPtr<class CSpriteComponent>  mRoot;
     //CSharedPtr<class CStaticMeshComponent>  mRoot;
@@ -47,7 +53,7 @@ protected:
     float           mLogicTime = 0.f;    // 로직 랜덤 체인지를 위한 시간
 
     CSharedPtr<class CMovementComponent>    mMovement;
-
+    float           mSpeed = 200.f;
 public:
     void SetTarget(class CSceneObject* Target)
     {
@@ -56,6 +62,7 @@ public:
 
 public:
     virtual bool Init();
+    virtual void PreUpdate(float DeltaTime);
     virtual void Update(float DeltaTime);
 
 public:
@@ -75,7 +82,7 @@ private:
     void CollisionEnemyDetectEnd(class CColliderBase* Dest);
 
 protected:
-    virtual FVector3D MovePoint();
+    virtual void MovePoint();
     
 
 protected:  // ============ AI Virtual Function ===============

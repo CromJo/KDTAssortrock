@@ -5,6 +5,7 @@
 #include "BulletObject.h"
 #include "PlayerObject.h"
 #include "../Animation/Animation2D.h"
+#include "../Component/MovementComponent.h"
 
 CNormalEnemy::CNormalEnemy()
 {
@@ -50,13 +51,20 @@ bool CNormalEnemy::Init()
     mAnimation->SetEndFunction<CNormalEnemy>("EnemyAttack",
         this, &CNormalEnemy::AttackEnd);
 
+    mAnimation->AddNotify<CNormalEnemy>("EnemyMove1",
+        0, this, &CNormalEnemy::MovePoint);
+
+    mMovement = CreateComponent<CMovementComponent>();
+    mMovement->SetUpdateComponent(mRoot);
+    mMovement->SetMoveSpeed(mSpeed);
+
     return true;
 }
 
 void CNormalEnemy::Update(float DeltaTime)
 {
     CEnemyObject::Update(DeltaTime);
-
+    /*
     //if (mTarget)
     //{
     //    if (mTarget->IsEnable())
@@ -65,7 +73,7 @@ void CNormalEnemy::Update(float DeltaTime)
     //            GetWorldPosition();
     //        ViewDir.Normalize();
 
-    //        float Angle = FVector3D::Axis[EAxis::Y].GetAngle(ViewDir);*/
+    //        float Angle = FVector3D::Axis[EAxis::Y].GetAngle(ViewDir);
     //        float Angle = GetWorldPosition().GetViewTargetAngle(
     //            mTarget->GetWorldPosition());
 
@@ -136,7 +144,8 @@ void CNormalEnemy::Update(float DeltaTime)
 
             Bullet->SetLifeTime(2.f);
         }
-    }*/
+    }
+    */
 }
 
 /// <summary>
@@ -262,8 +271,7 @@ void CNormalEnemy::SkillEnd()
 //    return FVector3D();
 //}
 
-FVector3D CNormalEnemy::MovePoint()
-{
-    CEnemyObject::MovePoint();
-    return FVector3D();
-}
+//void CNormalEnemy::MovePoint()
+//{
+//
+//}

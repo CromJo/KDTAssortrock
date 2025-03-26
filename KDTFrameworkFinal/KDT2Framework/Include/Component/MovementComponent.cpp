@@ -50,22 +50,16 @@ void CMovementComponent::SetMovePoint(const FVector2D& Pos)
     }
 }
 
-void CMovementComponent::SetMoveRandomPoint(FVector2D& Pos)
+void CMovementComponent::SetMoveRandomPoint(const FVector3D& Pos)
 {
     // 업데이트 컴포넌트가 있는지 체크
     if (mUpdateComponent)
     {
         // 있다면
         // 현재 월드 좌표를 받아온다.
-        FVector3D   WorldPos;
-        WorldPos.x = mUpdateComponent->GetWorldPosition().x - Pos.x;
-        WorldPos.y = mUpdateComponent->GetWorldPosition().y - Pos.y;
-        WorldPos.z = mUpdateComponent->GetWorldPosition().z;
-
-        SetMove(WorldPos);
-
-        Pos.x = WorldPos.x;
-        Pos.y = WorldPos.y;
+        FVector3D   WorldPos = mUpdateComponent->GetWorldPosition();
+        
+        SetMove(Pos);
     }
 }
 
@@ -118,14 +112,20 @@ void CMovementComponent::Update(float DeltaTime)
 
                 }
 
+                // 이동거리를 정규화 시켜서
                 mVelocity.Normalize();
 
+                // 이동거리가 0이아니라면
                 if (mVelocity.Length() > 0.f)
                 {
+                    // 거리 비례로 이동하라.
                     mMoveStep = mVelocity * mSpeed * DeltaTime;
                 }
 
+                // Old
+                // 기존의 값에 이동값을 추가하는 기능
                 mUpdateComponent->AddWorldPos(mMoveStep);
+                //mUpdateComponent->SetWorldPos(mMoveStep);
             }
             // 이동경로목록이 존재한다면
             else

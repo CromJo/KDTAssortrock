@@ -76,17 +76,8 @@ bool CEnemyObject::Init()
     return true;
 }
 
-/// <summary>
-/// 모든 적 오브젝트의 업데이트를 관장하는 기능.
-/// 1. 전체적인 적 오브젝트이기 때문에,
-///     전체적으로 수행할 기능들만 작성한다.
-/// 2. 만약 적오브젝트 고유의 기능이 있다면 고유 클래스에서 작성해야한다.
-/// </summary>
-/// <param name="DeltaTime"></param>
-void CEnemyObject::Update(float DeltaTime)
+void CEnemyObject::PreUpdate(float DeltaTime)
 {
-    CSceneObject::Update(DeltaTime);
-
     // 바라볼 대상이 있다면 (추후 삭제 예정)
     if (mTarget)
     {
@@ -108,7 +99,7 @@ void CEnemyObject::Update(float DeltaTime)
         mLogicTime -= 2.f;
         // AI로직을 랜덤 실행하기 위한 난수 적용
         int random = rand() % (int)EEnemyAI::End;
-        
+
         mAI = (EEnemyAI)random;
     }
 
@@ -141,6 +132,18 @@ void CEnemyObject::Update(float DeltaTime)
         AICustom();
         break;
     }
+}
+
+/// <summary>
+/// 모든 적 오브젝트의 업데이트를 관장하는 기능.
+/// 1. 전체적인 적 오브젝트이기 때문에,
+///     전체적으로 수행할 기능들만 작성한다.
+/// 2. 만약 적오브젝트 고유의 기능이 있다면 고유 클래스에서 작성해야한다.
+/// </summary>
+/// <param name="DeltaTime"></param>
+void CEnemyObject::Update(float DeltaTime)
+{
+    CSceneObject::Update(DeltaTime);
 }
 
 float CEnemyObject::Damage(float Attack,
@@ -201,16 +204,39 @@ void CEnemyObject::CollisionEnemyDetectEnd(CColliderBase* Dest)
     DetectTargetRelease();
 }
 
-FVector3D CEnemyObject::MovePoint()
+void CEnemyObject::MovePoint()
 {
     // 현재 화면 크기를 불러온다.
     const FResolution& RS = CDevice::GetInst()->GetResolution();
 
-    int randX = rand() % RS.Width;
-    int randY = rand() % RS.Height;
+    mMovement->SetUpdateComponent(mRoot);
+    mMovement->SetMoveSpeed(200.f);
+
+    int randX = rand() % (RS.Width  / 2);
+    int randY = rand() % (RS.Height / 2);
+
+    // 랜덤 돌려서 0 나오면 왼쪽으로 이동 1나오면 오른쪽으로 이동
+    EEnemyMoveDirect Dir = rand() % 2 == 0 ? 
+        EEnemyMoveDirect::Left : EEnemyMoveDirect::Right;
+
+    switch (Dir)
+    {
+    case EEnemyMoveDirect::None:
+        break;
+    case EEnemyMoveDirect::Left:
+        CLog::PrintLog("왼쪽이동인데?");
+        randX *= -1;
+        break;
+    case EEnemyMoveDirect::Right:
+        CLog::PrintLog("오른쪽 이동인데?");
+        break;
+    default:
+        break;
+    }
 
     // 랜덤한 좌표를 설정해준다.
-    return FVector3D(randX, randY, 0.f);
+    mMovement->SetMoveRandomPoint(FVector3D(randX - mRoot->GetWorldPosition().x,
+        randY - mRoot->GetWorldPosition().y, 0.f));
 }
 
 /// <summary>
@@ -240,7 +266,6 @@ void CEnemyObject::AIMove()
     // 애니메이션 변경
     if (mAnimation)
         mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Move]);
-
 }
 
 void CEnemyObject::AIAttack()

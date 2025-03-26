@@ -57,16 +57,27 @@ public:
 		mSpeed = Speed;
 	}
 
+	/// <summary>
+	/// 현재 좌표에서 특정 거리만큼 이동 위치를 추가해준다.
+	/// </summary>
+	/// <param name="Dir"></param>
 	void AddMove(const FVector3D& Dir)
 	{
 		mVelocity += Dir;
 	}
 
+	/// <summary>
+	/// 현재 좌표의 지정한 거리를 설정한다.
+	/// </summary>
+	/// <param name="Dir"></param>
 	void SetMove(const FVector3D& Dir)
 	{
 		mVelocity = Dir;
 	}
 
+	/// <summary>
+	/// 이동 불가한지 아닌지를 체크한다.
+	/// </summary>
 	void SetVelocityInit(bool VelocityInit)
 	{
 		mVelocityInit = VelocityInit;
@@ -78,8 +89,7 @@ public:
 	}
 
 	void SetMovePoint(const FVector2D& Pos);
-	void SetMoveRandomPoint(FVector2D& Pos);
-
+	void SetMoveRandomPoint(const FVector3D& Pos);
 
 public:
 	virtual bool Init();
