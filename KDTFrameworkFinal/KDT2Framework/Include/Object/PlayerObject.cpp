@@ -23,6 +23,8 @@
 #include "../Asset/AssetManager.h"
 #include "../Asset/Texture/Texture.h"
 #include "../Asset/Texture/TextureManager.h"
+//#include "../Animation/Animation2DSequence.h"
+//#include "../Animation/Animation2D.h"
 
 // 추후 삭제 전처리기
 #include "BulletObject.h"
@@ -56,7 +58,7 @@ bool CPlayerObject::Init()
     //mBody = CreateComponent<CColliderAABB2D>();
     //mBody = CreateComponent<CColliderSphere2D>();
     mBody = CreateComponent<CColliderOBB2D>();
-    mLine = CreateComponent<CColliderLine2D>();
+    //mLine = CreateComponent<CColliderLine2D>();
     mRotationPivot = CreateComponent<CSceneComponent>();
     mSub = CreateComponent<CSpriteComponent>();
     mSub2 = CreateComponent<CSpriteComponent>();
@@ -73,26 +75,34 @@ bool CPlayerObject::Init()
     mRotation = CreateComponent<CRotationComponent>();
     mInventory = CreateComponent<CInventoryComponent>();
 
-    mRoot->SetTexture("Teemo", TEXT("Texture/teemo.png"));
+    //mRoot->SetTexture("Teemo", TEXT("Texture/teemo.png"));
     mRoot->SetPivot(0.5f, 0.5f);
 
     mAnimation = mRoot->CreateAnimation2D<CAnimation2D>();
 
     mAnimation->AddSequence("PlayerIdle", 2.5f, 1.f, true, false);
-    mAnimation->AddSequence("PlayerAttack", 0.1f, 1.f, false, false);
+    mAnimation->AddSequence("PlayerAttack", 0.1f, 1.f, true, false);
     mAnimation->AddSequence("PlayerReloading", 1.2f, 1.f, false, false);
+    mAnimation->AddSequence("PlayerCoverHit", 0.33f, 1.f, false, false);
+    mAnimation->AddSequence("PlayerStanceHit", 0.33f, 1.f, false, false);
 
     // 애니메이션의 마지막 프레임 동작 후 부가적인 이벤트 실행 (부가적 이벤트 : AttackEnd)
     //mAnimation->SetEndFunction<CPlayerObject>("PlayerAttack",
     //    this, &CPlayerObject::ActionEnd);
+    
     // 애니메이션의 부가적인 이벤트를 추가 및 실행. (부가적 이벤트 : AttackNotify함수)
-    mAnimation->SetLoop("PlayerAttack", true);
+    //mAnimation->SetLoop("PlayerAttack", true);
     mAnimation->AddNotify<CPlayerObject>("PlayerAttack",
         1, this, &CPlayerObject::AttackNotify);
     
     // 장전 모션 끝난 후 이벤트 설정
     mAnimation->SetEndFunction<CPlayerObject>("PlayerReloading",
         this, &CPlayerObject::ReloadingEnd);
+
+    mAnimation->SetEndFunction<CPlayerObject>("PlayerCoverHit",
+        this, &CPlayerObject::CoverHitEnd);
+    mAnimation->SetEndFunction<CPlayerObject>("PlayerStanceHit",
+        this, &CPlayerObject::StanceHitEnd);
 
     mRoot->SetWorldPos(0.f, -200.f, 0.f);
     mRoot->SetWorldScale(300.f, 300.f, 1.f);
@@ -105,14 +115,14 @@ bool CPlayerObject::Init()
 
     mRoot->AddChild(mBody);
 
-    mRoot->AddChild(mLine);
+    //mRoot->AddChild(mLine);
 
     mRoot->SetRenderLayerName("Object");
 
     // Default
-    mLine->SetCollisionProfile("Player");
-    mLine->SetRelativePos(0.f, 50.f);
-    mLine->SetLineDistance(300.f);
+    //mLine->SetCollisionProfile("Player");
+    //mLine->SetRelativePos(0.f, 50.f);
+    //mLine->SetLineDistance(300.f);
 
     // 카메라 최종 세팅타입 : 직교 투영 방식
     // 원근 투영방식 다시는 보지말자 시부레 
@@ -205,19 +215,35 @@ void CPlayerObject::Update(float DeltaTime)
 {
     CSceneObject::Update(DeltaTime);
 
+    switch (mPlayerState)
+    {
+    case EPlayerState::Idle:
+        ActionEnd();
+        break;
+    case EPlayerState::Attack:
+        break;
+    case EPlayerState::Reloading:
+        Reloading(DeltaTime);
+        break;
+    case EPlayerState::CoverHit:
+        break;
+    case EPlayerState::StanceHit:
+        break;
+    }
+
     // 총알이 0발이고 대기모션인지 체크
     if (mAmmo <= 0 && mAutoBasePose)
     {
         //mAnimation->ChangeAnimation("PlayerReloading");
         Reloading(DeltaTime);
-
-        //UpdateReloading(DeltaTime);
     }
     // 움직이지 않고, 디폴트 자세로 돌아가는 것이 켜져있다면, 
     // 기본자세로 돌려라
     else if (mMovement->GetVelocityLength() == 0.f && mAutoBasePose)
         ActionEnd();
 
+#pragma region 인벤토리 아이템 테스트용 기능
+    /*
     static bool ItemTest = false;
 
     // 엔터키 누르면 아이템 추가 테스트 ON
@@ -280,6 +306,8 @@ void CPlayerObject::Update(float DeltaTime)
 
         mInventory->RemoveItem(rand() % 10);
     }
+    */
+#pragma endregion
 }
 
 void CPlayerObject::Render()
@@ -309,6 +337,14 @@ float CPlayerObject::Damage(float Attack, CSceneObject* Obj)
     // 플레이어의 HP를 깎는다.
     mHP -= (int)Attack;
 
+    bool CurrentSequence = mAnimation->GetCurrentAnimation("PlayerCoverHit");
+    
+    if (mAnimation->GetCurrentAnimation("PlayerCoverHit"))
+        mAnimation->ChangeAnimation("PlayerCoverHit");
+    else if (mAnimation->GetCurrentAnimation("PlayerStanceHit"))
+        mAnimation->ChangeAnimation("PlayerStanceHit");
+
+    mAutoBasePose = false;
     // 공격 값을 반환
     return Attack;
 }
@@ -347,7 +383,6 @@ void CPlayerObject::RotationZ(float DeltaTime)
     mAnimation->ChangeAnimation("PlayerIdle");
 
     mAutoBasePose = true;
-
 }
 
 void CPlayerObject::RotationZInv(float DeltaTime)
@@ -459,11 +494,26 @@ void CPlayerObject::Skill8(float DeltaTime)
 /// </summary>
 void CPlayerObject::ActionEnd()
 {
+    if (mPlayerState == EPlayerState::Idle)
+        return;
+
+    mPlayerState = EPlayerState::Idle;
+
     // 애니메이션 변경 및 로그 남김 
     //CLog::PrintLog("Action End");
     mAnimation->ChangeAnimation("PlayerIdle");
 
     mAutoBasePose = true;
+
+    FVector3D TargetPos;
+    FVector3D CurrentPos;
+    float Distance = CurrentPos.Distance(TargetPos);
+
+    if (20.f >= Distance)
+    {
+        // 이동오나료
+    }
+
 }
 
 /// <summary>
@@ -472,13 +522,26 @@ void CPlayerObject::ActionEnd()
 /// </summary>
 void CPlayerObject::AttackNotify()
 {
+    // 홀드 한 상태이거나, 0발일때 실행
     if (!mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton) ||
         mAmmo <= 0)
     {
+
+        //mAnimation->SetLoop("PlayerAttack", false);
+
+        //if (!mAnimation->GetCurrentAnimation("PlayerStanceHit"))
+        //    return;
+
         ActionEnd();
 
         return;
     }
+
+
+    if (mPlayerState == EPlayerState::Attack)
+        return;
+
+    mPlayerState = EPlayerState::Attack;
 
     // 왼쪽클릭하고 있고, 총알이 1발 이상 있을 경우
     // 1발 사용
@@ -508,6 +571,21 @@ void CPlayerObject::AttackNotify()
     //str += std::to_string(Pos.y);
     //CLog::PrintLog(str);
     //
+}
+
+void CPlayerObject::CoverHitEnd()
+{
+    mAnimation->ChangeAnimation("PlayerCoverHit");
+
+    ActionEnd();
+}
+
+void CPlayerObject::StanceHitEnd()
+{
+    mAnimation->ChangeAnimation("PlayerStanceHit");
+
+
+    ActionEnd();
 }
 
 void CPlayerObject::ReloadingEnd()

@@ -5,13 +5,13 @@
 enum class EEnemyAI : unsigned char
 {
     Idle,
-    Trace,
+    //Trace,
     Move,
-    Patrol,
+    //Patrol,
     Attack,
-    Death,
-    Skill,
-    Custom,
+    //Death,
+    //Skill,
+    //Custom,
     End
 };
 
@@ -54,6 +54,8 @@ protected:
 
     CSharedPtr<class CMovementComponent>    mMovement;
     float           mSpeed = 200.f;
+    EEnemyMoveDirect mMoveDirect = EEnemyMoveDirect::None;
+
 public:
     void SetTarget(class CSceneObject* Target)
     {
@@ -81,19 +83,22 @@ private:
         class CColliderBase* Dest);
     void CollisionEnemyDetectEnd(class CColliderBase* Dest);
 
+
+
 protected:
     virtual void MovePoint();
+    std::string EnumString(EEnemyAI ai);
     
-
 protected:  // ============ AI Virtual Function ===============
     virtual void AIIdle();
     virtual void AIPatrol();
-    virtual void AITrace();
+    //virtual void AITrace();
     virtual void AIMove();
     virtual void AIAttack();
     virtual void AIDeath();
-    virtual void AISkill();
+    //virtual void AISkill();
     virtual void AICustom();
+    virtual void AIChangeMove();
 
     //virtual FVector3D Test() { return FVector3D::Zero; }
 };

@@ -348,3 +348,16 @@ CAnimation2DSequence* CAnimation2D::FindSequence(
 	// 이름을 찾았다면 값 반환
 	return iter->second;
 }
+
+bool CAnimation2D::GetCurrentAnimation(const std::string& Name)
+{
+	// 변경할 애니메이션 이름이 존재하는지 체크
+	if (Name.empty())
+		return false;
+
+	// 현재 실행중인 애니메이션이 받아오려는 애니메이션이면 종료
+	else if (mCurrentSequence->GetName() == Name)
+		return false;
+	
+	return true;
+}

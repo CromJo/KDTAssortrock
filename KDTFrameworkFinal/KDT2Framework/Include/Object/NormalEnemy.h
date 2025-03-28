@@ -5,6 +5,9 @@ class CNormalEnemy :
 {
     friend class CScene;
 
+private:
+    EEnemyAI mMyAI = EEnemyAI::Idle;
+
 protected:
     CNormalEnemy();
     CNormalEnemy(const CNormalEnemy& Obj);
@@ -17,20 +20,23 @@ protected:
 
 public:
     virtual bool Init();
+    virtual void PreUpdate(float DeltaTime);
     virtual void Update(float DeltaTime);
 
 protected:
     virtual void DetectTarget();
+    virtual void Move();
 
 protected:
     virtual void AIAttack();
+    virtual void MovePoint();
 
 protected:
     void AttackNotify();
     void AttackEnd();
     void SkillNotify();
-    void SkillEnd();
+    //void SkillEnd();
 
-    virtual FVector3D MovePoint() override;
+    //virtual FVector3D MovePoint() override;
 };
 

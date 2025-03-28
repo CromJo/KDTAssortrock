@@ -113,5 +113,7 @@ public:
 		// 시퀀스의 추가 동작할 기능을 추가. 
 		Sequence->AddNotify<T>(Name, Frame, Obj, Func);
 	}
+
+	bool GetCurrentAnimation(const std::string& Name);
 };
 

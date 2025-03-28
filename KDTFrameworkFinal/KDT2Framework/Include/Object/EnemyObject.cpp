@@ -78,6 +78,8 @@ bool CEnemyObject::Init()
 
 void CEnemyObject::PreUpdate(float DeltaTime)
 {
+    mLogicTime += DeltaTime;
+
     // 바라볼 대상이 있다면 (추후 삭제 예정)
     if (mTarget)
     {
@@ -89,16 +91,32 @@ void CEnemyObject::PreUpdate(float DeltaTime)
         }
     }
 
-    // 현재 시간으로 랜덤한 값을 설정
-    srand(time(0));
-
-    mLogicTime += DeltaTime;
     if (mLogicTime > 2.f)
     {
-        CLog::PrintLog("랜덤 로직 실행");
         mLogicTime -= 2.f;
         // AI로직을 랜덤 실행하기 위한 난수 적용
         int random = rand() % (int)EEnemyAI::End;
+
+        // 출력
+        std::string str;
+        str += "랜덤 로직 실행 : ";
+        str += EnumString(mAI);
+        CLog::PrintLog(str);
+
+        // 이동 관련 로직이 걸렸을 때 실행
+        if (random == (int)EEnemyAI::Move)
+        {
+            // 랜덤하게
+            // 0 : 왼쪽으로 이동
+            // 1 : 오른쪽으로 이동
+            mMoveDirect = rand() % 2 == 0 ?
+                EEnemyMoveDirect::Left : EEnemyMoveDirect::Right;
+
+            if (mMoveDirect == EEnemyMoveDirect::Left)
+                CLog::PrintLog("왼쪽 이동인데?");
+            else if (mMoveDirect == EEnemyMoveDirect::Right)
+                CLog::PrintLog("오른쪽 이동인데?");
+        }
 
         mAI = (EEnemyAI)random;
     }
@@ -113,24 +131,24 @@ void CEnemyObject::PreUpdate(float DeltaTime)
         MovePoint();
         AIMove();
         break;
-    case EEnemyAI::Trace:     // 추적 (바라봄)
-        AITrace();
-        break;
-    case EEnemyAI::Patrol:    // 없음
-        AIPatrol();
-        break;
+    //case EEnemyAI::Trace:     // 추적 (바라봄)
+    //    AIChangeMove();
+    //    break;
+    //case EEnemyAI::Patrol:    // 순찰
+    //    AIChangeMove();
+    //    break;
     case EEnemyAI::Attack:    // 공격
         AIAttack();
         break;
-    case EEnemyAI::Death:     // 쥬금
-        AIDeath();
+    //case EEnemyAI::Death:     // 쥬금
+    //    AIChangeMove();
+    //    break;
+    //case EEnemyAI::Skill:     // 스킬사용
+        AIChangeMove();
         break;
-    case EEnemyAI::Skill:     // 스킬사용
-        AISkill();
-        break;
-    case EEnemyAI::Custom:
-        AICustom();
-        break;
+    //case EEnemyAI::Custom:
+    //    AIChangeMove();
+    //    break;
     }
 }
 
@@ -193,8 +211,8 @@ void CEnemyObject::CollisionEnemyDetect(const FVector3D& HitPoint,
 {
     // 타겟을 설정 후 
     mTarget = Dest->GetOwner();
-    mAI = EEnemyAI::Trace;
-    DetectTarget();
+    //mAI = EEnemyAI::Trace;
+    //DetectTarget();
 }
 
 void CEnemyObject::CollisionEnemyDetectEnd(CColliderBase* Dest)
@@ -206,37 +224,18 @@ void CEnemyObject::CollisionEnemyDetectEnd(CColliderBase* Dest)
 
 void CEnemyObject::MovePoint()
 {
-    // 현재 화면 크기를 불러온다.
-    const FResolution& RS = CDevice::GetInst()->GetResolution();
+}
 
-    mMovement->SetUpdateComponent(mRoot);
-    mMovement->SetMoveSpeed(200.f);
-
-    int randX = rand() % (RS.Width  / 2);
-    int randY = rand() % (RS.Height / 2);
-
-    // 랜덤 돌려서 0 나오면 왼쪽으로 이동 1나오면 오른쪽으로 이동
-    EEnemyMoveDirect Dir = rand() % 2 == 0 ? 
-        EEnemyMoveDirect::Left : EEnemyMoveDirect::Right;
-
-    switch (Dir)
-    {
-    case EEnemyMoveDirect::None:
-        break;
-    case EEnemyMoveDirect::Left:
-        CLog::PrintLog("왼쪽이동인데?");
-        randX *= -1;
-        break;
-    case EEnemyMoveDirect::Right:
-        CLog::PrintLog("오른쪽 이동인데?");
-        break;
-    default:
-        break;
+std::string CEnemyObject::EnumString(EEnemyAI ai)
+{
+    switch (ai) {
+    case EEnemyAI::Idle:
+        return "Idle";
+    case EEnemyAI::Move:
+        return "Move";
+    case EEnemyAI::Attack:
+        return "Attack";
     }
-
-    // 랜덤한 좌표를 설정해준다.
-    mMovement->SetMoveRandomPoint(FVector3D(randX - mRoot->GetWorldPosition().x,
-        randY - mRoot->GetWorldPosition().y, 0.f));
 }
 
 /// <summary>
@@ -252,11 +251,11 @@ void CEnemyObject::AIPatrol()
 {
 }
 
-void CEnemyObject::AITrace()
-{
-    if (mAnimation)
-        mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Trace]);
-}
+//void CEnemyObject::AITrace()
+//{
+//    if (mAnimation)
+//        mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Trace]);
+//}
 
 /// <summary>
 /// 적오브젝트의 공통 이동 기능
@@ -278,12 +277,17 @@ void CEnemyObject::AIDeath()
 {
 }
 
-void CEnemyObject::AISkill()
-{
-    if (mAnimation)
-        mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Skill]);
-}
+//void CEnemyObject::AISkill()
+//{
+//    if (mAnimation)
+//        mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Skill]);
+//}
 
 void CEnemyObject::AICustom()
 {
+}
+
+void CEnemyObject::AIChangeMove()
+{
+    AIMove();
 }

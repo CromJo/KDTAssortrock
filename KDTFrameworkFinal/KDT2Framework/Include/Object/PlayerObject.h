@@ -2,11 +2,21 @@
 
 #include "SceneObject.h"
 
-enum class ESkill4State
+enum class EPlayerState
 {
-    Expansion,
-    Maintain,
-    Reduction
+    Idle,
+    Attack,
+    Reloading,
+    CoverHit,
+    StanceHit
+};
+
+enum class EHitState
+{
+    None,
+    Cover,          // 커버 중일 때
+    Stance,         // 공격 중일 때
+    End
 };
 
 enum class EReloadingState
@@ -55,6 +65,11 @@ protected:
     bool            isReloading = false;// 재장전중인가?
     EReloadingState mReloadingState = EReloadingState::Check;
 
+    EPlayerState mPlayerState = EPlayerState::Idle;
+    EPlayerState mPlayerStatePrev = EPlayerState::Idle;
+
+    EPlayerState SetPlayerState();
+
 public:
     virtual bool Init();
     virtual void Update(float DeltaTime);
@@ -83,6 +98,9 @@ private:
 public:
     void ActionEnd();       // 공격이 끝났을때 
     void AttackNotify();    // 공격 중일 때
+
+    void CoverHitEnd();  // 공격 받았을 때
+    void StanceHitEnd(); // 공격 받았을 때
 
     void ReloadingEnd();
 };

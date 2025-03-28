@@ -85,7 +85,7 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::OnceDestroy);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(400.f, -300.f);
+    EnemyPoint->SetWorldPos(400.f, 200.f);
 
     EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy3");
@@ -96,23 +96,22 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetDestroySpawnCount(3);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(-400.f, -300.f);
+    EnemyPoint->SetWorldPos(-400.f, 100.f);
 
-    CEnemyObject* Enemy = CreateObj<CNormalEnemy>("Enemy");
-
-    Enemy->SetWorldPos(400.f, 250.f);
-
-    Enemy = CreateObj<CNearingEnemy>("Enemy");
-
-    Enemy->SetTarget(Player);
-
-    Enemy->SetWorldPos(-200.f, 0.f);
+    //CEnemyObject* Enemy = CreateObj<CNormalEnemy>("Enemy");
+    //Enemy->SetWorldPos(400.f, 250.f);
+    //Enemy = CreateObj<CNearingEnemy>("Enemy");
+    //Enemy->SetTarget(Player);
+    //Enemy->SetWorldPos(-200.f, 0.f);
 
     return true;
 }
 
 bool CSceneMain::InitWidget()
 {
+    // 현재 시간으로 랜덤한 값을 설정
+    srand(time(0));
+
     //CMainWidget* Widget = mUIManager->CreateWidget<CMainWidget>("Main");
 
     //mUIManager->AddToViewport(Widget);

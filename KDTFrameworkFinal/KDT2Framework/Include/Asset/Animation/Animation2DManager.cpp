@@ -42,6 +42,44 @@ bool CAnimation2DManager::Init()
     AddFrameCount("PlayerIdle", ImageSize, 0.f, 0.f, 1.f, 1.f);
 #pragma endregion
 
+#pragma region Cover Hit 애니메이션
+    CreateAnimation("PlayerCoverHit");
+    SetAnimationTextureType("PlayerCoverHit",
+        EAnimationTextureType::Frame);
+
+    FileNames.clear();
+
+    ImageSize = 11;
+
+    for (int i = 0; i < ImageSize; ++i)
+    {
+        wsprintf(Path[i], TEXT("Texture\\Player\\Novel_Cover_Hit\\Nikke_%d.png"), i);
+        FileNames.emplace_back(Path[i]);
+    }
+
+    SetTexture("PlayerCoverHit", "PlayerCoverHit", FileNames);
+    AddFrameCount("PlayerCoverHit", ImageSize, 0.f, 0.f, 1.f, 1.f);
+#pragma endregion
+
+#pragma region Stance Hit 애니메이션
+    CreateAnimation("PlayerStanceHit");
+    SetAnimationTextureType("PlayerStanceHit",
+        EAnimationTextureType::Frame);
+
+    FileNames.clear();
+
+    ImageSize = 13;
+
+    for (int i = 0; i < ImageSize; ++i)
+    {
+        wsprintf(Path[i], TEXT("Texture\\Player\\Novel_Stance_Hit\\Nikke_%d.png"), i);
+        FileNames.emplace_back(Path[i]);
+    }
+
+    SetTexture("PlayerStanceHit", "PlayerStanceHit", FileNames);
+    AddFrameCount("PlayerStanceHit", ImageSize, 0.f, 0.f, 1.f, 1.f);
+#pragma endregion
+
 #pragma region Reloading 애니메이션
     CreateAnimation("PlayerReloading");
     SetAnimationTextureType("PlayerReloading",
