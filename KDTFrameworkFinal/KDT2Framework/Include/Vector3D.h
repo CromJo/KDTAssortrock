@@ -156,6 +156,7 @@ struct FVector3D
 
 	FVector3D GetRotation(const FVector3D& Rot)	const;
 
+	float GetDistance(const FVector3D& v)	const;
 	float GetAngle(const FVector3D& v)	const;
 	float GetViewTargetAngle(const FVector3D& v,
 		EAxis::Type AxisType = EAxis::Y)	const;

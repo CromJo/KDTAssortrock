@@ -507,6 +507,17 @@ FVector3D FVector3D::GetRotation(const FVector3D& Rot)	const
 	return TransformNormal(matRot);
 }
 
+/// <summary>
+/// 타겟과의 거리 구하기
+/// </summary>
+/// <param name="v"></param>
+/// <returns></returns>
+float FVector3D::GetDistance(const FVector3D& v) const
+{
+	// (0, -200, 0) - (400, 300, 0) = (-400, -500, 0)
+	return (v - *this).Length();
+}
+
 float FVector3D::GetAngle(const FVector3D& v) const
 {
 	FVector3D	v1 = *this;
