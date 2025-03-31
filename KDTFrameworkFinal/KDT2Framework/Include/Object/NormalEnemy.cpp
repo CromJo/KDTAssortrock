@@ -55,8 +55,8 @@ bool CNormalEnemy::Init()
     mAnimation->SetEndFunction<CNormalEnemy>("EnemyAttack",
         this, &CNormalEnemy::AttackEnd);
 
-    mAnimation->AddNotify<CNormalEnemy>("EnemyMove",
-        3, this, &CNormalEnemy::MovePointNotify);
+    //mAnimation->AddNotify<CNormalEnemy>("EnemyMove",
+    //    3, this, &CNormalEnemy::MovePointNotify);
     
     mAnimation->SetEndFunction<CNormalEnemy>("EnemyMove",
         this, &CNormalEnemy::MovePointEnd);
@@ -87,12 +87,7 @@ void CNormalEnemy::DetectTarget()
     mAI = EEnemyAI::Attack;
 }
 
-void CNormalEnemy::MoveLeft()
-{
-    mAI = EEnemyAI::Move;
-}
-
-void CNormalEnemy::MoveRight()
+void CNormalEnemy::Move()
 {
     mAI = EEnemyAI::Move;
 }
@@ -120,11 +115,6 @@ void CNormalEnemy::AIAttack()
             //SetWorldRotationZ(Angle);
         }
     }
-}
-
-// 
-void CNormalEnemy::MovePoint()
-{
 }
 
 // 애니메이션 용
@@ -219,7 +209,7 @@ void CNormalEnemy::SkillNotify()
 void CNormalEnemy::MovePointEnd()
 {
     CLog::PrintLog("이동 끝마치고 공격");
-    //AttackNotify();
+    AttackNotify();
 }
 
 //void CNormalEnemy::SkillEnd()

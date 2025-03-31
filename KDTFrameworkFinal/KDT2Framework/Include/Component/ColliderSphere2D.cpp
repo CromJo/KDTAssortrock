@@ -102,11 +102,19 @@ CColliderSphere2D* CColliderSphere2D::Clone()
     return new CColliderSphere2D(*this);
 }
 
+/// <summary>
+/// 충돌 시 동작하는 기능 (사거리 계산시 사용 중)
+/// </summary>
+/// <param name="HitPoint"></param>
+/// <param name="Dest"></param>
+/// <returns></returns>
 bool CColliderSphere2D::Collision(FVector3D& HitPoint,
     CColliderBase* Dest)
 {
+    // 3D 객체면 종료
     if (Dest->GetColliderType() == EColliderType::Colider3D)
         return false;
+
 
     switch (Dest->GetColliderShape())
     {

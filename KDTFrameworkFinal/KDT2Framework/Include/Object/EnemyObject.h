@@ -86,11 +86,19 @@ private:
         class CColliderBase* Dest);
     void CollisionEnemyDetectEnd(class CColliderBase* Dest);
 
-
-
 protected:
+    // Loop : LoopState 함수에서 사용하는 함수
+    // Once : ChageState 함수에서 사용하는 함수
     virtual void MovePointLoop(float DeltaTime);
     virtual void MovePointOnce();
+
+    virtual void IdleLoop(float DeltaTime);
+    virtual void IdleOnce();
+
+    virtual void AttackLoop(float DeltaTime);
+    virtual void AttackOnce();
+
+
     std::string EnumString(EEnemyAI ai);
     void ChangeState(EEnemyAI Type);
     void LoopState(float DeltaTime);

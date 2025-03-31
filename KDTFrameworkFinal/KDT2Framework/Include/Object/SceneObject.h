@@ -152,6 +152,9 @@ public:
 
 
 public:
+
+	const float GetDistance(CSceneObject* Target) const;
+
 	const FMatrix& GetScaleMatrix()	const;
 
 	const FMatrix& GetRotationMatrix()	const;

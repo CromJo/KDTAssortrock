@@ -25,14 +25,12 @@ public:
 
 protected:
     virtual void DetectTarget();
-    virtual void MoveLeft();
-    virtual void MoveRight();
+    virtual void Move();
 
 protected:
     // Animation Notify 작성용 칸
     virtual void AIAttack();
-    virtual void MovePoint();
-    virtual void MovePointNotify();
+    virtual void MovePointNotify();     // 디테일용이기 때문에 제거 하자.
 
     
 

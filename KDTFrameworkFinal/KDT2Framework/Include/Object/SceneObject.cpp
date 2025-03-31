@@ -336,6 +336,11 @@ float CSceneObject::Damage(float Attack, CSceneObject* Obj)
     return Attack;
 }
 
+const float CSceneObject::GetDistance(CSceneObject* Target) const
+{
+	return mRootComponent->GetDistance(Target->GetWorldPosition());
+}
+
 const FMatrix& CSceneObject::GetScaleMatrix() const
 {
     return mRootComponent->GetScaleMatrix();

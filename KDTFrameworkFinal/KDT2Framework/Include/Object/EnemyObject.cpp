@@ -10,6 +10,7 @@
 #include "../Device.h"
 #include "../Component/MovementComponent.h"
 #include "../Scene/Navigation.h"
+#include "../Object/PlayerObject.h"
 
 CEnemyObject::CEnemyObject()
 {
@@ -61,7 +62,11 @@ bool CEnemyObject::Init()
     mRoot->AddChild(mBody);
 
     mDetect->SetCollisionProfile("EnemyDetect");
-    mDetect->SetRadius(1000.f);
+
+    // 오류있음 고쳐야함
+    //CPlayerObject* Target = mScene->FindObjectFromName<CPlayerObject>("Player");
+    //mDetect->SetRadius(this->GetDistance(Target));
+
     //mBody->SetBoxSize(100.f, 100.f);
     mDetect->SetCollisionBeginFunc<CEnemyObject>(this,
         &CEnemyObject::CollisionEnemyDetect);
@@ -195,22 +200,25 @@ void CEnemyObject::CollisionEnemyDetectEnd(CColliderBase* Dest)
 
 void CEnemyObject::MovePointLoop(float DeltaTime)
 {
-    /// 해결 방안
-    /// 1. 이동 위치에 도달하면 이동기능 비활성화
-    /// 2. 애니메이션 루프 
+    mMovement->SetMoveRandomPoint(mSaveMoveData);
     
     FVector3D Target = mSaveMoveData;
     FVector3D CurrentTransform = GetWorldPosition();
 
-    float 어그래 = CurrentTransform.Distance(Target);
-    if (어그래 <= 50.f)
+    float Distance = CurrentTransform.Distance(Target);
+
+    // 거리 오차가 20 이하면 멈추도록 설정
+    if (Distance <= 20.f)
     {
         //멈췅!
         mMovement->SetMoveRandomPoint(FVector3D::Zero);
     }
-
 }
 
+/// <summary>
+/// 이동 위치를 설정해주는 기능
+/// 1. 난수를 이용해 한번 위치를 설정해준다.
+/// </summary>
 void CEnemyObject::MovePointOnce()
 {
     // 애니메이션 재생
@@ -230,8 +238,6 @@ void CEnemyObject::MovePointOnce()
 
     FVector3D Dir = { randX - mRoot->GetWorldPosition().x, 0.f, 0.f };
     mSaveMoveData = Dir;
-    Dir.Normalize();
-    mMovement->SetMoveRandomPoint(Dir);
 }
 
 /*
@@ -245,6 +251,24 @@ void CEnemyObject::MovePointOnce()
         - 기능을 수행하는 기능임 (Update)
 */
 
+
+void CEnemyObject::IdleLoop(float DeltaTime)
+{
+}
+
+void CEnemyObject::IdleOnce()
+{
+    // 1. 애니메이션 변경 (위에서 하는중 안넣어도 됨)
+    //      ※ 설정해줄 것이 없음. 빈공간상태가 맞음 (아직까진)
+}
+
+void CEnemyObject::AttackLoop(float DeltaTime)
+{
+}
+
+void CEnemyObject::AttackOnce()
+{
+}
 
 /// <summary>
 /// 디버깅 용임 아무 효과 없음
@@ -263,57 +287,63 @@ std::string CEnemyObject::EnumString(EEnemyAI ai)
     }
 }
 
+/// <summary>
+/// 특성 변경시 1회 실행 되는 기능
+/// </summary>
+/// <param name="Type"></param>
 void CEnemyObject::ChangeState(EEnemyAI Type)
 {
+    // 현재 상태와 변경하려는 상태가 같으면 종료
     if (mAI == Type)
         return;
 
+    // 같지 않다면 변경
     mAI = Type;
 
-    switch (Type)
+    // 애니메이션 변경
+    if (mAnimation)
+        mAnimation->ChangeAnimation(mAIAnimationName[(int)mAI]);
+
+    switch (mAI)
     {
     case EEnemyAI::Idle:
+        IdleOnce();         // 현재로선 비어있는게 맞음.
         break;
     case EEnemyAI::Move:
         MovePointOnce();
         break;
     case EEnemyAI::Attack:
-        // 어택 에니메이숀 재생
-        break;
-    case EEnemyAI::End:
+		AttackOnce();
         break;
     }
 }
 
+/// <summary>
+/// 상태를 처리하는 기능
+/// </summary>
+/// <param name="DeltaTime"></param>
 void CEnemyObject::LoopState(float DeltaTime)
 {
     // 몬스터 행동 패턴 알고리즘
     switch (mAI)
     {
     case EEnemyAI::Idle:      // 대기
-        AIIdle();
+        //AIIdle();
+        IdleLoop(DeltaTime);
         break;
     case EEnemyAI::Move:      // 이동
-        //MovePoint();
-        mMovement->SetMoveRandomPoint(mSaveMoveData);
-        AIMove();
+        MovePointLoop(DeltaTime);
+        //AIMove();
         break;
-        //case EEnemyAI::Trace:     // 추적 (바라봄)
-        //    AIChangeMove();
-        //    break;
-        //case EEnemyAI::Patrol:    // 순찰
-        //    AIChangeMove();
-        //    break;
     case EEnemyAI::Attack:    // 공격
-        AIAttack();
+        //AIAttack();
+
+
         break;
         //case EEnemyAI::Death:     // 쥬금
         //    AIChangeMove();
         //    break;
         //case EEnemyAI::Skill:     // 스킬사용
-        //    AIChangeMove();
-        //    break;
-        //case EEnemyAI::Custom:
         //    AIChangeMove();
         //    break;
     }
@@ -325,8 +355,8 @@ void CEnemyObject::LoopState(float DeltaTime)
 /// </summary>
 void CEnemyObject::AIIdle()
 {
-    if (mAnimation)
-        mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Idle]);
+    //if (mAnimation)
+    //    mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Idle]);
 }
 
 void CEnemyObject::AIPatrol()
@@ -354,8 +384,8 @@ void CEnemyObject::AIMove()
 
 void CEnemyObject::AIAttack()
 {
-    if (mAnimation)
-        mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Attack]);
+    //if (mAnimation)
+    //    mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Attack]);
 }
 
 void CEnemyObject::AIDeath()
