@@ -78,6 +78,11 @@ protected:
 	FMatrix		mmatWorld;
 
 public:
+	const float& GetDistance(const FVector3D& Pos)	const
+	{
+		return mWorldPos.GetDistance(Pos);
+	}
+
 	const FMatrix& GetScaleMatrix()	const
 	{
 		return mmatScale;
