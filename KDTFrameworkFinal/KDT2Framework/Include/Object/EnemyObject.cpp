@@ -61,7 +61,7 @@ bool CEnemyObject::Init()
     mRoot->AddChild(mBody);
 
     mDetect->SetCollisionProfile("EnemyDetect");
-    mDetect->SetRadius(500.f);
+    mDetect->SetRadius(1000.f);
     //mBody->SetBoxSize(100.f, 100.f);
     mDetect->SetCollisionBeginFunc<CEnemyObject>(this,
         &CEnemyObject::CollisionEnemyDetect);
@@ -93,63 +93,21 @@ void CEnemyObject::PreUpdate(float DeltaTime)
 
     if (mLogicTime > 2.f)
     {
-        mLogicTime -= 2.f;
+        //mLogicTime -= 2.f;
         // AI로직을 랜덤 실행하기 위한 난수 적용
         int random = rand() % (int)EEnemyAI::End;
 
-        // 출력
-        std::string str;
-        str += "랜덤 로직 실행 : ";
-        str += EnumString(mAI);
-        CLog::PrintLog(str);
-
-        // 이동 관련 로직이 걸렸을 때 실행
-        if (random == (int)EEnemyAI::Move)
-        {
-            // 랜덤하게
-            // 0 : 왼쪽으로 이동
-            // 1 : 오른쪽으로 이동
-            mMoveDirect = rand() % 2 == 0 ?
-                EEnemyMoveDirect::Left : EEnemyMoveDirect::Right;
-
-            if (mMoveDirect == EEnemyMoveDirect::Left)
-                CLog::PrintLog("왼쪽 이동인데?");
-            else if (mMoveDirect == EEnemyMoveDirect::Right)
-                CLog::PrintLog("오른쪽 이동인데?");
-        }
-
-        mAI = (EEnemyAI)random;
+        //mAI = (EEnemyAI)random;
+        if(rand()% 2 == 0)
+			ChangeState(EEnemyAI::Idle);
+		else
+			ChangeState(EEnemyAI::Move);
+        //ChangeState((EEnemyAI)random);
+        //mAI = EEnemyAI::Idle;
     }
 
-    // 몬스터 행동 패턴 알고리즘
-    switch (mAI)
-    {
-    case EEnemyAI::Idle:      // 대기
-        AIIdle();
-        break;
-    case EEnemyAI::Move:      // 이동
-        MovePoint();
-        AIMove();
-        break;
-    //case EEnemyAI::Trace:     // 추적 (바라봄)
-    //    AIChangeMove();
-    //    break;
-    //case EEnemyAI::Patrol:    // 순찰
-    //    AIChangeMove();
-    //    break;
-    case EEnemyAI::Attack:    // 공격
-        AIAttack();
-        break;
-    //case EEnemyAI::Death:     // 쥬금
-    //    AIChangeMove();
-    //    break;
-    //case EEnemyAI::Skill:     // 스킬사용
-        AIChangeMove();
-        break;
-    //case EEnemyAI::Custom:
-    //    AIChangeMove();
-    //    break;
-    }
+    LoopState(DeltaTime);
+
 }
 
 /// <summary>
@@ -162,6 +120,18 @@ void CEnemyObject::PreUpdate(float DeltaTime)
 void CEnemyObject::Update(float DeltaTime)
 {
     CSceneObject::Update(DeltaTime);
+
+    // 출력
+    if (mLogicTime > 2.f)
+    {
+        mLogicTime -= 2.f;
+
+        std::string str;
+        str += "랜덤 로직 실행 : ";
+        str += EnumString(mAI);
+        CLog::PrintLog(str);
+    }
+
 }
 
 float CEnemyObject::Damage(float Attack,
@@ -222,20 +192,132 @@ void CEnemyObject::CollisionEnemyDetectEnd(CColliderBase* Dest)
     DetectTargetRelease();
 }
 
-void CEnemyObject::MovePoint()
+
+void CEnemyObject::MovePointLoop(float DeltaTime)
 {
+    /// 해결 방안
+    /// 1. 이동 위치에 도달하면 이동기능 비활성화
+    /// 2. 애니메이션 루프 
+    
+    FVector3D Target = mSaveMoveData;
+    FVector3D CurrentTransform = GetWorldPosition();
+
+    float 어그래 = CurrentTransform.Distance(Target);
+    if (어그래 <= 50.f)
+    {
+        //멈췅!
+        mMovement->SetMoveRandomPoint(FVector3D::Zero);
+    }
+
 }
 
+void CEnemyObject::MovePointOnce()
+{
+    // 애니메이션 재생
+    mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Move]);
+
+    // 현재 화면 크기를 불러온다.
+    const FResolution& RS = CDevice::GetInst()->GetResolution();
+
+    mMovement->SetUpdateComponent(mRoot);
+    mMovement->SetMoveSpeed(200.f);
+
+    int randX = rand() % (RS.Width / 2);
+    int randY = rand() % (RS.Height / 2);
+
+    mAnimation->SetAnimationReverseX(true);
+    randX *= -1;
+
+    FVector3D Dir = { randX - mRoot->GetWorldPosition().x, 0.f, 0.f };
+    mSaveMoveData = Dir;
+    Dir.Normalize();
+    mMovement->SetMoveRandomPoint(Dir);
+}
+
+/*
+    애니메이션 Notify 역할
+        - 쓰지마라 (디테일 용임)
+    
+    Once 
+        - 한번만 변경하게끔 해주는 기능
+
+    Loop :
+        - 기능을 수행하는 기능임 (Update)
+*/
+
+
+/// <summary>
+/// 디버깅 용임 아무 효과 없음
+/// </summary>
+/// <param name="ai"></param>
+/// <returns></returns>
 std::string CEnemyObject::EnumString(EEnemyAI ai)
 {
     switch (ai) {
     case EEnemyAI::Idle:
         return "Idle";
     case EEnemyAI::Move:
-        return "Move";
+        return "MoveLeft";
     case EEnemyAI::Attack:
         return "Attack";
     }
+}
+
+void CEnemyObject::ChangeState(EEnemyAI Type)
+{
+    if (mAI == Type)
+        return;
+
+    mAI = Type;
+
+    switch (Type)
+    {
+    case EEnemyAI::Idle:
+        break;
+    case EEnemyAI::Move:
+        MovePointOnce();
+        break;
+    case EEnemyAI::Attack:
+        // 어택 에니메이숀 재생
+        break;
+    case EEnemyAI::End:
+        break;
+    }
+}
+
+void CEnemyObject::LoopState(float DeltaTime)
+{
+    // 몬스터 행동 패턴 알고리즘
+    switch (mAI)
+    {
+    case EEnemyAI::Idle:      // 대기
+        AIIdle();
+        break;
+    case EEnemyAI::Move:      // 이동
+        //MovePoint();
+        mMovement->SetMoveRandomPoint(mSaveMoveData);
+        AIMove();
+        break;
+        //case EEnemyAI::Trace:     // 추적 (바라봄)
+        //    AIChangeMove();
+        //    break;
+        //case EEnemyAI::Patrol:    // 순찰
+        //    AIChangeMove();
+        //    break;
+    case EEnemyAI::Attack:    // 공격
+        AIAttack();
+        break;
+        //case EEnemyAI::Death:     // 쥬금
+        //    AIChangeMove();
+        //    break;
+        //case EEnemyAI::Skill:     // 스킬사용
+        //    AIChangeMove();
+        //    break;
+        //case EEnemyAI::Custom:
+        //    AIChangeMove();
+        //    break;
+    }
+
 }
 
 /// <summary>
@@ -262,9 +344,12 @@ void CEnemyObject::AIPatrol()
 /// </summary>
 void CEnemyObject::AIMove()
 {
-    // 애니메이션 변경
     if (mAnimation)
-        mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Move]);
+    {
+        // 애니메이션 변경
+        //if (mAI == EEnemyAI::Move)
+        //    mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Move]);
+    }
 }
 
 void CEnemyObject::AIAttack()

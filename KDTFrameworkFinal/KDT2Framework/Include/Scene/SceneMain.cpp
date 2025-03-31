@@ -67,7 +67,7 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetImmediateSpawn(true);
     EnemyPoint->SetWorldPos(400.f, 300.f);
 
-    EnemyPoint =
+    /*EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy2");
 
     EnemyPoint->SetSpawnType(EObjectSpawnType::NormalEnemy);
@@ -96,7 +96,7 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetDestroySpawnCount(3);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(-400.f, 100.f);
+    EnemyPoint->SetWorldPos(-400.f, 100.f);*/
 
     //CEnemyObject* Enemy = CreateObj<CNormalEnemy>("Enemy");
     //Enemy->SetWorldPos(400.f, 250.f);

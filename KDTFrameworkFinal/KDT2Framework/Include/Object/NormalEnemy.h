@@ -25,16 +25,22 @@ public:
 
 protected:
     virtual void DetectTarget();
-    virtual void Move();
+    virtual void MoveLeft();
+    virtual void MoveRight();
 
 protected:
+    // Animation Notify 작성용 칸
     virtual void AIAttack();
     virtual void MovePoint();
+    virtual void MovePointNotify();
+
+    
 
 protected:
     void AttackNotify();
     void AttackEnd();
     void SkillNotify();
+    void MovePointEnd();
     //void SkillEnd();
 
     //virtual FVector3D MovePoint() override;

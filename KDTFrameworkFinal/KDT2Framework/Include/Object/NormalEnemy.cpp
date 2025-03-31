@@ -38,12 +38,13 @@ bool CNormalEnemy::Init()
     mAnimation = mRoot->CreateAnimation2D<CAnimation2D>();
 
     mAnimation->AddSequence("EnemyIdle", 1.f, 1.f, true, false);
-    mAnimation->AddSequence("EnemyMove1", 1.f, 1.f, true, false);
+    mAnimation->AddSequence("EnemyMove", 2.f, 1.f, true, false);
+    //mAnimation->AddSequence("EnemyMove", 2.f, 1.f, true, false);
     mAnimation->AddSequence("EnemyAttack", 1.f, 1.f, true, false);
     mAnimation->AddSequence("GunnerSkill", 1.f, 1.f, true, false);
 
     mAIAnimationName[(int)EEnemyAI::Idle] = "EnemyIdle";
-    mAIAnimationName[(int)EEnemyAI::Move] = "EnemyMove1";
+    mAIAnimationName[(int)EEnemyAI::Move] = "EnemyMove";
     mAIAnimationName[(int)EEnemyAI::Attack] = "EnemyAttack";
     //mAIAnimationName[(int)EEnemyAI::Skill] = "GunnerSkill";
 
@@ -54,8 +55,11 @@ bool CNormalEnemy::Init()
     mAnimation->SetEndFunction<CNormalEnemy>("EnemyAttack",
         this, &CNormalEnemy::AttackEnd);
 
-    mAnimation->AddNotify<CNormalEnemy>("EnemyMove1",
-        0, this, &CNormalEnemy::MovePoint);
+    mAnimation->AddNotify<CNormalEnemy>("EnemyMove",
+        3, this, &CNormalEnemy::MovePointNotify);
+    
+    mAnimation->SetEndFunction<CNormalEnemy>("EnemyMove",
+        this, &CNormalEnemy::MovePointEnd);
 
     mMovement = CreateComponent<CMovementComponent>();
     mMovement->SetUpdateComponent(mRoot);
@@ -72,6 +76,7 @@ void CNormalEnemy::PreUpdate(float DeltaTime)
 void CNormalEnemy::Update(float DeltaTime)
 {
     CEnemyObject::Update(DeltaTime);
+
 }
 
 /// <summary>
@@ -82,7 +87,12 @@ void CNormalEnemy::DetectTarget()
     mAI = EEnemyAI::Attack;
 }
 
-void CNormalEnemy::Move()
+void CNormalEnemy::MoveLeft()
+{
+    mAI = EEnemyAI::Move;
+}
+
+void CNormalEnemy::MoveRight()
 {
     mAI = EEnemyAI::Move;
 }
@@ -112,36 +122,14 @@ void CNormalEnemy::AIAttack()
     }
 }
 
+// 
 void CNormalEnemy::MovePoint()
 {
-    // 현재 화면 크기를 불러온다.
-    const FResolution& RS = CDevice::GetInst()->GetResolution();
+}
 
-    mMovement->SetUpdateComponent(mRoot);
-    mMovement->SetMoveSpeed(200.f);
-
-    int randX = rand() % (RS.Width / 2);
-    int randY = rand() % (RS.Height / 2);
-
-    switch (mMoveDirect)
-    {
-    case EEnemyMoveDirect::None:
-        break;
-    case EEnemyMoveDirect::Left:
-        randX *= -1;
-        break;
-    case EEnemyMoveDirect::Right:
-        break;
-    default:
-        break;
-    }
-
-    // 랜덤한 좌표를 설정해준다.
-    //mMovement->SetMoveRandomPoint(FVector3D(randX - mRoot->GetWorldPosition().x,
-    //    randY - mRoot->GetWorldPosition().y, 0.f));
-
-    mMovement->SetMoveRandomPoint(FVector3D(randX - mRoot->GetWorldPosition().x,
-        0.f, 0.f));
+// 애니메이션 용
+void CNormalEnemy::MovePointNotify()
+{
 }
 
 /// <summary>
@@ -223,6 +211,15 @@ void CNormalEnemy::SkillNotify()
     Root->SetWorldPos(Pos + Dir * 75.f);
 
     Bullet->SetLifeTime(2.f);
+}
+
+/// <summary>
+/// 이동 로직이 끝나면 공격하도록 하는 기능
+/// </summary>
+void CNormalEnemy::MovePointEnd()
+{
+    CLog::PrintLog("이동 끝마치고 공격");
+    //AttackNotify();
 }
 
 //void CNormalEnemy::SkillEnd()

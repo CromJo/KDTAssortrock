@@ -11,9 +11,8 @@ enum class EPlayerState
     StanceHit
 };
 
-enum class EHitState
+enum class EPostureState
 {
-    None,
     Cover,          // 커버 중일 때
     Stance,         // 공격 중일 때
     End
@@ -44,8 +43,6 @@ protected:
     CSharedPtr<class CColliderOBB2D>        mBody;
     CSharedPtr<class CColliderLine2D>       mLine;
     CSharedPtr<class CSceneComponent>       mRotationPivot;
-    CSharedPtr<class CSpriteComponent>  mSub;
-    CSharedPtr<class CSpriteComponent>  mSub2;
     CSharedPtr<class CCameraComponent>      mCamera;
     CSharedPtr<class CWidgetComponent>    mHPBar;
 
@@ -66,9 +63,8 @@ protected:
     EReloadingState mReloadingState = EReloadingState::Check;
 
     EPlayerState mPlayerState = EPlayerState::Idle;
-    EPlayerState mPlayerStatePrev = EPlayerState::Idle;
-
-    EPlayerState SetPlayerState();
+    EPlayerState mPlayerStatePrev = mPlayerState;
+    EPostureState mPostureState = EPostureState::Cover;
 
 public:
     virtual bool Init();
@@ -96,12 +92,16 @@ private:
 
     void Skill8(float DeltaTime);
 public:
-    void ActionEnd();       // 공격이 끝났을때 
+    void ActionEnd();       // 모든 액션의 끝났을때 
     void AttackNotify();    // 공격 중일 때
 
     void CoverHitEnd();  // 공격 받았을 때
     void StanceHitEnd(); // 공격 받았을 때
 
     void ReloadingEnd();
+
+private:
+    void StateChange(EPlayerState State);
+    void PostureChange(EPostureState State);
 };
 

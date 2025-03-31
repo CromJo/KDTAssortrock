@@ -10,6 +10,7 @@ class CAnimation2D
 
 private:
 	static CAnimation2DCBuffer* mAnimCBuffer;
+	CAnimation2DCBuffer* mAnimCBufferMember;
 
 public:
 	static void CreateCBuffer();

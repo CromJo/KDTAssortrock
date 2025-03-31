@@ -56,6 +56,9 @@ protected:
     float           mSpeed = 200.f;
     EEnemyMoveDirect mMoveDirect = EEnemyMoveDirect::None;
 
+    FVector3D       mSaveMoveData = FVector3D::Zero;
+
+    
 public:
     void SetTarget(class CSceneObject* Target)
     {
@@ -86,8 +89,11 @@ private:
 
 
 protected:
-    virtual void MovePoint();
+    virtual void MovePointLoop(float DeltaTime);
+    virtual void MovePointOnce();
     std::string EnumString(EEnemyAI ai);
+    void ChangeState(EEnemyAI Type);
+    void LoopState(float DeltaTime);
     
 protected:  // ============ AI Virtual Function ===============
     virtual void AIIdle();

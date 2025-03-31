@@ -153,35 +153,41 @@ bool CAnimation2DManager::Init()
 #pragma region Idle 애니메이션
     CreateAnimation("EnemyIdle");
     SetAnimationTextureType("EnemyIdle",
-        EAnimationTextureType::SpriteSheet);
+        EAnimationTextureType::Frame);
 
-    SetTexture("EnemyIdle", "EnemySprite",
-        TEXT("Texture\\Enemy\\Enemy1&2.png"));
+    SetTexture("EnemyIdle", "EnemyIdle",
+        TEXT("Texture\\Enemy\\EnemyIdle\\Enemy0.png"));
 
     AddFrame("EnemyIdle", 0.f, 0.f, 150.f, 170.f);
 #pragma endregion
 
-#pragma region Move1 애니메이션
-    // 몬스터 이동 애니메이션 설정
-    CreateAnimation("EnemyMove1");
-    SetAnimationTextureType("EnemyMove1",
-        EAnimationTextureType::SpriteSheet);
-    SetTexture("EnemyMove1", "EnemySprite");
-    
-    // 0번째 사진 제외하고 1,2,3사진 이미지 추가
-    for (int i = 1; i < 4; ++i)
+#pragma region MoveLeft 애니메이션
+    CreateAnimation("EnemyMove");
+    SetAnimationTextureType("EnemyMove",
+        EAnimationTextureType::Frame);
+
+    FileNames.clear();
+
+    ImageSize = 3;
+
+    for (int i = 0; i < ImageSize; ++i)
     {
-        AddFrame("EnemyMove1", i * 150.f, 0.f,
-            150.f, 170.f);
+        wsprintf(Path[i], TEXT("Texture\\Enemy\\EnemyMove\\Enemy%d.png"), i);
+        FileNames.emplace_back(Path[i]);
     }
+
+    SetTexture("EnemyMove", "EnemyMove", FileNames);
+    AddFrameCount("EnemyMove", ImageSize, 0.f, 0.f, 1.f, 1.f);
 #pragma endregion
 
 #pragma region Attack 애니메이션
     CreateAnimation("EnemyAttack");
     SetAnimationTextureType("EnemyAttack",
-        EAnimationTextureType::SpriteSheet);
-    SetTexture("EnemyAttack", "EnemySprite");
-    
+        EAnimationTextureType::Frame);
+
+    SetTexture("EnemyAttack", "EnemyAttack",
+        TEXT("Texture\\Enemy\\EnemyIdle\\Enemy0.png"));
+
     AddFrame("EnemyAttack", 0.f, 0.f, 150.f, 170.f);
 #pragma endregion
 

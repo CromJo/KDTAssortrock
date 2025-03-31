@@ -60,8 +60,6 @@ bool CPlayerObject::Init()
     mBody = CreateComponent<CColliderOBB2D>();
     //mLine = CreateComponent<CColliderLine2D>();
     mRotationPivot = CreateComponent<CSceneComponent>();
-    mSub = CreateComponent<CSpriteComponent>();
-    mSub2 = CreateComponent<CSpriteComponent>();
     mCamera = CreateComponent<CCameraComponent>();
     mHPBar = CreateComponent<CWidgetComponent>();
 
@@ -215,6 +213,17 @@ void CPlayerObject::Update(float DeltaTime)
 {
     CSceneObject::Update(DeltaTime);
 
+    // 총알이 0발이고 대기모션인지 체크
+    if (mAmmo <= 0 && mAutoBasePose)
+    {
+        //mAnimation->ChangeAnimation("PlayerReloading");
+        Reloading(DeltaTime);
+    }
+    // 움직이지 않고, 디폴트 자세로 돌아가는 것이 켜져있다면, 
+    // 기본자세로 돌려라
+    else if (mMovement->GetVelocityLength() == 0.f && mAutoBasePose)
+        ActionEnd();
+
     switch (mPlayerState)
     {
     case EPlayerState::Idle:
@@ -226,21 +235,13 @@ void CPlayerObject::Update(float DeltaTime)
         Reloading(DeltaTime);
         break;
     case EPlayerState::CoverHit:
+        mAnimation->ChangeAnimation("PlayerCoverHit");
         break;
     case EPlayerState::StanceHit:
+        mAnimation->ChangeAnimation("PlayerStanceHit");
         break;
     }
 
-    // 총알이 0발이고 대기모션인지 체크
-    if (mAmmo <= 0 && mAutoBasePose)
-    {
-        //mAnimation->ChangeAnimation("PlayerReloading");
-        Reloading(DeltaTime);
-    }
-    // 움직이지 않고, 디폴트 자세로 돌아가는 것이 켜져있다면, 
-    // 기본자세로 돌려라
-    else if (mMovement->GetVelocityLength() == 0.f && mAutoBasePose)
-        ActionEnd();
 
 #pragma region 인벤토리 아이템 테스트용 기능
     /*
@@ -337,12 +338,19 @@ float CPlayerObject::Damage(float Attack, CSceneObject* Obj)
     // 플레이어의 HP를 깎는다.
     mHP -= (int)Attack;
 
-    bool CurrentSequence = mAnimation->GetCurrentAnimation("PlayerCoverHit");
-    
-    if (mAnimation->GetCurrentAnimation("PlayerCoverHit"))
+    switch (mPostureState)
+    {
+    case EPostureState::Cover:
+        StateChange(EPlayerState::CoverHit);
         mAnimation->ChangeAnimation("PlayerCoverHit");
-    else if (mAnimation->GetCurrentAnimation("PlayerStanceHit"))
+        break;
+    case EPostureState::Stance:
+        StateChange(EPlayerState::StanceHit);
         mAnimation->ChangeAnimation("PlayerStanceHit");
+        break;
+    }
+
+    // 죽었을때 로직 추가 해줘야 함.
 
     mAutoBasePose = false;
     // 공격 값을 반환
@@ -400,9 +408,9 @@ void CPlayerObject::MoveRight(float DeltaTime)
 {
     mMovement->AddMove(mRootComponent->GetAxis(EAxis::X));
 
-    mAnimation->ChangeAnimation("PlayerIdle");
+    //mAnimation->ChangeAnimation("PlayerIdle");
 
-    mAnimation->SetAnimationReverseX(false);
+    //mAnimation->SetAnimationReverseX(false);
 
     mAutoBasePose = true;
 }
@@ -411,9 +419,9 @@ void CPlayerObject::MoveLeft(float DeltaTime)
 {
     mMovement->AddMove(mRootComponent->GetAxis(EAxis::X) * -1);
 
-    mAnimation->ChangeAnimation("PlayerIdle");
+    //mAnimation->ChangeAnimation("PlayerIdle");
 
-    mAnimation->SetAnimationReverseX(true);
+    //mAnimation->SetAnimationReverseX(true);
 
     mAutoBasePose = true;
 }
@@ -444,7 +452,6 @@ void CPlayerObject::MouseFire(float DeltaTime)
         return;
     }
 
-
     // PlayerAttack 애니메이션으로 변경
     mAnimation->ChangeAnimation("PlayerAttack");
 
@@ -461,6 +468,9 @@ void CPlayerObject::Reloading(float DeltaTime)
 {
     if (mAmmo == mAmmoMax)
         return;
+
+    StateChange(EPlayerState::Reloading);
+    PostureChange(EPostureState::Cover);
 
     CLog::PrintLog("리로딩!!!");
 
@@ -494,26 +504,14 @@ void CPlayerObject::Skill8(float DeltaTime)
 /// </summary>
 void CPlayerObject::ActionEnd()
 {
-    if (mPlayerState == EPlayerState::Idle)
-        return;
-
-    mPlayerState = EPlayerState::Idle;
+    StateChange(EPlayerState::Idle);
+    PostureChange(EPostureState::Cover);
 
     // 애니메이션 변경 및 로그 남김 
     //CLog::PrintLog("Action End");
     mAnimation->ChangeAnimation("PlayerIdle");
 
     mAutoBasePose = true;
-
-    FVector3D TargetPos;
-    FVector3D CurrentPos;
-    float Distance = CurrentPos.Distance(TargetPos);
-
-    if (20.f >= Distance)
-    {
-        // 이동오나료
-    }
-
 }
 
 /// <summary>
@@ -537,11 +535,8 @@ void CPlayerObject::AttackNotify()
         return;
     }
 
-
-    if (mPlayerState == EPlayerState::Attack)
-        return;
-
-    mPlayerState = EPlayerState::Attack;
+    StateChange(EPlayerState::Attack);
+    PostureChange(EPostureState::Stance);
 
     // 왼쪽클릭하고 있고, 총알이 1발 이상 있을 경우
     // 1발 사용
@@ -575,17 +570,17 @@ void CPlayerObject::AttackNotify()
 
 void CPlayerObject::CoverHitEnd()
 {
-    mAnimation->ChangeAnimation("PlayerCoverHit");
-
     ActionEnd();
 }
 
 void CPlayerObject::StanceHitEnd()
 {
-    mAnimation->ChangeAnimation("PlayerStanceHit");
+    StateChange(EPlayerState::Attack);
+    PostureChange(EPostureState::Stance);
 
-
-    ActionEnd();
+    // 애니메이션 변경 및 로그 남김 
+    //CLog::PrintLog("Action End");
+    mAnimation->ChangeAnimation("PlayerAttack");
 }
 
 void CPlayerObject::ReloadingEnd()
@@ -593,4 +588,23 @@ void CPlayerObject::ReloadingEnd()
     mAmmo = mAmmoMax;
 
     ActionEnd();
+}
+
+void CPlayerObject::StateChange(EPlayerState State)
+{
+    if (mPlayerState == State)
+        return;
+
+    // 기존 자세를 전 자세로 저장 후
+    // 현재 자세를 변경
+    mPlayerStatePrev = mPlayerState;
+    mPlayerState = State;
+}
+
+void CPlayerObject::PostureChange(EPostureState State)
+{
+    if (mPostureState == State)
+        return;
+
+    mPostureState = State;
 }

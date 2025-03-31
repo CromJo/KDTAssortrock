@@ -57,10 +57,19 @@ CAnimation2D::~CAnimation2D()
 	{
 		SAFE_DELETE(iter->second);
 	}
+
+	SAFE_DELETE(mAnimCBufferMember);
 }
 
 bool CAnimation2D::Init()
 {
+	//mAnimCBufferMember->SetAnimation2DEnable(false);
+	//mAnimCBufferMember->UpdateBuffer();
+
+	mAnimCBufferMember = new CAnimation2DCBuffer;
+
+	mAnimCBufferMember->Init();
+
 	return true;
 }
 
@@ -319,15 +328,15 @@ void CAnimation2D::SetShader()
 		break;
 	}
 
-	mAnimCBuffer->SetAnimation2DEnable(true);
-	mAnimCBuffer->SetUV(LTX, LTY, RBX, RBY);
+	mAnimCBufferMember->SetAnimation2DEnable(true);
+	mAnimCBufferMember->SetUV(LTX, LTY, RBX, RBY);
 
-	mAnimCBuffer->UpdateBuffer();
+	mAnimCBufferMember->UpdateBuffer();
 }
 
 void CAnimation2D::SetAnimationReverseX(bool Reverse)
 {
-	mAnimCBuffer->SetAnimation2DReverseX(Reverse);
+	mAnimCBufferMember->SetAnimation2DReverseX(Reverse);
 }
 
 /// <summary>
