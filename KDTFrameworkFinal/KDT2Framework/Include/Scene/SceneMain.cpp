@@ -65,7 +65,7 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(400.f, 300.f);
+    EnemyPoint->SetWorldPos(400.f, 200.f);
 
     /*EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy2");

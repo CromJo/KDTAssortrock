@@ -193,6 +193,25 @@ bool CAnimation2DManager::Init()
 
 #pragma endregion
 
+#pragma region Attack Guage 애니메이션 모음
+    CreateAnimation("EnemyAttackGuage");
+    SetAnimationTextureType("EnemyAttackGuage",
+        EAnimationTextureType::Frame);
+
+    FileNames.clear();
+
+    ImageSize = 10;
+
+    for (int i = 0; i < ImageSize; ++i)
+    {
+        wsprintf(Path[i], TEXT("Texture\\UI\\Attack_Guage_%d.png"), i);
+        FileNames.emplace_back(Path[i]);
+    }
+
+    SetTexture("EnemyAttackGuage", "EnemyAttackGuage", FileNames);
+    AddFrameCount("EnemyAttackGuage", ImageSize, 0.f, 0.f, 1.f, 1.f);
+#pragma endregion
+
     return true;
 }
 

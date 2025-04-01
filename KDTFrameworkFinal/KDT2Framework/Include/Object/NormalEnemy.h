@@ -7,6 +7,12 @@ class CNormalEnemy :
 
 private:
     EEnemyAI mMyAI = EEnemyAI::Idle;
+    CSharedPtr<class CSpriteComponent>        mGuageBar;
+    CSharedPtr<class CGuageInfo>            mGuageInfo;
+
+    class CAnimation2D* mGuageAnimation = nullptr;
+
+    float mControlRatio = 0;
 
 protected:
     CNormalEnemy();
@@ -15,6 +21,7 @@ protected:
     virtual ~CNormalEnemy();
 
 protected:
+
     float       mFireTime = 1.f;
     int         mFireCount = 0;
 
@@ -32,6 +39,7 @@ protected:
     virtual void AIAttack();
     virtual void MovePointNotify();     // 디테일용이기 때문에 제거 하자.
 
+    virtual void AttackLoop(float DeltaTime);
     
 
 protected:

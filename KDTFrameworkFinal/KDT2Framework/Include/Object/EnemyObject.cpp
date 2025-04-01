@@ -11,6 +11,9 @@
 #include "../Component/MovementComponent.h"
 #include "../Scene/Navigation.h"
 #include "../Object/PlayerObject.h"
+#include "../Component/WidgetComponent.h"
+#include "../UI/UserWidget/HeadInfo.h"
+#include "../Scene/SceneUIManager.h"
 
 CEnemyObject::CEnemyObject()
 {
@@ -43,9 +46,13 @@ bool CEnemyObject::Init()
     //mBody = CreateComponent<CColliderOBB2D>();
     mDetect = CreateComponent<CColliderSphere2D>();
     mMovement = CreateComponent<CMovementComponent>();
+    mHPBar = CreateComponent<CWidgetComponent>();
 
-    //mRoot->SetMesh("CenterRect");
-    //mRoot->SetShader("ColorMeshShader");
+    mHPBar->SetRelativePos(-75.f, 50.f);
+    CHeadInfo* HeadInfo = mScene->GetUIManager()->CreateWidget<CHeadInfo>("HeadInfo");
+    //HeadInfo->SetSize(50.f, 20.f);        // 작동안되는 중
+    mHPBar->SetWidget(HeadInfo);
+    mRoot->AddChild(mHPBar);
 
     mRoot->SetWorldScale(100.f, 100.f, 1.f);
 
@@ -62,7 +69,7 @@ bool CEnemyObject::Init()
     mRoot->AddChild(mBody);
 
     mDetect->SetCollisionProfile("EnemyDetect");
-
+    mDetect->SetRadius(1000.f);
     // 오류있음 고쳐야함
     //CPlayerObject* Target = mScene->FindObjectFromName<CPlayerObject>("Player");
     //mDetect->SetRadius(this->GetDistance(Target));
@@ -99,20 +106,19 @@ void CEnemyObject::PreUpdate(float DeltaTime)
     if (mLogicTime > 2.f)
     {
         //mLogicTime -= 2.f;
+        
         // AI로직을 랜덤 실행하기 위한 난수 적용
         int random = rand() % (int)EEnemyAI::End;
 
-        //mAI = (EEnemyAI)random;
-        if(rand()% 2 == 0)
-			ChangeState(EEnemyAI::Idle);
-		else
-			ChangeState(EEnemyAI::Move);
-        //ChangeState((EEnemyAI)random);
-        //mAI = EEnemyAI::Idle;
+        //if(rand()% 2 == 0)
+		//	ChangeState(EEnemyAI::Idle);
+		//else
+		//	ChangeState(EEnemyAI::Move);
+        
+        ChangeState((EEnemyAI)random);
     }
 
     LoopState(DeltaTime);
-
 }
 
 /// <summary>
@@ -136,7 +142,6 @@ void CEnemyObject::Update(float DeltaTime)
         str += EnumString(mAI);
         CLog::PrintLog(str);
     }
-
 }
 
 float CEnemyObject::Damage(float Attack,
@@ -233,10 +238,33 @@ void CEnemyObject::MovePointOnce()
     int randX = rand() % (RS.Width / 2);
     int randY = rand() % (RS.Height / 2);
 
-    mAnimation->SetAnimationReverseX(true);
-    randX *= -1;
+    // 0 : 왼쪽으로 설정
+    // 1 : 오른쪽으로 설정
+    randX *= rand() % 2 == 0 ? -1 : 1;
+    
+    if (randX < 0)
+        mAnimation->SetAnimationReverseX(false);
+    else
+        mAnimation->SetAnimationReverseX(true);
 
-    FVector3D Dir = { randX - mRoot->GetWorldPosition().x, 0.f, 0.f };
+    FVector3D Dir;
+
+    Dir = FVector3D(randX - mRoot->GetWorldPosition().x, 0.f, 0.f);
+    
+    // 만약 이동하려는 위치가 화면 왼쪽을 넘으려 한다면
+    //if ((randX - mRoot->GetWorldPosition().x) <= -(float(RS.Width) / 2))
+    //{
+    //    float min = mRoot->GetWorldPosition().x + randX;
+    //
+    //    Dir = FVector3D(min, 0.f, 0.f);
+    //}
+    //else if ((randX - mRoot->GetWorldPosition().x) >= (RS.Width / 2))
+    //{
+    //    float max = mRoot->GetWorldPosition().x - randX;
+    //
+    //    Dir = FVector3D(max, 0.f, 0.f);
+    //}
+
     mSaveMoveData = Dir;
 }
 
@@ -281,7 +309,7 @@ std::string CEnemyObject::EnumString(EEnemyAI ai)
     case EEnemyAI::Idle:
         return "Idle";
     case EEnemyAI::Move:
-        return "MoveLeft";
+        return "Move";
     case EEnemyAI::Attack:
         return "Attack";
     }
@@ -293,11 +321,6 @@ std::string CEnemyObject::EnumString(EEnemyAI ai)
 /// <param name="Type"></param>
 void CEnemyObject::ChangeState(EEnemyAI Type)
 {
-    // 현재 상태와 변경하려는 상태가 같으면 종료
-    if (mAI == Type)
-        return;
-
-    // 같지 않다면 변경
     mAI = Type;
 
     // 애니메이션 변경
@@ -337,7 +360,7 @@ void CEnemyObject::LoopState(float DeltaTime)
         break;
     case EEnemyAI::Attack:    // 공격
         //AIAttack();
-
+        AttackLoop(DeltaTime);
 
         break;
         //case EEnemyAI::Death:     // 쥬금

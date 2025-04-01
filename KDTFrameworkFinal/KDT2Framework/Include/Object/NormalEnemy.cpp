@@ -9,6 +9,10 @@
 #include "../Component/MovementComponent.h"
 #include "../Share/Log.h"
 #include "../Object/HitScanBullet.h"
+#include "../Component/WidgetComponent.h"
+#include "../UI/UserWidget/HeadInfo.h"
+#include "../Scene/SceneUIManager.h"
+#include "../UI/UserWidget/GuageInfo.h"
 
 CNormalEnemy::CNormalEnemy()
 {
@@ -36,12 +40,12 @@ bool CNormalEnemy::Init()
 
     // 자기자신에 애니메이션 컴포넌트 추가
     mAnimation = mRoot->CreateAnimation2D<CAnimation2D>();
-
     mAnimation->AddSequence("EnemyIdle", 1.f, 1.f, true, false);
     mAnimation->AddSequence("EnemyMove", 2.f, 1.f, true, false);
     //mAnimation->AddSequence("EnemyMove", 2.f, 1.f, true, false);
     mAnimation->AddSequence("EnemyAttack", 1.f, 1.f, true, false);
     mAnimation->AddSequence("GunnerSkill", 1.f, 1.f, true, false);
+    mAnimation->AddSequence("EnemyAttackGuage", 1.5f, 1.f, false, false);
 
     mAIAnimationName[(int)EEnemyAI::Idle] = "EnemyIdle";
     mAIAnimationName[(int)EEnemyAI::Move] = "EnemyMove";
@@ -64,6 +68,17 @@ bool CNormalEnemy::Init()
     mMovement = CreateComponent<CMovementComponent>();
     mMovement->SetUpdateComponent(mRoot);
     mMovement->SetMoveSpeed(mSpeed);
+
+    ////////// 게이지 애니메이션 ///////////
+    mGuageBar = CreateComponent<CSpriteComponent>();
+    mGuageBar->SetPivot(0.5f, 0.5f);
+    mGuageBar->SetRelativePos(-75.f, 70.f);
+    mGuageInfo = mScene->GetUIManager()->CreateWidget<CGuageInfo>("GuageInfo");
+    mRoot->AddChild(mGuageBar);
+
+    mGuageAnimation = mGuageBar->CreateAnimation2D<CAnimation2D>();
+
+    mGuageAnimation->AddSequence("EnemyAttackGuage", 1.5f, 1.f, false, false);
 
     return true;
 }
@@ -122,21 +137,32 @@ void CNormalEnemy::MovePointNotify()
 {
 }
 
+void CNormalEnemy::AttackLoop(float DeltaTime)
+{
+}
+
 /// <summary>
 /// 공격 수행 기능
 /// </summary>
 void CNormalEnemy::AttackNotify()
 {
-    CHitScanBullet* HitScan = mScene->CreateObj<CHitScanBullet>("HitScan");
-    HitScan->SetBulletCollisionProfile("EnemyAttack");
 
-    CSceneComponent* Root = HitScan->GetRootComponent();
+    //mGuageInfo->SetSize(50.f, 20.f);        // 작동안되는 중
+    //mGuageBar->SetWidget(mGuageInfo);
+    // 애니메이션 재생
+    mGuageAnimation->ChangeAnimation("EnemyAttackGuage");
 
-    FVector3D Pos = mTarget->GetWorldPosition();
 
-    HitScan->SetWorldScale(50.f, 50.f);
-    HitScan->SetWorldPos(Pos);
-    HitScan->SetLifeTime(1.f);
+    //CHitScanBullet* HitScan = mScene->CreateObj<CHitScanBullet>("HitScan");
+    //HitScan->SetBulletCollisionProfile("EnemyAttack");
+    //
+    //CSceneComponent* Root = HitScan->GetRootComponent();
+    //
+    //FVector3D Pos = mTarget->GetWorldPosition();
+    //
+    //HitScan->SetWorldScale(50.f, 50.f);
+    //HitScan->SetWorldPos(Pos);
+    //HitScan->SetLifeTime(1.f);
 }
 
 /// <summary>
@@ -145,10 +171,7 @@ void CNormalEnemy::AttackNotify()
 /// </summary>
 void CNormalEnemy::AttackEnd()
 {
-    //if (mFireCount == 4)
-    //{
-    //    mAI = EEnemyAI::Skill;
-    //}
+    ChangeState(EEnemyAI::Idle);
 }
 
 void CNormalEnemy::SkillNotify()

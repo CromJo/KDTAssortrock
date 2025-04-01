@@ -71,7 +71,6 @@ bool CPlayerObject::Init()
 
     mMovement = CreateComponent<CMovementComponent>();
     mRotation = CreateComponent<CRotationComponent>();
-    mInventory = CreateComponent<CInventoryComponent>();
 
     //mRoot->SetTexture("Teemo", TEXT("Texture/teemo.png"));
     mRoot->SetPivot(0.5f, 0.5f);

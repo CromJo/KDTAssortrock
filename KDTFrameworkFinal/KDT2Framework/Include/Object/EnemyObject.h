@@ -41,6 +41,7 @@ protected:
     CSharedPtr<class CColliderSphere2D>       mBody;
     //CSharedPtr<class CColliderOBB2D>       mBody;
     CSharedPtr<class CColliderSphere2D>       mDetect;
+    CSharedPtr<class CWidgetComponent>        mHPBar;
     CSharedPtr<CSceneObject>  mTarget;
     class CAnimation2D* mAnimation = nullptr;
     EEnemyAI          mAI = EEnemyAI::Idle;
@@ -58,6 +59,7 @@ protected:
 
     FVector3D       mSaveMoveData = FVector3D::Zero;
 
+    int            mAttackActive = 0;
     
 public:
     void SetTarget(class CSceneObject* Target)
@@ -88,7 +90,7 @@ private:
 
 protected:
     // Loop : LoopState 함수에서 사용하는 함수
-    // Once : ChageState 함수에서 사용하는 함수
+    // Once : ChageState 함수에서 한번만 실행 될 함수
     virtual void MovePointLoop(float DeltaTime);
     virtual void MovePointOnce();
 

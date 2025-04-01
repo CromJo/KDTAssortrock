@@ -86,6 +86,8 @@ bool CRenderManager::Init()
 	CreateRenderLayer("BackGround", INT_MIN);
 	CreateRenderLayer("Object", 0);
 	CreateRenderLayer("Enemy", 1);
+	CreateRenderLayer("EnemyTest", 2);
+	CreateRenderLayer("GaugeBar", 50);
 
 	mStateManager = new CRenderStateManager;
 
@@ -227,6 +229,9 @@ void CRenderManager::RefreshLayer()
 		{
 			// 현재 subIt의 Object 데이터를 넣어준다.
 			CSharedPtr<CSceneComponent> subItVal = subIt->Get();
+			if (subItVal->GetScene() == nullptr)
+				return;
+
 			// Object Data의 레이어명칭을 받아온다.
 			FRenderLayer* foundLayer = FindLayer(subItVal->GetRenderLayerName());
 

@@ -591,6 +591,9 @@
     <ClCompile Include="Object\BackgroundObject.cpp">
       <Filter>06. Object\06. Background</Filter>
     </ClCompile>
+    <ClCompile Include="UI\UserWidget\GuageInfo.cpp">
+      <Filter>10. UI\02. UserWidget</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -997,6 +1000,9 @@
     </ClInclude>
     <ClInclude Include="Object\BackgroundObject.h">
       <Filter>06. Object\06. Background</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UserWidget\GuageInfo.h">
+      <Filter>10. UI\02. UserWidget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
