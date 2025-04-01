@@ -156,19 +156,6 @@ void CNormalEnemy::AttackNotify()
 
     // 애니메이션 재생
     mGuageBar->SetEnable(true);
-
-
-
-    //CHitScanBullet* HitScan = mScene->CreateObj<CHitScanBullet>("HitScan");
-    //HitScan->SetBulletCollisionProfile("EnemyAttack");
-    //
-    //CSceneComponent* Root = HitScan->GetRootComponent();
-    //
-    //FVector3D Pos = mTarget->GetWorldPosition();
-    //
-    //HitScan->SetWorldScale(50.f, 50.f);
-    //HitScan->SetWorldPos(Pos);
-    //HitScan->SetLifeTime(1.f);
 }
 
 void CNormalEnemy::AttackGuageEnd()
@@ -177,6 +164,17 @@ void CNormalEnemy::AttackGuageEnd()
 
     mGuageBar->SetEnable(false);
 	mGuageAnimation->ResetFrame();
+
+    CHitScanBullet* HitScan = mScene->CreateObj<CHitScanBullet>("HitScan");
+    HitScan->SetBulletCollisionProfile("EnemyAttack");
+
+    CSceneComponent* Root = HitScan->GetRootComponent();
+
+    FVector3D Pos = mTarget->GetWorldPosition();
+
+    HitScan->SetWorldScale(50.f, 50.f);
+    HitScan->SetWorldPos(Pos);
+    HitScan->SetLifeTime(1.f);
 }
 
 /// <summary>
