@@ -296,6 +296,13 @@ void CAnimation2D::ChangeAnimation(const std::string& Name)
 		mCurrentSequence->GetAnimationAsset()->GetTexture());
 }
 
+void CAnimation2D::ResetFrame()
+{
+	mCurrentSequence->mFrame = 0;
+	mCurrentSequence->mTime = 0.f;
+	mCurrentSequence->mEndFunctionEnable = true;
+}
+
 CAnimation2D* CAnimation2D::Clone()
 {
 	return new CAnimation2D(*this);

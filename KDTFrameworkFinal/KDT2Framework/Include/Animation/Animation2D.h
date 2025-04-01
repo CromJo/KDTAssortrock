@@ -46,6 +46,8 @@ public:
 	void SetReverse(const std::string& Name,
 		bool Reverse);
 	void ChangeAnimation(const std::string& Name);
+	void ResetFrame();
+
 	CAnimation2D* Clone();
 	void SetShader();
 	void SetAnimationReverseX(bool left);

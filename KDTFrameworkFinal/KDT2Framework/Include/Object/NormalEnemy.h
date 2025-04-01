@@ -44,6 +44,7 @@ protected:
 
 protected:
     void AttackNotify();
+    void AttackGuageEnd();
     void AttackEnd();
     void SkillNotify();
     void MovePointEnd();
