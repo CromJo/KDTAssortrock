@@ -26,6 +26,9 @@ protected:
 	bool			mDamageEnable = true;
 	CSharedPtr<class CObjectSpawnPoint> mSpawnPoint;
 
+	float mZDepth;			// 야매 Z의 깊이
+	float mScale;			// 야매용 스케일	
+
 public:
 	class CSceneComponent* GetRootComponent()
 	{
@@ -79,6 +82,7 @@ public:
 public:
 	virtual float Damage(float Attack, CSceneObject* Obj);
 
+	void UpdatePositionZDepth();
 public:
 	template <typename T>
 	T* CreateComponent(const std::string& Name = "Component")
@@ -178,6 +182,8 @@ public:
 	const FVector3D& GetWorldPosition()	const;
 
 public:
+	float CalculateScale(float Z);
+
 	void SetRelativeScale(const FVector3D& Scale);
 	void SetRelativeScale(float x, float y, float z);
 	void SetRelativeScale(const FVector2D& Scale);

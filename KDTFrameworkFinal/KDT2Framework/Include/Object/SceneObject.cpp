@@ -336,6 +336,15 @@ float CSceneObject::Damage(float Attack, CSceneObject* Obj)
     return Attack;
 }
 
+void CSceneObject::UpdatePositionZDepth()
+{
+	FVector3D Scale = mRootComponent->GetWorldPosition();
+    Scale.x *= mScale;
+    Scale.y *= mScale;
+
+	SetWorldPos(Scale);
+}
+
 const float CSceneObject::GetDistance(CSceneObject* Target) const
 {
 	return mRootComponent->GetDistance(Target->GetWorldPosition());
@@ -394,6 +403,14 @@ const FVector3D& CSceneObject::GetWorldRotation() const
 const FVector3D& CSceneObject::GetWorldPosition() const
 {
     return mRootComponent->GetWorldPosition();
+}
+
+/// <summary>
+/// 계산하여 스케일 조정해줄 기능
+/// </summary>
+float CSceneObject::CalculateScale(float Z)
+{
+    return 1.f * (100.f / (100.f + Z));
 }
 
 void CSceneObject::SetRelativeScale(const FVector3D& Scale)
