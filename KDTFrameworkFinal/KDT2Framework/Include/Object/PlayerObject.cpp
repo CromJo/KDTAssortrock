@@ -48,10 +48,25 @@ CPlayerObject::~CPlayerObject()
 {
 }
 
+bool CPlayerObject::KeyInput()
+{
+    mScene->GetInput()->AddBindKey("Attack", VK_LBUTTON);
+    mScene->GetInput()->AddBindKey("Reloading", mReloadingKey);
+
+	mScene->GetInput()->AddBindFunction<CPlayerObject>("Attack",
+		EInputType::Hold, this, &CPlayerObject::MouseFire);
+	mScene->GetInput()->AddBindFunction<CPlayerObject>("Reloading",
+		EInputType::Down, this, &CPlayerObject::Reloading);
+
+    return true;
+}
+
 bool CPlayerObject::Init()
 {
     //__super::Init();
     CSceneObject::Init();
+
+    KeyInput();
 
     //mRoot = CreateComponent<CStaticMeshComponent>();
     mRoot = CreateComponent<CSpriteComponent>("Player");
@@ -78,7 +93,7 @@ bool CPlayerObject::Init()
     mAnimation = mRoot->CreateAnimation2D<CAnimation2D>();
 
     mAnimation->AddSequence("PlayerIdle", 2.5f, 1.f, true, false);
-    mAnimation->AddSequence("PlayerAttack", 0.1f, 1.f, true, false);
+    mAnimation->AddSequence("PlayerAttack", 0.1f, 1.f, false, false);
     mAnimation->AddSequence("PlayerReloading", 1.2f, 1.f, false, false);
     mAnimation->AddSequence("PlayerCoverHit", 0.33f, 1.f, false, false);
     mAnimation->AddSequence("PlayerStanceHit", 0.33f, 1.f, false, false);
@@ -167,12 +182,8 @@ bool CPlayerObject::Init()
     mScene->GetInput()->AddBindKey("MoveUp", 'W');
     mScene->GetInput()->AddBindKey("MoveDown", 'S');
 
-
-
-    mScene->GetInput()->AddBindKey("Fire", VK_SPACE);
     mScene->GetInput()->AddBindKey("MouseFire", VK_LBUTTON);
 
-    mScene->GetInput()->AddBindKey("Reloading", 'R');
     mScene->GetInput()->AddBindKey("Skill8", '8');
 
     mScene->GetInput()->AddBindFunction<CPlayerObject>("MoveUp",
@@ -202,12 +213,9 @@ bool CPlayerObject::Init()
     mScene->GetInput()->AddBindFunction<CPlayerObject>("RotationZInv",
         EInputType::Hold, this, &CPlayerObject::RotationZInv);*/
 
-    mScene->GetInput()->AddBindFunction<CPlayerObject>("MouseFire",
-        EInputType::Hold, this, &CPlayerObject::MouseFire);
+    //mScene->GetInput()->AddBindFunction<CPlayerObject>("MouseFire",
+    //    EInputType::Hold, this, &CPlayerObject::MouseFire);
 
-    mScene->GetInput()->AddBindFunction<CPlayerObject>("Fire",
-        EInputType::Down, this, &CPlayerObject::Fire);
-    
     mScene->GetInput()->AddBindFunction<CPlayerObject>("Reloading",
         EInputType::Down, this, &CPlayerObject::Reloading);
 
@@ -221,15 +229,16 @@ void CPlayerObject::Update(float DeltaTime)
 {
     CSceneObject::Update(DeltaTime);
 
+    /*
     // 총알이 0발이고 대기모션인지 체크
-    if (mAmmo <= 0 && mAutoBasePose)
+    if (mAmmo <= 0)
     {
         //mAnimation->ChangeAnimation("PlayerReloading");
         Reloading(DeltaTime);
     }
     // 움직이지 않고, 디폴트 자세로 돌아가는 것이 켜져있다면, 
     // 기본자세로 돌려라
-    else if (mMovement->GetVelocityLength() == 0.f && mAutoBasePose)
+    else if (mMovement->GetVelocityLength() == 0.f)
         ActionEnd();
 
     switch (mPlayerState)
@@ -249,74 +258,14 @@ void CPlayerObject::Update(float DeltaTime)
         mAnimation->ChangeAnimation("PlayerStanceHit");
         break;
     }
-
-
-#pragma region 인벤토리 아이템 테스트용 기능
-    /*
-    static bool ItemTest = false;
-
-    // 엔터키 누르면 아이템 추가 테스트 ON
-    if (GetAsyncKeyState(VK_RETURN) & 0x8000)
-    {
-        ItemTest = true;
-    }
-
-    // 만약 아이템 추가 기능이 켜진 상태면
-    else if (ItemTest)
-    {
-        // 초기화해주고,
-        ItemTest = false;
-        // 두개의 이름을 데이터에 담는다.
-        std::string NameArray[2] =
-        {
-            "IconSword",
-            "IconShield"
-        };
-        // 랜덤번호를 대입해준다.
-        int RandIndex = rand() % 2;
-        // 데이터를 생성 및 대입해주고,
-        FItemData* Data = new FItemData;
-
-        // 랜덤한 번호의 아이템 이름을 데이터 이름에 대입해주고,
-        Data->Name = NameArray[RandIndex];
-
-        // 랜덤번호가 0번이라면 무기를,
-        if (RandIndex == 0)
-            Data->Type = EItemType::Weapon;
-        // 1번이라면 방어구의 타입을 넣어준다.
-        else if (RandIndex == 1)
-            Data->Type = EItemType::Armor;
-
-        // 씬이 null이 아니면 (존재한다면)
-        // 아이템 타입에 맞는 이미지를 넣어준다.
-        if (mScene)
-            Data->Icon = mScene->GetAssetManager()->FindTexture(NameArray[RandIndex]);
-        // 씬이 null이면 "응 어떻게든 넣을꺼야~"
-        else
-            Data->Icon = CAssetManager::GetInst()->GetTextureManager()->FindTexture(NameArray[RandIndex]);
-
-        // 인벤토리에 데이터를 추가해준다.
-        mInventory->AddItem(Data);
-    }
-
-    static bool ItemTest1 = false;
-
-    // 0번 누르면 테스트 기능 활성화
-    if (GetAsyncKeyState('0') & 0x8000)
-    {
-        ItemTest1 = true;
-    }
-
-    // 테스트 기능이 활성화 되었다면 인벤토리 1~10번째까지의 아이템중
-    // 한개의 아이템을 제거한다.
-    else if (ItemTest1)
-    {
-        ItemTest1 = false;
-
-        mInventory->RemoveItem(rand() % 10);
-    }
     */
-#pragma endregion
+
+    if (mScene->GetInput()->GetMouseDown(EMouseButtonType::LButton))
+    {
+		ChangeState(EPlayerState::Attack);
+    }
+
+	LoopState(DeltaTime);
 }
 
 void CPlayerObject::Render()
@@ -360,9 +309,78 @@ float CPlayerObject::Damage(float Attack, CSceneObject* Obj)
 
     // 죽었을때 로직 추가 해줘야 함.
 
-    mAutoBasePose = false;
     // 공격 값을 반환
     return Attack;
+}
+
+/// <summary>
+/// 1번만 실행 될 상태 변경 기능
+/// </summary>
+/// <param name="State"></param>
+void CPlayerObject::ChangeState(EPlayerState State)
+{
+    // 현재 상태와 받으려는 상태가 같으면 종료
+    if(mPlayerState == State)
+        return;
+
+    if (mPlayerState == EPlayerState::Reloading)
+    {
+        if (State == EPlayerState::Attack)
+        {
+			CLog::PrintLog("재장전 중에는 공격할 수 없습니다.");
+
+			return;
+        }
+    }
+
+    // 다르다면 이전 상태를 현재 상태로 변경 후
+    // 현재 상태를 받은 상태로 변경
+    mPlayerStatePrev = mPlayerState;
+    mPlayerState = State;
+
+    switch (mPlayerState)
+    {
+    case EPlayerState::Idle:
+        IdleAnimation();            // 대기모션으로 변경
+        break;
+    case EPlayerState::Attack:
+            AttackAnimation();          // 공격모션으로 변경  
+        
+        break;
+    case EPlayerState::Reloading:
+		ReloadingAnimation();       // 재장전모션으로 변경
+        break;
+    case EPlayerState::CoverHit:
+		CoverHitAnimation();        // 커버히트모션으로 변경
+        break;
+    case EPlayerState::StanceHit:
+		StanceHitAnimation();       // 스탠스히트모션으로 변경
+        break;
+    default:
+        break;
+    }
+}
+
+void CPlayerObject::LoopState(float DeltaTime)
+{
+    switch (mPlayerState)
+    {
+    case EPlayerState::Idle:
+		// 동작할 기능이 굳이 없음 (애니메이션만 출력해주면 되기 때문)
+        break;
+    case EPlayerState::Attack:
+		// 공격 애니메이션 실행시 동시실행하는 함수
+        MouseFire(DeltaTime);
+        break;
+    case EPlayerState::Reloading:
+        break;
+    case EPlayerState::CoverHit:
+        break;
+    case EPlayerState::StanceHit:
+        break;
+    default:
+        break;
+    }
 }
 
 void CPlayerObject::MoveUp(float DeltaTime)
@@ -371,7 +389,6 @@ void CPlayerObject::MoveUp(float DeltaTime)
 
     mAnimation->ChangeAnimation("PlayerIdle");
 
-    mAutoBasePose = true;
 }
 
 void CPlayerObject::MoveDown(float DeltaTime)
@@ -380,7 +397,6 @@ void CPlayerObject::MoveDown(float DeltaTime)
 
     mAnimation->ChangeAnimation("PlayerIdle");
 
-    mAutoBasePose = true;
 }
 
 void CPlayerObject::MovePoint(float DeltaTime)
@@ -398,7 +414,6 @@ void CPlayerObject::RotationZ(float DeltaTime)
 
     mAnimation->ChangeAnimation("PlayerIdle");
 
-    mAutoBasePose = true;
 }
 
 void CPlayerObject::RotationZInv(float DeltaTime)
@@ -409,7 +424,6 @@ void CPlayerObject::RotationZInv(float DeltaTime)
     mMovement->AddMove(mRootComponent->GetAxis(EAxis::X) * -1.f);
 
     mAnimation->ChangeAnimation("PlayerIdle");
-    mAutoBasePose = true;
 }
 
 void CPlayerObject::MoveRight(float DeltaTime)
@@ -419,8 +433,6 @@ void CPlayerObject::MoveRight(float DeltaTime)
     //mAnimation->ChangeAnimation("PlayerIdle");
 
     //mAnimation->SetAnimationReverseX(false);
-
-    mAutoBasePose = true;
 }
 
 void CPlayerObject::MoveLeft(float DeltaTime)
@@ -430,17 +442,6 @@ void CPlayerObject::MoveLeft(float DeltaTime)
     //mAnimation->ChangeAnimation("PlayerIdle");
 
     //mAnimation->SetAnimationReverseX(true);
-
-    mAutoBasePose = true;
-}
-
-// 공격 기능
-void CPlayerObject::Fire(float DeltaTime)
-{
-    // PlayerAttack 애니메이션으로 변경
-    mAnimation->ChangeAnimation("PlayerAttack");
-
-    mAutoBasePose = false;
 }
 
 /// <summary>
@@ -449,21 +450,6 @@ void CPlayerObject::Fire(float DeltaTime)
 /// <param name="DeltaTime"></param>
 void CPlayerObject::MouseFire(float DeltaTime)
 {
-    // 왼쪽 클릭 안하고 있거나,
-    // 총알이 다떨어진 상태면,
-    // 대기모션으로 변경 후 종료
-    // !mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton) ||
-    if (mAmmo <= 0)
-    {
-        Reloading(DeltaTime);
-
-        return;
-    }
-
-    // PlayerAttack 애니메이션으로 변경
-    mAnimation->ChangeAnimation("PlayerAttack");
-
-    mAutoBasePose = false;
 }
 
 /// <summary>
@@ -485,7 +471,6 @@ void CPlayerObject::Reloading(float DeltaTime)
     // 모든 조건이 부합하면 재장전 애니메이션을 실행
     mAnimation->ChangeAnimation("PlayerReloading");
 
-    mAutoBasePose = false;              
 }
 
 void CPlayerObject::Skill8(float DeltaTime)
@@ -506,6 +491,37 @@ void CPlayerObject::Skill8(float DeltaTime)
     Bullet->SetBoxSize(300.f, 300.f);
 }
 
+#pragma region Animation 변경 이벤트 모음
+void CPlayerObject::IdleAnimation()
+{
+    mAnimation->ChangeAnimation("PlayerIdle");
+}
+
+void CPlayerObject::AttackAnimation()
+{
+    if(mPlayerState == EPlayerState::Reloading)
+        return;
+
+    mAnimation->SetLoop("PlayerAttack", true);
+    mAnimation->ChangeAnimation("PlayerAttack");
+}
+
+void CPlayerObject::ReloadingAnimation()
+{
+    mAnimation->ChangeAnimation("PlayerReloading");
+}
+
+void CPlayerObject::CoverHitAnimation()
+{
+    mAnimation->ChangeAnimation("PlayerCoverHit");
+}
+
+void CPlayerObject::StanceHitAnimation()
+{
+    mAnimation->ChangeAnimation("PlayerStanceHit");
+}
+#pragma endregion
+
 /// <summary>
 /// 모든 행동이 끝날 경우 실행되는 기능
 /// 1. 대기모션으로 되돌립니다.
@@ -519,7 +535,6 @@ void CPlayerObject::ActionEnd()
     //CLog::PrintLog("Action End");
     mAnimation->ChangeAnimation("PlayerIdle");
 
-    mAutoBasePose = true;
 }
 
 /// <summary>
@@ -528,23 +543,25 @@ void CPlayerObject::ActionEnd()
 /// </summary>
 void CPlayerObject::AttackNotify()
 {
-    // 홀드 한 상태이거나, 0발일때 실행
+    // 왼쪽 클릭 안하고 있거나,
+    // 총알이 다떨어진 상태면,
+    // 대기모션으로 변경 후 종료
     if (!mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton) ||
         mAmmo <= 0)
     {
+        mAnimation->SetLoop("PlayerAttack", false);
 
-        //mAnimation->SetLoop("PlayerAttack", false);
+        if (mAmmo <= 0)
+        {
+            ChangeState(EPlayerState::Reloading);
 
-        //if (!mAnimation->GetCurrentAnimation("PlayerStanceHit"))
-        //    return;
+            return;
+        }
 
-        ActionEnd();
+        ChangeState(EPlayerState::Idle);
 
         return;
     }
-
-    StateChange(EPlayerState::Attack);
-    PostureChange(EPostureState::Stance);
 
     // 왼쪽클릭하고 있고, 총알이 1발 이상 있을 경우
     // 1발 사용
@@ -554,18 +571,18 @@ void CPlayerObject::AttackNotify()
     // 총알을 생성.
     CHitScanBullet* HitScan = mScene->CreateObj<CHitScanBullet>("HitScan");
     HitScan->SetBulletCollisionProfile("PlayerAttack");
-    
+
     CSceneComponent* Root = HitScan->GetRootComponent();
-    
+
     // 마우스 좌표값을 받음
     FVector2D Pos = mScene->GetInput()->GetMouseWorldPos2D();
-    
+
     // 크기 조정은 HitScan Init에서 하는 중.
     //Root->SetWorldScale(50.f, 50.f);
     Root->SetWorldRotation(mRoot->GetWorldRotation());
     Root->SetWorldPos(Pos.x, Pos.y);
     HitScan->SetLifeTime(0.25f);
-    
+
     // 출력
     //std::string str;
     //str += "<Mouse Position> x : ";
@@ -578,17 +595,23 @@ void CPlayerObject::AttackNotify()
 
 void CPlayerObject::CoverHitEnd()
 {
-    ActionEnd();
+    if(!mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton))
+        ChangeState(EPlayerState::Idle);
+    else
+        ChangeState(EPlayerState::Attack);
+
+    CLog::PrintLog("커버 자세의 피격 애니메이션 종료");
 }
 
 void CPlayerObject::StanceHitEnd()
 {
-    StateChange(EPlayerState::Attack);
-    PostureChange(EPostureState::Stance);
-
-    // 애니메이션 변경 및 로그 남김 
-    //CLog::PrintLog("Action End");
-    mAnimation->ChangeAnimation("PlayerAttack");
+    if(mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton) && mAmmo > 0)
+        ChangeState(EPlayerState::Attack);
+    else
+        ChangeState(EPlayerState::Idle);
+    
+    CLog::PrintLog("사격 자세의 피격 애니메이션 종료");
+    //PostureChange(EPostureState::Stance);
 }
 
 void CPlayerObject::ReloadingEnd()

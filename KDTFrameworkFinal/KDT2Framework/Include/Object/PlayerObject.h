@@ -53,7 +53,6 @@ protected:
     CSharedPtr<class CBulletObject> mSkill1Object;
 
     class CAnimation2D* mAnimation = nullptr;
-    bool                mAutoBasePose = true;   // 디폴트 (아이들)모션이 아닌지 체크
 
     int             mHP = 10;
 
@@ -66,7 +65,12 @@ protected:
     EPlayerState mPlayerStatePrev = mPlayerState;
     EPostureState mPostureState = EPostureState::Cover;
 
+private:
+    UCHAR mAttackKey = VK_LBUTTON;            // 왼쪽 마우스버튼 할당
+    UCHAR mReloadingKey = 'R';            // 왼쪽 마우스버튼 할당
+
 public:
+    bool KeyInput();
     virtual bool Init();
     virtual void Update(float DeltaTime);
     virtual void Render();
@@ -74,6 +78,9 @@ public:
     virtual float Damage(float Attack, CSceneObject* Obj);
     
 private:
+    void ChangeState(EPlayerState State);
+    void LoopState(float DeltaTime);
+
     void MoveUp(float DeltaTime);
     void MoveDown(float DeltaTime);
 
@@ -85,13 +92,20 @@ private:
     void MoveRight(float DeltaTime);
     void MoveLeft(float DeltaTime);
 
-    void Fire(float DeltaTime);
     void MouseFire(float DeltaTime);
 
     void Reloading(float DeltaTime);
 
     void Skill8(float DeltaTime);
+
+    void IdleAnimation();
+    void AttackAnimation();
+    void ReloadingAnimation();
+    void CoverHitAnimation();
+    void StanceHitAnimation();
+
 public:
+
     void ActionEnd();       // 모든 액션의 끝났을때 
     void AttackNotify();    // 공격 중일 때
 

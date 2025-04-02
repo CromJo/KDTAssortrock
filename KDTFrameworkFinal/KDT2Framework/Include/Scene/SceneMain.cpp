@@ -57,6 +57,8 @@ bool CSceneMain::InitObject()
 
     // 플레이어 오브젝트 생성
     CPlayerObject* Player = CreateObj<CPlayerObject>("Player");
+    
+    return true;
 
     CObjectSpawnPoint* EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy1");

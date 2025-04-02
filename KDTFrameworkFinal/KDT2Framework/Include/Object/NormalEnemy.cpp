@@ -75,7 +75,7 @@ bool CNormalEnemy::Init()
     mGuageBar = CreateComponent<CSpriteComponent>();
     //mGuageBar->SetPivot(0.5f, 0.5f);
     mGuageBar->SetRelativeScale(1.5f, 0.2f);
-    mGuageBar->SetPivot(0.5f, 0.f);
+	mGuageBar->SetPivot(0.5f, 0.f);             // 하단 중앙
     //mGuageInfo = mScene->GetUIManager()->CreateWidget<CGuageInfo>("GuageInfo");
     mRoot->AddChild(mGuageBar);
 

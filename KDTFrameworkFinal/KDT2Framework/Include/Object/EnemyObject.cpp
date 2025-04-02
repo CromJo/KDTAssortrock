@@ -116,8 +116,8 @@ void CEnemyObject::PreUpdate(float DeltaTime)
 		//else
 		//	ChangeState(EEnemyAI::Attack);
         
-        ChangeState((EEnemyAI)random);
-        //ChangeState(EEnemyAI::Idle);
+        //ChangeState((EEnemyAI)random);
+        ChangeState(EEnemyAI::Idle);
     }
 
     LoopState(DeltaTime);
@@ -280,7 +280,6 @@ void CEnemyObject::MovePointOnce()
     Loop :
         - 기능을 수행하는 기능임 (Update)
 */
-
 
 void CEnemyObject::IdleLoop(float DeltaTime)
 {
