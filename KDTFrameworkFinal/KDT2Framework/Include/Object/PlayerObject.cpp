@@ -164,6 +164,10 @@ bool CPlayerObject::Init()
     mScene->GetInput()->AddBindKey("MoveLeft", 'A');
     mScene->GetInput()->AddBindKey("MovePoint", VK_RBUTTON);
     */
+    mScene->GetInput()->AddBindKey("MoveUp", 'W');
+    mScene->GetInput()->AddBindKey("MoveDown", 'S');
+
+
 
     mScene->GetInput()->AddBindKey("Fire", VK_SPACE);
     mScene->GetInput()->AddBindKey("MouseFire", VK_LBUTTON);
@@ -171,6 +175,11 @@ bool CPlayerObject::Init()
     mScene->GetInput()->AddBindKey("Reloading", 'R');
     mScene->GetInput()->AddBindKey("Skill8", '8');
 
+    mScene->GetInput()->AddBindFunction<CPlayerObject>("MoveUp",
+        EInputType::Hold, this, &CPlayerObject::MoveUp);
+
+    mScene->GetInput()->AddBindFunction<CPlayerObject>("MoveDown",
+        EInputType::Hold, this, &CPlayerObject::MoveDown);
     /*
     mScene->GetInput()->AddBindFunction<CPlayerObject>("MoveUp",
         EInputType::Hold, this, &CPlayerObject::MoveUp);

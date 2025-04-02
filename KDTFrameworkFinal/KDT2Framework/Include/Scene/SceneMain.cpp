@@ -53,6 +53,7 @@ bool CSceneMain::InitObject()
 
     // 배경 이미지 세팅
     CBackgroundObject* Background = CreateObj<CBackgroundObject>("BackGround");
+    //Background->SetWorldScale(1280.f, 720.f);
 
     // 플레이어 오브젝트 생성
     CPlayerObject* Player = CreateObj<CPlayerObject>("Player");
@@ -66,6 +67,83 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
     EnemyPoint->SetWorldPos(400.f, 200.f);
+
+    EnemyPoint =
+        CreateObj<CObjectSpawnPoint>("Enemy2");
+
+    EnemyPoint->SetSpawnType(EObjectSpawnType::NormalEnemy);
+    EnemyPoint->SetSpawnLoopType(EObjectSpawnLoopType::Once);
+    EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
+    EnemyPoint->SetSpawnTime(3.f);
+    EnemyPoint->SetImmediateSpawn(true);
+    EnemyPoint->SetWorldPos(0.f, 300.f);
+
+    EnemyPoint =
+        CreateObj<CObjectSpawnPoint>("Enemy3");
+
+    EnemyPoint->SetSpawnType(EObjectSpawnType::NormalEnemy);
+    EnemyPoint->SetSpawnLoopType(EObjectSpawnLoopType::Once);
+    EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
+    EnemyPoint->SetSpawnTime(3.f);
+    EnemyPoint->SetImmediateSpawn(true);
+    EnemyPoint->SetWorldPos(0.f, 250.f);
+
+    EnemyPoint =
+        CreateObj<CObjectSpawnPoint>("Enemy4");
+
+    EnemyPoint->SetSpawnType(EObjectSpawnType::NormalEnemy);
+    EnemyPoint->SetSpawnLoopType(EObjectSpawnLoopType::Once);
+    EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
+    EnemyPoint->SetSpawnTime(3.f);
+    EnemyPoint->SetImmediateSpawn(true);
+    EnemyPoint->SetWorldPos(0.f, 200.f);
+
+    EnemyPoint =
+        CreateObj<CObjectSpawnPoint>("Enemy5");
+
+    EnemyPoint->SetSpawnType(EObjectSpawnType::NormalEnemy);
+    EnemyPoint->SetSpawnLoopType(EObjectSpawnLoopType::Once);
+    EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
+    EnemyPoint->SetSpawnTime(3.f);
+    EnemyPoint->SetImmediateSpawn(true);
+    EnemyPoint->SetWorldPos(0.f, 170.f);
+    EnemyPoint =
+        CreateObj<CObjectSpawnPoint>("Enemy6");
+
+    EnemyPoint->SetSpawnType(EObjectSpawnType::NormalEnemy);
+    EnemyPoint->SetSpawnLoopType(EObjectSpawnLoopType::Once);
+    EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
+    EnemyPoint->SetSpawnTime(3.f);
+    EnemyPoint->SetImmediateSpawn(true);
+    EnemyPoint->SetWorldPos(0.f, 190.f);
+
+    EnemyPoint =
+        CreateObj<CObjectSpawnPoint>("Enemy7");
+
+    EnemyPoint->SetSpawnType(EObjectSpawnType::NormalEnemy);
+    EnemyPoint->SetSpawnLoopType(EObjectSpawnLoopType::Once);
+    EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
+    EnemyPoint->SetSpawnTime(3.f);
+    EnemyPoint->SetImmediateSpawn(true);
+    EnemyPoint->SetWorldPos(0.f, 210.f);
+    EnemyPoint =
+        CreateObj<CObjectSpawnPoint>("Enemy8");
+
+    EnemyPoint->SetSpawnType(EObjectSpawnType::NormalEnemy);
+    EnemyPoint->SetSpawnLoopType(EObjectSpawnLoopType::Once);
+    EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
+    EnemyPoint->SetSpawnTime(3.f);
+    EnemyPoint->SetImmediateSpawn(true);
+    EnemyPoint->SetWorldPos(0.f, 110.f);
+    EnemyPoint =
+        CreateObj<CObjectSpawnPoint>("Enemy9");
+
+    EnemyPoint->SetSpawnType(EObjectSpawnType::NormalEnemy);
+    EnemyPoint->SetSpawnLoopType(EObjectSpawnLoopType::Once);
+    EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
+    EnemyPoint->SetSpawnTime(3.f);
+    EnemyPoint->SetImmediateSpawn(true);
+    EnemyPoint->SetWorldPos(0.f, 130.f);
 
     /*EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy2");

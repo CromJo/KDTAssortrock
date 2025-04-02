@@ -76,6 +76,7 @@ bool CNormalEnemy::Init()
     //mGuageBar->SetPivot(0.5f, 0.5f);
     mGuageBar->SetRelativePos(-75.f, 70.f);
     mGuageBar->SetRelativeScale(1.5f, 0.2f);
+    mGuageBar->SetPivot(-0.5f, 0.5f);
     //mGuageInfo = mScene->GetUIManager()->CreateWidget<CGuageInfo>("GuageInfo");
     mRoot->AddChild(mGuageBar);
 
@@ -170,10 +171,8 @@ void CNormalEnemy::AttackGuageEnd()
 
     CSceneComponent* Root = HitScan->GetRootComponent();
 
-    FVector3D Pos = mTarget->GetWorldPosition();
-
     HitScan->SetWorldScale(50.f, 50.f);
-    HitScan->SetWorldPos(Pos);
+    HitScan->SetWorldPos(mTarget->GetWorldPosition());
     HitScan->SetLifeTime(1.f);
 }
 

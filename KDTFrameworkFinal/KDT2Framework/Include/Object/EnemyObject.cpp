@@ -46,13 +46,13 @@ bool CEnemyObject::Init()
     //mBody = CreateComponent<CColliderOBB2D>();
     mDetect = CreateComponent<CColliderSphere2D>();
     mMovement = CreateComponent<CMovementComponent>();
-    mHPBar = CreateComponent<CWidgetComponent>();
 
-    mHPBar->SetRelativePos(-75.f, 50.f);
-    CHeadInfo* HeadInfo = mScene->GetUIManager()->CreateWidget<CHeadInfo>("HeadInfo");
+    //mHPBar = CreateComponent<CWidgetComponent>();
+    //mHPBar->SetRelativePos(-75.f, 50.f);
+    //CHeadInfo* HeadInfo = mScene->GetUIManager()->CreateWidget<CHeadInfo>("HeadInfo");
     //HeadInfo->SetSize(50.f, 20.f);        // 작동안되는 중
-    mHPBar->SetWidget(HeadInfo);
-    mRoot->AddChild(mHPBar);
+    //mHPBar->SetWidget(HeadInfo);
+    //mRoot->AddChild(mHPBar);
 
     mRoot->SetWorldScale(100.f, 100.f, 1.f);
 
@@ -68,8 +68,9 @@ bool CEnemyObject::Init()
 
     mRoot->AddChild(mBody);
 
+    mTarget = mScene->FindObjectFromName<CPlayerObject>("Player");
     mDetect->SetCollisionProfile("EnemyDetect");
-    mDetect->SetRadius(1000.f);
+    mDetect->SetRadius(mTarget->GetDistance(mTarget));
     // 오류있음 고쳐야함
     //CPlayerObject* Target = mScene->FindObjectFromName<CPlayerObject>("Player");
     //mDetect->SetRadius(this->GetDistance(Target));
@@ -113,9 +114,10 @@ void CEnemyObject::PreUpdate(float DeltaTime)
         //if(rand()% 2 == 0)
 		//	ChangeState(EEnemyAI::Idle);
 		//else
-		//	ChangeState(EEnemyAI::Move);
+		//	ChangeState(EEnemyAI::Attack);
         
         ChangeState((EEnemyAI)random);
+        //ChangeState(EEnemyAI::Idle);
     }
 
     LoopState(DeltaTime);
