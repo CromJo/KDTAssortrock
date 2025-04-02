@@ -30,7 +30,7 @@ public:
 public:
 	void SetRenderLayerName(const std::string& Name)
 	{
-		if (mRenderLayerName.compare(Name))
+		if (!mRenderLayerName.compare(Name))
 			return;
 
 		mRenderLayerName = Name;
@@ -170,6 +170,7 @@ public:
 
 
 public:
+	float CalculateVirtualScale() const;
 	void SetRelativeScale(const FVector3D& Scale);
 	void SetRelativeScale(float x, float y, float z);
 	void SetRelativeScale(const FVector2D& Scale);

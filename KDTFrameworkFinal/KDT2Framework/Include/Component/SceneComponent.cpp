@@ -1,6 +1,7 @@
 ﻿#include "SceneComponent.h"
 #include "../Shader/TransformCBuffer.h"
 #include "../Render/RenderManager.h"
+#include "../Device.h"
 
 // 씬의 생성자
 CSceneComponent::CSceneComponent()
@@ -194,66 +195,21 @@ void CSceneComponent::PreRender()
 {
     CComponent::PreRender();
 
-    mmatScale.Scaling(mWorldScale);
+    // virtual Z Scale 계산 및 범위 설정
+    float virtualScale = CalculateVirtualScale();
+
+    //Old                                                                                                                                                                                                                                                                                         
+    //mmatScale.Scaling(mWorldScale);
+    mmatScale.Scaling(mWorldScale * virtualScale);
     mmatRot.Rotation(mWorldRot);
     mmatTranslate.Translation(mWorldPos);
 
     mmatWorld = mmatScale * mmatRot * mmatTranslate;
-
-    //std::vector<CSharedPtr<CSceneComponent>>::iterator  iter;
-    //std::vector<CSharedPtr<CSceneComponent>>::iterator  iterEnd = mChildList.end();
-
-    //for (iter = mChildList.begin(); iter != iterEnd;)
-    //{
-    //    if (!(*iter)->IsActive())
-    //    {
-    //        // 지워야 할 값과 마지막 값을 바꾼다.
-    //        std::swap(*iter, mChildList.back());
-
-    //        mChildList.pop_back();
-    //        iterEnd = mChildList.end();
-    //        continue;
-    //    }
-
-    //    else if (!(*iter)->IsEnable())
-    //    {
-    //        ++iter;
-    //        continue;
-    //    }
-
-    //    (*iter)->PreRender();
-    //    ++iter;
-    //}
 }
 
 void CSceneComponent::Render()
 {
     CComponent::Render();
-
-    //std::vector<CSharedPtr<CSceneComponent>>::iterator  iter;
-    //std::vector<CSharedPtr<CSceneComponent>>::iterator  iterEnd = mChildList.end();
-
-    //for (iter = mChildList.begin(); iter != iterEnd;)
-    //{
-    //    if (!(*iter)->IsActive())
-    //    {
-    //        // 지워야 할 값과 마지막 값을 바꾼다.
-    //        std::swap(*iter, mChildList.back());
-
-    //        mChildList.pop_back();
-    //        iterEnd = mChildList.end();
-    //        continue;
-    //    }
-
-    //    else if (!(*iter)->IsEnable())
-    //    {
-    //        ++iter;
-    //        continue;
-    //    }
-
-    //    (*iter)->Render();
-    //    ++iter;
-    //}
 }
 
 void CSceneComponent::PostRender()
@@ -320,6 +276,23 @@ void CSceneComponent::EndFrame()
     {
         (*iter)->EndFrame();
     }
+}
+
+float CSceneComponent::CalculateVirtualScale() const
+{
+    // y절대값 
+    const FResolution& RS = CDevice::GetInst()->GetResolution();
+
+    int screenHeight = RS.Height;
+    int minY = -(int)RS.Height / 2.f;
+    float maxScale = 1.f;
+    float minScale = 0.5f;
+
+    float y = GetWorldPosition().y;
+    float t = (y - minY) / screenHeight;        // 0 ~ 1 정규화
+
+    // Y값이 커질 수록 Scale 감소
+    return maxScale - t * (maxScale - minScale);
 }
 
 /// <summary>
