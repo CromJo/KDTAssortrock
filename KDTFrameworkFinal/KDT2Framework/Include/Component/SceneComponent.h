@@ -170,7 +170,8 @@ public:
 
 
 public:
-	float CalculateVirtualScale() const;
+	virtual float CalculateVirtualScale() const;
+	
 	void SetRelativeScale(const FVector3D& Scale);
 	void SetRelativeScale(float x, float y, float z);
 	void SetRelativeScale(const FVector2D& Scale);

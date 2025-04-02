@@ -13,7 +13,9 @@ struct FTransformCBufferInfo
     FMatrix matWV;
     FMatrix matWVP;
     FVector3D   Pivot;
+    //FVector3D   Scale;
     float       Empty;
+    //float       Empty2;
 };
 
 struct FMaterialCBufferInfo

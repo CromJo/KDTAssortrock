@@ -14,7 +14,9 @@ cbuffer Transform : register(b0)
     matrix gmatWV;
     matrix gmatWVP;
     float3 gPivot;
+    //float3 gScale;
     float gTransformEmpty;
+    //float gTransformEmpty2;
 };
 
 cbuffer Material : register(b1)

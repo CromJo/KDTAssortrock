@@ -195,8 +195,11 @@ void CSceneComponent::PreRender()
 {
     CComponent::PreRender();
 
+
     // virtual Z Scale 계산 및 범위 설정
     float virtualScale = CalculateVirtualScale();
+
+    //mTransformCBuffer->SetScale(FVector3D(virtualScale, virtualScale, 1.f));
 
     //Old                                                                                                                                                                                                                                                                                         
     //mmatScale.Scaling(mWorldScale);
@@ -206,7 +209,6 @@ void CSceneComponent::PreRender()
 
     mmatWorld = mmatScale * mmatRot * mmatTranslate;
 }
-
 void CSceneComponent::Render()
 {
     CComponent::Render();
@@ -286,7 +288,7 @@ float CSceneComponent::CalculateVirtualScale() const
     int screenHeight = RS.Height;
     int minY = -(int)RS.Height / 2.f;
     float maxScale = 1.f;
-    float minScale = 0.5f;
+    float minScale = 0.3f;
 
     float y = GetWorldPosition().y;
     float t = (y - minY) / screenHeight;        // 0 ~ 1 정규화

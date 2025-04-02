@@ -18,6 +18,8 @@ protected:
 	FVector2D	mBoxSize;
 	FOBB2D		mBoxInfo;
 
+	FVector2D	mOriginBox;
+
 public:
 	const FOBB2D& GetBox()	const
 	{
@@ -33,12 +35,16 @@ public:
 	void SetBoxSize(const FVector2D& Size)
 	{
 		mBoxSize = Size;
+		mOriginBox = Size;
 	}
 
 	void SetBoxSize(float x, float y)
 	{
 		mBoxSize.x = x;
 		mBoxSize.y = y;
+
+		mOriginBox.x = x;
+		mOriginBox.y = y;
 	}
 
 public:

@@ -17,6 +17,7 @@ protected:
 protected:
 	FVector2D	mBoxSize;
 	FAABB2D		mAABB;
+	FVector2D	mOriginBox;
 
 public:
 	const FAABB2D& GetBox()	const
@@ -33,12 +34,16 @@ public:
 	void SetBoxSize(const FVector2D& Size)
 	{
 		mBoxSize = Size;
+		mOriginBox = Size;
 	}
 
 	void SetBoxSize(float x, float y)
 	{
 		mBoxSize.x = x;
 		mBoxSize.y = y;
+
+		mOriginBox.x = x;
+		mOriginBox.y = y;
 	}
 
 public:

@@ -29,6 +29,9 @@ protected:
 	std::function<void(CColliderBase*)>	mCollisionEndFunc;
 	class CSceneObject*		mEndObj;
 
+	FVector3D mOriginalExtents;		// 원본 충돌체
+	FVector3D mScaledExtents;		// 조정된 충돌체 
+
 #ifdef _DEBUG
 
 	class CColliderCBuffer* mCBuffer = nullptr;
@@ -38,6 +41,9 @@ protected:
 
 #endif // _DEBUG
 
+public:
+	virtual float CalculateColliderScale();
+	virtual FVector2D ApplyVirtualScale(FVector2D& Scale);
 
 public:
 	FCollisionProfile* GetProfile()	const
@@ -87,7 +93,6 @@ public:
 	virtual CColliderBase* Clone();
 	virtual void EraseOwner();
 	virtual bool Collision(FVector3D& HitPoint, CColliderBase* Dest) = 0;
-
 
 public:
 	template <typename T>

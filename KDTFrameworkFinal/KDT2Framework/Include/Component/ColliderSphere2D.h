@@ -16,6 +16,7 @@ protected:
 
 protected:
 	float	mRadius = 10.f;
+	float	mOriginRadius = 10.f;
 
 public:
 	float GetRadius()	const
@@ -27,6 +28,7 @@ public:
 	void SetRadius(float Radius)
 	{
 		mRadius = Radius;
+		mOriginRadius = Radius;
 	}
 
 public:

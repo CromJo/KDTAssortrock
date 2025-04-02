@@ -78,6 +78,11 @@ void CColliderOBB2D::Update(float DeltaTime)
 {
     CColliderBase::Update(DeltaTime);
 
+    FVector2D OriginSize = mOriginBox;
+    FVector2D temp = ApplyVirtualScale(OriginSize);
+    // 매 프레임 충돌체 크기 업데이트    
+    mBoxSize = mOriginBox * temp;
+
     mBoxInfo.Center.x = mWorldPos.x;
     mBoxInfo.Center.y = mWorldPos.y;
 

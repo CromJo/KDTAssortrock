@@ -8,13 +8,14 @@
 #include "../Shader/ShaderManager.h"
 #include "../Scene/CameraManager.h"
 #include "../Asset/Mesh/Mesh.h"
+#include "../Device.h"
 
 CColliderBase::CColliderBase()
 {
 #ifdef _DEBUG
 
     mRenderType = EComponentRender::Render;
-    mRenderLayerName = "Object";
+    mRenderLayerName = "Collider";
 
 #endif // _DEBUG
     // 리해싱이 자주 일어나지 않도록 미리 공간을 확보한다.
@@ -48,6 +49,36 @@ CColliderBase::~CColliderBase()
     SAFE_DELETE(mCBuffer);
 
 #endif // _DEBUG
+}
+
+float CColliderBase::CalculateColliderScale()
+{
+    const FResolution& RS = CDevice::GetInst()->GetResolution();
+
+    const float screenHeight = RS.Height;
+
+    // Y값 -360 ~ 360
+    float y = GetWorldPosition().y;
+    float t = (y + screenHeight / 2) / screenHeight;
+
+    // 스케일 범위 100% ~ 30%
+    float minScale = 0.3f;
+    float maxScale = 1.0f;
+
+    return maxScale - t * (maxScale - minScale);
+}
+
+FVector2D CColliderBase::ApplyVirtualScale(FVector2D& Scale)
+{
+    // 가상 스케일 계산
+    float colliderScale = CalculateColliderScale();
+
+    // 충돌 범위 조정
+    mScaledExtents = colliderScale;
+
+    Scale = FVector2D(mScaledExtents.x, mScaledExtents.y);
+
+    return Scale;
 }
 
 void CColliderBase::SetCollisionProfile(const std::string& Name)
@@ -169,6 +200,7 @@ void CColliderBase::PreUpdate(float DeltaTime)
 void CColliderBase::Update(float DeltaTime)
 {
     CSceneComponent::Update(DeltaTime);
+    
 }
 
 void CColliderBase::PostUpdate(float DeltaTime)

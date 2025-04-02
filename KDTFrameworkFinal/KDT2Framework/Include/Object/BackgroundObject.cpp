@@ -27,7 +27,7 @@ bool CBackgroundObject::Init()
 
     mRoot->SetWorldPos(0.f, 0.f, 0.f);
     // 기본사이즈의 1.2배 해줌.
-    mRoot->SetWorldScale(1280.f * 1.2f, 640.f * 1.2f, 1.f);
+    mRoot->SetWorldScale(1280.f * 2.f, 640.f * 2.f, 1.f);
     mRoot->SetPivot(0.5f, 0.5f);
     SetRootComponent(mRoot);
 

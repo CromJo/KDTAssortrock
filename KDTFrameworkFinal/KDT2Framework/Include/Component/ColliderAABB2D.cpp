@@ -69,6 +69,12 @@ void CColliderAABB2D::PreUpdate(float DeltaTime)
 void CColliderAABB2D::Update(float DeltaTime)
 {
     CColliderBase::Update(DeltaTime);
+    
+
+    FVector2D OriginSize = mOriginBox;
+    FVector2D temp = ApplyVirtualScale(OriginSize);
+    // 매 프레임 충돌체 크기 업데이트    
+    mBoxSize = mOriginBox * temp;
 
     mAABB.Min.x = mWorldPos.x - mBoxSize.x * 0.5f;
     mAABB.Min.y = mWorldPos.y - mBoxSize.y * 0.5f;

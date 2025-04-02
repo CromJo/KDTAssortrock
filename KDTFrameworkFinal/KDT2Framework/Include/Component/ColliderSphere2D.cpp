@@ -63,6 +63,13 @@ void CColliderSphere2D::Update(float DeltaTime)
 {
     CColliderBase::Update(DeltaTime);
 
+    FVector2D Scale = { mOriginRadius, mOriginRadius };
+    Scale *= 2.f;
+
+    FVector2D temp = ApplyVirtualScale(Scale);
+    // 매 프레임 충돌체 크기 업데이트    
+    mRadius = mOriginRadius * temp.x;
+    
     mMin.x = mWorldPos.x - mRadius;
     mMin.y = mWorldPos.y - mRadius;
 

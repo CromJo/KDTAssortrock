@@ -86,8 +86,8 @@ bool CRenderManager::Init()
 	CreateRenderLayer("BackGround", INT_MIN);
 	CreateRenderLayer("Object", 0);
 	CreateRenderLayer("Enemy", 1);
-	CreateRenderLayer("EnemyTest", 2);
 	CreateRenderLayer("GaugeBar", 50);
+	CreateRenderLayer("Collider", INT_MAX);
 
 	mStateManager = new CRenderStateManager;
 
