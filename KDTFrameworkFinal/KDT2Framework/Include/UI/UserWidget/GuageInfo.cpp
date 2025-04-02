@@ -17,6 +17,7 @@ bool CGuageInfo::Init()
         ("GuageBar");
     
     mGuageBar->SetSize(150.f, 20.f);
+    mGuageBar->SetPivot(0.5f, 0.5f);
     //mGuageBar->SetTint(EProgressBarImageType::Back, 0.3f, 0.3f, 0.3f);
     //mGuageBar->SetTexture(EProgressBarImageType::Fill, "Guage",
     //    TEXT("Texture\\UI\\Attack_Guage_0.png"));

@@ -74,9 +74,8 @@ bool CNormalEnemy::Init()
     ////////// 게이지 애니메이션 ///////////
     mGuageBar = CreateComponent<CSpriteComponent>();
     //mGuageBar->SetPivot(0.5f, 0.5f);
-    mGuageBar->SetRelativePos(-75.f, 70.f);
     mGuageBar->SetRelativeScale(1.5f, 0.2f);
-    mGuageBar->SetPivot(-0.5f, 0.5f);
+    mGuageBar->SetPivot(0.5f, 0.f);
     //mGuageInfo = mScene->GetUIManager()->CreateWidget<CGuageInfo>("GuageInfo");
     mRoot->AddChild(mGuageBar);
 
@@ -100,6 +99,7 @@ void CNormalEnemy::Update(float DeltaTime)
 {
     CEnemyObject::Update(DeltaTime);
 
+    mGuageBar->SetRelativePos(0.f, mRoot->GetWorldScale().y / 2);
 }
 
 /// <summary>
