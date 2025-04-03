@@ -15,13 +15,6 @@ enum class EEnemyAI : unsigned char
     End
 };
 
-enum class EEnemyMoveDirect : unsigned char
-{
-    None,       // 멈춘 상태
-    Left,       // 왼쪽으로 이동 해야하는 상태
-    Right       // 오른쪽으로 이동 해야하는 상태
-};
-
 class CEnemyObject :
     public CSceneObject
 {
@@ -50,17 +43,22 @@ protected:
     float           mDetectDistance = 0.f;
 
     int             mHP = 5;
-
     float           mLogicTime = 0.f;    // 로직 랜덤 체인지를 위한 시간
 
     CSharedPtr<class CMovementComponent>    mMovement;
     float           mSpeed = 200.f;
-    EEnemyMoveDirect mMoveDirect = EEnemyMoveDirect::None;
-
     FVector3D       mSaveMoveData = FVector3D::Zero;
 
-    int            mAttackActive = 0;
-    
+public:
+    // 화면 범위 지정 데이터
+    float ScreenMinX;
+    float ScreenMaxX;
+    float ScreenMinY;
+    float ScreenMaxY;
+
+private:
+    void SetLimitScreen();
+
 public:
     void SetTarget(class CSceneObject* Target)
     {
@@ -106,15 +104,10 @@ protected:
     void LoopState(float DeltaTime);
     
 protected:  // ============ AI Virtual Function ===============
-    virtual void AIIdle();
-    virtual void AIPatrol();
-    //virtual void AITrace();
-    virtual void AIMove();
-    virtual void AIAttack();
-    virtual void AIDeath();
-    //virtual void AISkill();
-    virtual void AICustom();
-    virtual void AIChangeMove();
+    virtual void IdleAnimation();
+    virtual void MoveAnimation();
+    virtual void AttackAnimation();
+    virtual void DeathAnimation();
 
     //virtual FVector3D Test() { return FVector3D::Zero; }
 };

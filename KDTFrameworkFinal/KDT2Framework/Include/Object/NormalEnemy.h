@@ -36,7 +36,7 @@ protected:
 
 protected:
     // Animation Notify 작성용 칸
-    virtual void AIAttack();
+    virtual void AttackAnimation();
     virtual void MovePointNotify();     // 디테일용이기 때문에 제거 하자.
 
     virtual void AttackLoop(float DeltaTime);

@@ -59,6 +59,11 @@ public:
 		return mTime;
 	}
 
+	bool GetReverse() const
+	{
+		return mReverse;
+	}
+
 	const std::string& GetName()	const;
 
 public:

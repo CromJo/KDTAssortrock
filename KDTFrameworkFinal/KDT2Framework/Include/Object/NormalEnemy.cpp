@@ -41,10 +41,9 @@ bool CNormalEnemy::Init()
     // 자기자신에 애니메이션 컴포넌트 추가
     mAnimation = mRoot->CreateAnimation2D<CAnimation2D>();
     mAnimation->AddSequence("EnemyIdle", 1.f, 1.f, true, false);
-    mAnimation->AddSequence("EnemyMove", 2.f, 1.f, true, false);
+    mAnimation->AddSequence("EnemyMove", 0.33f, 1.f, false, false);
     //mAnimation->AddSequence("EnemyMove", 2.f, 1.f, true, false);
-    mAnimation->AddSequence("EnemyAttack", 1.f, 1.f, true, false);
-    mAnimation->AddSequence("GunnerSkill", 1.f, 1.f, true, false);
+    mAnimation->AddSequence("EnemyAttack", 1.f, 1.f, false, false);
     //mAnimation->AddSequence("EnemyAttackGuage", 1.5f, 1.f, false, false);
 
     mAIAnimationName[(int)EEnemyAI::Idle] = "EnemyIdle";
@@ -118,9 +117,9 @@ void CNormalEnemy::Move()
 /// <summary>
 /// 
 /// </summary>
-void CNormalEnemy::AIAttack()
+void CNormalEnemy::AttackAnimation()
 {
-    CEnemyObject::AIAttack();
+    CEnemyObject::AttackAnimation();
 
     if (mTarget)
     {

@@ -33,6 +33,18 @@ CEnemyObject::~CEnemyObject()
 {
 }
 
+void CEnemyObject::SetLimitScreen()
+{
+    const FResolution& RS = CDevice::GetInst()->GetResolution();
+
+    float RadiusSize = mBody->GetRadius() / 2.f;
+
+    ScreenMinX = (float)(-(RS.Width / 2.f)) + RadiusSize;
+    ScreenMaxX = (float)(RS.Width / 2.f) - RadiusSize;
+    ScreenMinY = (float)(-(RS.Height / 2.f)) + RadiusSize;
+    ScreenMaxY = (float)(RS.Height / 2.f) - RadiusSize;
+}
+
 /// <summary>
 /// 적의 기본적인 초기화 기능
 /// </summary>
@@ -85,6 +97,8 @@ bool CEnemyObject::Init()
 
     mMovement->SetUpdateComponent(mRoot);
     mMovement->SetMoveSpeed(200.f);
+    
+    SetLimitScreen();
 
     return true;
 }
@@ -116,8 +130,8 @@ void CEnemyObject::PreUpdate(float DeltaTime)
 		//else
 		//	ChangeState(EEnemyAI::Attack);
         
-        //ChangeState((EEnemyAI)random);
-        ChangeState(EEnemyAI::Idle);
+        ChangeState((EEnemyAI)random);
+        //ChangeState(EEnemyAI::Idle);
     }
 
     LoopState(DeltaTime);
@@ -207,19 +221,48 @@ void CEnemyObject::CollisionEnemyDetectEnd(CColliderBase* Dest)
 
 void CEnemyObject::MovePointLoop(float DeltaTime)
 {
-    mMovement->SetMoveRandomPoint(mSaveMoveData);
-    
-    FVector3D Target = mSaveMoveData;
-    FVector3D CurrentTransform = GetWorldPosition();
+    FVector3D CurrentPos = mRoot->GetWorldPosition();
+    FVector3D Direct = mSaveMoveData - CurrentPos;
+    bool ReflectX = false, ReflectY = false;
 
-    float Distance = CurrentTransform.Distance(Target);
+    if (Direct.Length() > 0.f)
+        Direct.Normalize();
+
+    // 벽에 닿으면 좌표 설정 기능 활성화
+    if (CurrentPos.x < ScreenMinX || CurrentPos.x > ScreenMaxX)
+    {
+        Direct.x *= -1;
+        ReflectX = true;
+    }
+    if (CurrentPos.y < ScreenMinY || CurrentPos.y > ScreenMaxY)
+    {
+        Direct.y *= -1;
+        ReflectY = true;
+    }
+
+    // 벽에 닿은 부분의 새로운 좌표 설정
+    if (ReflectX || ReflectY)
+    {
+        //if(ReflectX)
+
+        const float ReflectDistance = rand() % 200;
+        mSaveMoveData = CurrentPos + Direct * ReflectDistance;
+
+        mSaveMoveData.x = Clamp(mSaveMoveData.x, ScreenMinX, ScreenMaxX);
+        mSaveMoveData.y = Clamp(mSaveMoveData.y, ScreenMinY, ScreenMaxY);
+    }
+
+    // 방향 설정
+    mMovement->SetMove(Direct);
 
     // 거리 오차가 20 이하면 멈추도록 설정
-    if (Distance <= 20.f)
+    if (CurrentPos.Distance(mSaveMoveData) <= 20.f)
     {
         //멈췅!
         mMovement->SetMoveRandomPoint(FVector3D::Zero);
+        ChangeState(EEnemyAI::Idle);
     }
+
 }
 
 /// <summary>
@@ -228,14 +271,8 @@ void CEnemyObject::MovePointLoop(float DeltaTime)
 /// </summary>
 void CEnemyObject::MovePointOnce()
 {
-    // 애니메이션 재생
-    mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Move]);
-
     // 현재 화면 크기를 불러온다.
     const FResolution& RS = CDevice::GetInst()->GetResolution();
-
-    mMovement->SetUpdateComponent(mRoot);
-    mMovement->SetMoveSpeed(200.f);
 
     int randX = rand() % (RS.Width / 2);
     int randY = rand() % (RS.Height / 2);
@@ -249,9 +286,8 @@ void CEnemyObject::MovePointOnce()
     else
         mAnimation->SetAnimationReverseX(true);
 
-    FVector3D Dir;
-
-    Dir = FVector3D(randX - mRoot->GetWorldPosition().x, 0.f, 0.f);
+    FVector3D CurrentPos = mRoot->GetWorldPosition();
+    mSaveMoveData = FVector3D(CurrentPos.x + randX, CurrentPos.y, CurrentPos.z);
     
     // 만약 이동하려는 위치가 화면 왼쪽을 넘으려 한다면
     //if ((randX - mRoot->GetWorldPosition().x) <= -(float(RS.Width) / 2))
@@ -267,7 +303,6 @@ void CEnemyObject::MovePointOnce()
     //    Dir = FVector3D(max, 0.f, 0.f);
     //}
 
-    mSaveMoveData = Dir;
 }
 
 /*
@@ -331,12 +366,15 @@ void CEnemyObject::ChangeState(EEnemyAI Type)
     switch (mAI)
     {
     case EEnemyAI::Idle:
+        IdleAnimation();    // 대기 애니메이션 재생
         IdleOnce();         // 현재로선 비어있는게 맞음.
         break;
     case EEnemyAI::Move:
+        MoveAnimation();    // 이동 애니메이션 재생
         MovePointOnce();
         break;
     case EEnemyAI::Attack:
+        AttackAnimation();  // 공격 애니메이션 재생
 		AttackOnce();
         break;
     }
@@ -377,42 +415,28 @@ void CEnemyObject::LoopState(float DeltaTime)
 /// <summary>
 /// 적의 대기 동작 기능 
 /// </summary>
-void CEnemyObject::AIIdle()
+void CEnemyObject::IdleAnimation()
 {
-    //if (mAnimation)
-    //    mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Idle]);
+    if (mAnimation)
+        mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Idle]);
 }
-
-void CEnemyObject::AIPatrol()
-{
-}
-
-//void CEnemyObject::AITrace()
-//{
-//    if (mAnimation)
-//        mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Trace]);
-//}
 
 /// <summary>
 /// 적오브젝트의 공통 이동 기능
 /// </summary>
-void CEnemyObject::AIMove()
+void CEnemyObject::MoveAnimation()
 {
     if (mAnimation)
-    {
-        // 애니메이션 변경
-        //if (mAI == EEnemyAI::Move)
-        //    mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Move]);
-    }
+        mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Move]);
 }
 
-void CEnemyObject::AIAttack()
+void CEnemyObject::AttackAnimation()
 {
-    //if (mAnimation)
-    //    mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Attack]);
+    if (mAnimation)
+        mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Attack]);
 }
 
-void CEnemyObject::AIDeath()
+void CEnemyObject::DeathAnimation()
 {
 }
 
@@ -421,12 +445,3 @@ void CEnemyObject::AIDeath()
 //    if (mAnimation)
 //        mAnimation->ChangeAnimation(mAIAnimationName[(int)EEnemyAI::Skill]);
 //}
-
-void CEnemyObject::AICustom()
-{
-}
-
-void CEnemyObject::AIChangeMove()
-{
-    AIMove();
-}

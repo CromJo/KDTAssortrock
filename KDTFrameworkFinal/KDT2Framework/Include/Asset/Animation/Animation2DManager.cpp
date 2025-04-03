@@ -197,7 +197,7 @@ bool CAnimation2DManager::Init()
     AddFrame("EnemyIdle", 0.f, 0.f, 150.f, 170.f);
 #pragma endregion
 
-#pragma region MoveLeft 애니메이션
+#pragma region Move 애니메이션
     CreateAnimation("EnemyMove");
     SetAnimationTextureType("EnemyMove",
         EAnimationTextureType::Frame);
