@@ -49,12 +49,14 @@ protected:
     float           mSpeed = 200.f;
     FVector3D       mSaveMoveData = FVector3D::Zero;
 
-public:
+private:
     // 화면 범위 지정 데이터
-    float ScreenMinX;
-    float ScreenMaxX;
-    float ScreenMinY;
-    float ScreenMaxY;
+    float ScreenMinX = 0.f;
+    float ScreenMaxX = 0.f;
+    float ScreenMinY = 0.f;
+    float ScreenMaxY = 0.f;
+    float mFirstMoveMinX = 200.f;
+    float mFirstMoveMaxX = 200.f;
 
 private:
     void SetLimitScreen();

@@ -228,30 +228,77 @@ void CEnemyObject::MovePointLoop(float DeltaTime)
     if (Direct.Length() > 0.f)
         Direct.Normalize();
 
-    // 벽에 닿으면 좌표 설정 기능 활성화
-    if (CurrentPos.x < ScreenMinX || CurrentPos.x > ScreenMaxX)
-    {
-        Direct.x *= -1;
-        ReflectX = true;
+    // 화면 진입 체크
+    bool InsideScreen =
+        (CurrentPos.x >= ScreenMinX && CurrentPos.x <= ScreenMaxX &&
+            CurrentPos.y >= ScreenMinY && CurrentPos.y <= ScreenMaxY);
 
-        mAnimation->SetAnimationReverseX(Direct.x > 0);
-    }
-    if (CurrentPos.y < ScreenMinY || CurrentPos.y > ScreenMaxY)
+    if (InsideScreen)
     {
-        Direct.y *= -1;
-        ReflectY = true;
+        // 벽에 닿으면 좌표 설정 기능 활성화
+        if (CurrentPos.x < ScreenMinX || CurrentPos.x > ScreenMaxX)
+        {
+            Direct.x *= -1;
+            ReflectX = true;
+
+            mAnimation->SetAnimationReverseX(Direct.x > 0);
+        }
+        if (CurrentPos.y < ScreenMinY || CurrentPos.y > ScreenMaxY)
+        {
+            Direct.y *= -1;
+            ReflectY = true;
+        }
     }
 
     // 벽에 닿은 부분의 새로운 좌표 설정
     if (ReflectX || ReflectY)
     {
-        //if(ReflectX)
-
-        const float ReflectDistance = rand() % 200;
+        const float MinReflectDistance = 200.f;
+        const float ReflectDistance = MinReflectDistance + (rand() % 200);
         mSaveMoveData = CurrentPos + Direct * ReflectDistance;
 
+        // 화면 밖으로 나가지 않도록 제한
         mSaveMoveData.x = Clamp(mSaveMoveData.x, ScreenMinX, ScreenMaxX);
         mSaveMoveData.y = Clamp(mSaveMoveData.y, ScreenMinY, ScreenMaxY);
+    }
+
+    // 맵 밖 일경우
+    if (InsideScreen)
+    {
+        static bool FirstStart = true;
+        
+        if (FirstStart)
+        {
+            float Min = rand() % (int)(ScreenMinX + mFirstMoveMinX);
+            float Max = rand() % (int)(ScreenMaxX - mFirstMoveMaxX);
+
+            mSaveMoveData.x = Clamp(mSaveMoveData.x, 
+                Min - 100, 
+                Max + 100);
+            mSaveMoveData.y = CurrentPos.y; // Y값 고정
+            FirstStart = false;
+        }
+
+        // 맵 안으로 진입한 경우 이동 제한
+        CurrentPos.x = Clamp(CurrentPos.x, ScreenMinX, ScreenMaxX);
+        CurrentPos.y = Clamp(CurrentPos.y, ScreenMinY, ScreenMaxY);
+        mRoot->SetWorldPos(CurrentPos);
+        
+        // 외부로 나가는 이동을 막기 위해 방향 초기화
+        if (CurrentPos.x <= ScreenMinX || CurrentPos.x >= ScreenMaxX)
+            Direct.x = 0;
+        if (CurrentPos.y <= ScreenMinY || CurrentPos.y >= ScreenMaxY)
+            Direct.y = 0;
+    }
+    // 화면 밖일 경우
+    else 
+    {
+        // 화면 중심으로 이동
+        FVector3D ScreenCenter((ScreenMinX + ScreenMaxX) / 2,
+            CurrentPos.y , 0.f);
+        Direct = ScreenCenter - CurrentPos;
+        Direct.y = 0.f;
+        Direct.Normalize();
     }
 
     // 방향 설정

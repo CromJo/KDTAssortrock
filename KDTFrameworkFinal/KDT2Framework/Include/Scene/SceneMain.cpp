@@ -48,6 +48,11 @@ bool CSceneMain::InitAsset()
 
 bool CSceneMain::InitObject()
 {
+    // 현재 화면 크기를 불러온다.
+    const FResolution& RS = CDevice::GetInst()->GetResolution();
+    float Width = RS.Width / 2.f;
+    float Height = RS.Height / 2.f;
+
     // 파일 경로를 저장해줄 데이터 생성
     TCHAR	FullPath[MAX_PATH] = {};
 
@@ -66,7 +71,7 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(400.f, 200.f);
+    EnemyPoint->SetWorldPos(Width + 50.f, 330.f);
 
     EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy2");
@@ -76,7 +81,7 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(0.f, 300.f);
+    EnemyPoint->SetWorldPos(Width + 50.f, 300.f);
 
     EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy3");
@@ -86,7 +91,7 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(0.f, 250.f);
+    EnemyPoint->SetWorldPos(Width + 50.f, 270.f);
 
     EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy4");
@@ -96,7 +101,7 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(0.f, 200.f);
+    EnemyPoint->SetWorldPos(Width + 50.f, 220.f);
 
     EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy5");
@@ -106,7 +111,7 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(0.f, 170.f);
+    EnemyPoint->SetWorldPos(-Width - 50.f, 180.f);
     EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy6");
 
@@ -115,7 +120,7 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(0.f, 190.f);
+    EnemyPoint->SetWorldPos(-Width - 50.f, 150.f);
 
     EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy7");
@@ -125,7 +130,7 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(0.f, 210.f);
+    EnemyPoint->SetWorldPos(Width + 50.f, 110.f);
     EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy8");
 
@@ -134,7 +139,7 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(0.f, 110.f);
+    EnemyPoint->SetWorldPos(-Width - 50.f, 60.f);
     EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy9");
 
@@ -143,7 +148,7 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(0.f, 130.f);
+    EnemyPoint->SetWorldPos(-Width - 50.f, 10.f);
 
     /*EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy2");
