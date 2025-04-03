@@ -10,7 +10,7 @@ enum class EPlayerState
     CoverToStance,
     StanceToCover,
     CoverHit,
-    StanceHit
+    StanceHit,
 };
 
 enum class EPostureState
@@ -70,6 +70,7 @@ protected:
 private:
     UCHAR mAttackKey = VK_LBUTTON;            // 왼쪽 마우스버튼 할당
     UCHAR mReloadingKey = 'R';            // 왼쪽 마우스버튼 할당
+    bool mReloadState = false;
 
 public:
     bool KeyInput();
@@ -88,17 +89,12 @@ private:
 
     void MovePoint(float DeltaTime);
 
-    void RotationZ(float DeltaTime);
-    void RotationZInv(float DeltaTime);
-
     void MoveRight(float DeltaTime);
     void MoveLeft(float DeltaTime);
 
-    void MouseFire(float DeltaTime);
+    void Skill8(float DeltaTime);
 
     void Reloading(float DeltaTime);
-
-    void Skill8(float DeltaTime);
 
     void IdleAnimation();
     void AttackAnimation();
@@ -109,8 +105,6 @@ private:
     void StanceToCoverAnimation();
 
 public:
-
-    void ActionEnd();       // 모든 액션의 끝났을때 
     void AttackNotify();    // 공격 중일 때
 
     void CoverHitEnd();  // 공격 받았을 때
@@ -121,10 +115,6 @@ public:
 
     void ReloadingEnd();
     
-    
     std::string DebugState();
-private:
-    void StateChange(EPlayerState State);
-    void PostureChange(EPostureState State);
 };
 

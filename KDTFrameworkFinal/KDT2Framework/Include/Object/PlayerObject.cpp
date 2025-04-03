@@ -53,11 +53,6 @@ bool CPlayerObject::KeyInput()
     mScene->GetInput()->AddBindKey("Attack", VK_LBUTTON);
     mScene->GetInput()->AddBindKey("Reloading", mReloadingKey);
 
-	mScene->GetInput()->AddBindFunction<CPlayerObject>("Attack",
-		EInputType::Hold, this, &CPlayerObject::MouseFire);
-	mScene->GetInput()->AddBindFunction<CPlayerObject>("Reloading",
-		EInputType::Down, this, &CPlayerObject::Reloading);
-
     return true;
 }
 
@@ -193,6 +188,8 @@ bool CPlayerObject::Init()
 
     mScene->GetInput()->AddBindKey("Skill8", '8');
 
+    mScene->GetInput()->AddBindKey("Reloading", mReloadingKey);
+
     mScene->GetInput()->AddBindFunction<CPlayerObject>("MoveUp",
         EInputType::Hold, this, &CPlayerObject::MoveUp);
 
@@ -224,7 +221,7 @@ bool CPlayerObject::Init()
     //    EInputType::Hold, this, &CPlayerObject::MouseFire);
 
     mScene->GetInput()->AddBindFunction<CPlayerObject>("Reloading",
-        EInputType::Down, this, &CPlayerObject::Reloading);
+        EInputType::Hold, this, &CPlayerObject::Reloading);
 
     mScene->GetInput()->AddBindFunction<CPlayerObject>("Skill8",
         EInputType::Down, this, &CPlayerObject::Skill8);
@@ -310,17 +307,7 @@ float CPlayerObject::Damage(float Attack, CSceneObject* Obj)
     // 플레이어의 HP를 깎는다.
     mHP -= (int)Attack;
 
-    switch (mPostureState)
-    {
-    case EPostureState::Cover:
-        StateChange(EPlayerState::CoverHit);
-        mAnimation->ChangeAnimation("PlayerCoverHit");
-        break;
-    case EPostureState::Stance:
-        StateChange(EPlayerState::StanceHit);
-        mAnimation->ChangeAnimation("PlayerStanceHit");
-        break;
-    }
+    ChangeState(EPlayerState::StanceHit);
 
     // 죽었을때 로직 추가 해줘야 함.
 
@@ -334,20 +321,37 @@ float CPlayerObject::Damage(float Attack, CSceneObject* Obj)
 /// <param name="State"></param>
 void CPlayerObject::ChangeState(EPlayerState State)
 {
-    // 현재 상태와 받으려는 상태가 같으면 종료
-    if(mPlayerState == State)
+    if (mPlayerState == State)
         return;
-    
+
     // 장전 중일 때
-    if (mPlayerState == EPlayerState::Reloading)
+    if (mReloadState)
     {
-        // 어택 명령이 들어오면
-        if (State == EPlayerState::Attack)
+        if (mPlayerState == EPlayerState::Reloading)
         {
-			CLog::PrintLog("재장전 중에는 공격할 수 없습니다.");
-            // 장전을 계속 실행하도록 처리함.
-			return;
+            // 재장전 자세가 아니면 전부 종료
+            if (State != EPlayerState::Reloading)
+            {
+                CLog::PrintLog("재장전 중에는 자세를 변경할 수 없습니다.");
+                // 장전을 계속 실행하도록 처리함.
+                return;
+            }
         }
+    }
+
+    // 피격 애니메이션을 받아왔다면
+    if (State == EPlayerState::StanceHit)
+    {
+        if (mPlayerState == EPlayerState::Idle ||
+            mPlayerState == EPlayerState::Reloading)
+        {
+            State = EPlayerState::CoverHit;
+        }
+        else if (mPlayerState == EPlayerState::StanceToCover ||
+            mPlayerState == EPlayerState::CoverToStance)
+            return;
+
+        CLog::PrintLog("피격");
     }
 
     // 다르다면 이전 상태를 현재 상태로 변경 후
@@ -355,13 +359,11 @@ void CPlayerObject::ChangeState(EPlayerState State)
     mPlayerStatePrev = mPlayerState;
     mPlayerState = State;
 
-
     std::string str;
     str += "현재 자세 : ";
     str += DebugState();
     CLog::PrintLog(str);
     
-
     switch (mPlayerState)
     {
     case EPlayerState::Idle:
@@ -369,7 +371,6 @@ void CPlayerObject::ChangeState(EPlayerState State)
         break;
     case EPlayerState::Attack:
         AttackAnimation();          // 공격모션으로 변경  
-        
         break;
     case EPlayerState::Reloading:
 		ReloadingAnimation();       // 재장전모션으로 변경
@@ -400,7 +401,6 @@ void CPlayerObject::LoopState(float DeltaTime)
         break;
     case EPlayerState::Attack:
 		// 공격 애니메이션 실행시 동시실행하는 함수
-        MouseFire(DeltaTime);
         break;
     case EPlayerState::Reloading:
         break;
@@ -439,27 +439,6 @@ void CPlayerObject::MovePoint(float DeltaTime)
         mScene->GetInput()->GetMouseWorldPos2D());
 }
 
-void CPlayerObject::RotationZ(float DeltaTime)
-{
-    //FVector3D   Rot = mRootComponent->GetWorldRotation();
-    //mRootComponent->SetWorldRotationZ(Rot.z + DeltaTime * -90.f);
-
-    mMovement->AddMove(mRootComponent->GetAxis(EAxis::X));
-
-    mAnimation->ChangeAnimation("PlayerIdle");
-
-}
-
-void CPlayerObject::RotationZInv(float DeltaTime)
-{
-    //FVector3D   Rot = mRootComponent->GetWorldRotation();
-    //mRootComponent->SetWorldRotationZ(Rot.z + DeltaTime * 90.f);
-
-    mMovement->AddMove(mRootComponent->GetAxis(EAxis::X) * -1.f);
-
-    mAnimation->ChangeAnimation("PlayerIdle");
-}
-
 void CPlayerObject::MoveRight(float DeltaTime)
 {
     mMovement->AddMove(mRootComponent->GetAxis(EAxis::X));
@@ -478,35 +457,6 @@ void CPlayerObject::MoveLeft(float DeltaTime)
     //mAnimation->SetAnimationReverseX(true);
 }
 
-/// <summary>
-/// 공격 기능
-/// </summary>
-/// <param name="DeltaTime"></param>
-void CPlayerObject::MouseFire(float DeltaTime)
-{
-}
-
-/// <summary>
-/// 재장전 기능 
-/// 1. R버튼을 누를 때 실행
-/// 2. 탄알이 0발 남았을 때 실행.
-/// </summary>
-/// <param name="DeltaTime"></param>
-void CPlayerObject::Reloading(float DeltaTime)
-{
-    if (mAmmo == mAmmoMax)
-        return;
-
-    StateChange(EPlayerState::Reloading);
-    PostureChange(EPostureState::Cover);
-
-    CLog::PrintLog("리로딩!!!");
-
-    // 모든 조건이 부합하면 재장전 애니메이션을 실행
-    mAnimation->ChangeAnimation("PlayerReloading");
-
-}
-
 void CPlayerObject::Skill8(float DeltaTime)
 {
     CBulletDot* Bullet = mScene->CreateObj<CBulletDot>("Bullet");
@@ -523,6 +473,39 @@ void CPlayerObject::Skill8(float DeltaTime)
     Root->SetWorldPos(Pos + Dir * 75.f);
 
     Bullet->SetBoxSize(300.f, 300.f);
+}
+
+void CPlayerObject::Reloading(float DeltaTime)
+{
+    // 탄창이 꽉 차있다면 종료
+    if (mAmmo == mAmmoMax)
+        return;
+
+    // 장전 상태에 돌입했다면 종료
+    if (mReloadState)
+        return;
+
+    mReloadState = true;
+
+    // 대기모션이거나 또는 커버상태에서 피격 애니메이션이면
+    // 재장전 자세로 변경
+    if (mPlayerState == EPlayerState::Idle ||
+        mPlayerState == EPlayerState::CoverHit)
+    {
+        ChangeState(EPlayerState::Reloading);
+
+        return;
+    }
+
+    // 공격 모션이거나, 스탠스 상태의 피격 애니메이션이면
+    // 커버상태로 돌아가는 애니메이션으로 변경
+    if (mPlayerState == EPlayerState::Attack ||
+        mPlayerState == EPlayerState::StanceHit)
+    {
+        ChangeState(EPlayerState::StanceToCover);
+
+        return;
+    }
 }
 
 #pragma region Animation 변경 이벤트 모음
@@ -565,21 +548,6 @@ void CPlayerObject::StanceToCoverAnimation()
     mAnimation->ChangeAnimation("PlayerStanceToCover");
 }
 #pragma endregion
-
-/// <summary>
-/// 모든 행동이 끝날 경우 실행되는 기능
-/// 1. 대기모션으로 되돌립니다.
-/// </summary>
-void CPlayerObject::ActionEnd()
-{
-    StateChange(EPlayerState::Idle);
-    PostureChange(EPostureState::Cover);
-
-    // 애니메이션 변경 및 로그 남김 
-    //CLog::PrintLog("Action End");
-    mAnimation->ChangeAnimation("PlayerIdle");
-
-}
 
 /// <summary>
 /// 공격 애니메이션 실행시 동시실행하는 함수
@@ -637,27 +605,38 @@ void CPlayerObject::AttackNotify()
     //
 }
 
+
+/// <summary>
+/// 대기 상태에서 피격 애니메이션이 끝난 후 실행
+/// </summary>
 void CPlayerObject::CoverHitEnd()
 {
+    // 왼쪽클릭 안하고 있다면 대기상태로
     if(!mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton))
         ChangeState(EPlayerState::Idle);
+    // 왼쪽 클릭을 하고 있다면 공격상태로
     else
-        ChangeState(EPlayerState::Attack);
+        if(mAmmo > 0)
+            ChangeState(EPlayerState::Attack);
 
     CLog::PrintLog("커버 자세의 피격 애니메이션 종료");
 }
 
+/// <summary>
+/// 공격 자세에서 피격 애니메이션이 끝난 후 실행
+/// </summary>
 void CPlayerObject::StanceHitEnd()
 {
+    // 왼쪽 클릭을 하고 있고 총알이 남아있으면 공격 상태로
     if(mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton) && mAmmo > 0)
         ChangeState(EPlayerState::Attack);
+    // 왼쪽 클릭을 안하고 있으면 대기 상태로
     else
         ChangeState(EPlayerState::Idle);
     
     CLog::PrintLog("사격 자세의 피격 애니메이션 종료");
     //PostureChange(EPostureState::Stance);
 }
-
 
 void CPlayerObject::CoverToStanceEnd()
 {
@@ -676,7 +655,8 @@ void CPlayerObject::StanceToCoverEnd()
     // 스탠스상태에서 커버 상태로 가는 애니메이션이 끝나면
     // Idle Animation이 실행되도록 설정
     // 0발일경우 Idle이 아닌 재장전으로 설정
-    if (mAmmo <= 0)
+    if (mAmmo <= 0 ||
+        mReloadState)
     {
         CLog::PrintLog("재장전을 활성화 합니다.");
 
@@ -691,8 +671,9 @@ void CPlayerObject::StanceToCoverEnd()
 void CPlayerObject::ReloadingEnd()
 {
     mAmmo = mAmmoMax;
+    mReloadState = false;
 
-    ActionEnd();
+    ChangeState(EPlayerState::Idle);
 }
 
 std::string CPlayerObject::DebugState()
@@ -721,23 +702,4 @@ std::string CPlayerObject::DebugState()
     default:
         break;
     }
-}
-
-void CPlayerObject::StateChange(EPlayerState State)
-{
-    if (mPlayerState == State)
-        return;
-
-    // 기존 자세를 전 자세로 저장 후
-    // 현재 자세를 변경
-    mPlayerStatePrev = mPlayerState;
-    mPlayerState = State;
-}
-
-void CPlayerObject::PostureChange(EPostureState State)
-{
-    if (mPostureState == State)
-        return;
-
-    mPostureState = State;
 }
