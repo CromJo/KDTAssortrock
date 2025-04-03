@@ -97,6 +97,8 @@ bool CPlayerObject::Init()
     mAnimation->AddSequence("PlayerReloading", 1.2f, 1.f, false, false);
     mAnimation->AddSequence("PlayerCoverHit", 0.33f, 1.f, false, false);
     mAnimation->AddSequence("PlayerStanceHit", 0.33f, 1.f, false, false);
+    mAnimation->AddSequence("PlayerCoverToStance", 0.33f, 1.f, false, false);
+    mAnimation->AddSequence("PlayerStanceToCover", 0.33f, 1.f, false, false);
 
     // 애니메이션의 마지막 프레임 동작 후 부가적인 이벤트 실행 (부가적 이벤트 : AttackEnd)
     //mAnimation->SetEndFunction<CPlayerObject>("PlayerAttack",
@@ -110,6 +112,11 @@ bool CPlayerObject::Init()
     // 장전 모션 끝난 후 이벤트 설정
     mAnimation->SetEndFunction<CPlayerObject>("PlayerReloading",
         this, &CPlayerObject::ReloadingEnd);
+
+    mAnimation->SetEndFunction<CPlayerObject>("PlayerCoverToStance",
+        this, &CPlayerObject::CoverToStanceEnd);
+    mAnimation->SetEndFunction<CPlayerObject>("PlayerStanceToCover",
+        this, &CPlayerObject::StanceToCoverEnd);
 
     mAnimation->SetEndFunction<CPlayerObject>("PlayerCoverHit",
         this, &CPlayerObject::CoverHitEnd);
@@ -260,9 +267,17 @@ void CPlayerObject::Update(float DeltaTime)
     }
     */
 
-    if (mScene->GetInput()->GetMouseDown(EMouseButtonType::LButton))
+    // 마우스 클릭 시 스탠스 상태로
+    if (mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton) && mAmmo > 0)
     {
-		ChangeState(EPlayerState::Attack);
+        if (mPlayerState == EPlayerState::Idle)
+            ChangeState(EPlayerState::CoverToStance);
+    }
+    // 클릭 해제 또는 탄약 소진 시 커버 상태로
+    else
+    {
+        if (mPlayerState == EPlayerState::Attack)
+            ChangeState(EPlayerState::StanceToCover);
     }
 
 	LoopState(DeltaTime);
@@ -322,13 +337,15 @@ void CPlayerObject::ChangeState(EPlayerState State)
     // 현재 상태와 받으려는 상태가 같으면 종료
     if(mPlayerState == State)
         return;
-
+    
+    // 장전 중일 때
     if (mPlayerState == EPlayerState::Reloading)
     {
+        // 어택 명령이 들어오면
         if (State == EPlayerState::Attack)
         {
 			CLog::PrintLog("재장전 중에는 공격할 수 없습니다.");
-
+            // 장전을 계속 실행하도록 처리함.
 			return;
         }
     }
@@ -338,17 +355,30 @@ void CPlayerObject::ChangeState(EPlayerState State)
     mPlayerStatePrev = mPlayerState;
     mPlayerState = State;
 
+
+    std::string str;
+    str += "현재 자세 : ";
+    str += DebugState();
+    CLog::PrintLog(str);
+    
+
     switch (mPlayerState)
     {
     case EPlayerState::Idle:
         IdleAnimation();            // 대기모션으로 변경
         break;
     case EPlayerState::Attack:
-            AttackAnimation();          // 공격모션으로 변경  
+        AttackAnimation();          // 공격모션으로 변경  
         
         break;
     case EPlayerState::Reloading:
 		ReloadingAnimation();       // 재장전모션으로 변경
+        break;
+    case EPlayerState::CoverToStance:
+        CoverToStanceAnimation();   // 스탠스 자세로 변경
+        break;
+    case EPlayerState::StanceToCover:
+        StanceToCoverAnimation();   // 커버 자세로 변경
         break;
     case EPlayerState::CoverHit:
 		CoverHitAnimation();        // 커버히트모션으로 변경
@@ -373,6 +403,10 @@ void CPlayerObject::LoopState(float DeltaTime)
         MouseFire(DeltaTime);
         break;
     case EPlayerState::Reloading:
+        break;
+    case EPlayerState::CoverToStance:
+        break;
+    case EPlayerState::StanceToCover:
         break;
     case EPlayerState::CoverHit:
         break;
@@ -520,6 +554,16 @@ void CPlayerObject::StanceHitAnimation()
 {
     mAnimation->ChangeAnimation("PlayerStanceHit");
 }
+
+void CPlayerObject::CoverToStanceAnimation()
+{
+    mAnimation->ChangeAnimation("PlayerCoverToStance");
+}
+
+void CPlayerObject::StanceToCoverAnimation()
+{
+    mAnimation->ChangeAnimation("PlayerStanceToCover");
+}
 #pragma endregion
 
 /// <summary>
@@ -614,11 +658,69 @@ void CPlayerObject::StanceHitEnd()
     //PostureChange(EPostureState::Stance);
 }
 
+
+void CPlayerObject::CoverToStanceEnd()
+{
+    // 커버상태에서 스탠스 상태로 가는 애니메이션이 끝나고
+    // 왼클 하고 있는 상태면
+    // Attack Animation이 실행되도록 설정
+    if (mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton) && mAmmo > 0)
+        ChangeState(EPlayerState::Attack);
+    // 만약 마우스가 올라가있느 상태면 다시 대기 애니메이션으로 설정
+    else if (!mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton))
+        ChangeState(EPlayerState::StanceToCover);
+}
+
+void CPlayerObject::StanceToCoverEnd()
+{
+    // 스탠스상태에서 커버 상태로 가는 애니메이션이 끝나면
+    // Idle Animation이 실행되도록 설정
+    // 0발일경우 Idle이 아닌 재장전으로 설정
+    if (mAmmo <= 0)
+    {
+        CLog::PrintLog("재장전을 활성화 합니다.");
+
+        ChangeState(EPlayerState::Reloading);
+        
+        return;
+    }
+
+    ChangeState(EPlayerState::Idle);
+}
+
 void CPlayerObject::ReloadingEnd()
 {
     mAmmo = mAmmoMax;
 
     ActionEnd();
+}
+
+std::string CPlayerObject::DebugState()
+{
+    switch (mPlayerState)
+    {
+    case EPlayerState::Idle:
+        return "Idle 상태";
+    case EPlayerState::Attack:
+        return "Attack 상태";
+    case EPlayerState::Reloading:
+        return "Reloading 상태";
+        break;
+    case EPlayerState::CoverToStance:
+        return "CoverToStance 상태";
+        break;
+    case EPlayerState::StanceToCover:
+        return "StanceToCover 상태";
+        break;
+    case EPlayerState::CoverHit:
+        return "CoverHit 상태";
+        break;
+    case EPlayerState::StanceHit:
+        return "StanceHit 상태";
+        break;
+    default:
+        break;
+    }
 }
 
 void CPlayerObject::StateChange(EPlayerState State)

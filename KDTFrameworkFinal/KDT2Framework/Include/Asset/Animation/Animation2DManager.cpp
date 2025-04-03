@@ -117,6 +117,42 @@ bool CAnimation2DManager::Init()
     AddFrameCount("PlayerAttack", ImageSize, 0.f, 0.f, 1.f, 1.f);
 #pragma endregion
 
+#pragma region Cover -> Stance 전환 애니메이션
+    CreateAnimation("PlayerCoverToStance");
+    SetAnimationTextureType("PlayerCoverToStance",
+        EAnimationTextureType::Frame);
+
+    FileNames.clear();
+
+    ImageSize = 26;
+
+    for (int i = 0; i < ImageSize; ++i)
+    {
+        wsprintf(Path[i], TEXT("Texture\\Player\\Novel_Cover_StanceChange\\Nikke_%d.png"), i);
+        FileNames.emplace_back(Path[i]);
+    }
+    
+    SetTexture("PlayerCoverToStance", "PlayerCoverToStance", FileNames);
+    AddFrameCount("PlayerCoverToStance", ImageSize, 0.f, 0.f, 1.f, 1.f);
+#pragma endregion
+
+#pragma region Stance -> Cover 전환 애니메이션
+    CreateAnimation("PlayerStanceToCover");
+    SetAnimationTextureType("PlayerStanceToCover",
+        EAnimationTextureType::Frame);
+
+    FileNames.clear();
+
+    for (int i = 25; i >= 0; --i)
+    {
+        wsprintf(Path[i], TEXT("Texture\\Player\\Novel_Cover_StanceChange\\Nikke_%d.png"), i);
+        FileNames.emplace_back(Path[i]);
+    }
+
+    SetTexture("PlayerStanceToCover", "PlayerStanceToCover", FileNames);
+    AddFrameCount("PlayerStanceToCover", FileNames.size(), 0.f, 0.f, 1.f, 1.f);
+#pragma endregion
+
 #pragma region 피격애니메이션
     CreateAnimation("Explosion");
     SetAnimationTextureType("Explosion",

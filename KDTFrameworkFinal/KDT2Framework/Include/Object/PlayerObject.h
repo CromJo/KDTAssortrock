@@ -7,6 +7,8 @@ enum class EPlayerState
     Idle,
     Attack,
     Reloading,
+    CoverToStance,
+    StanceToCover,
     CoverHit,
     StanceHit
 };
@@ -103,6 +105,8 @@ private:
     void ReloadingAnimation();
     void CoverHitAnimation();
     void StanceHitAnimation();
+    void CoverToStanceAnimation();
+    void StanceToCoverAnimation();
 
 public:
 
@@ -111,9 +115,14 @@ public:
 
     void CoverHitEnd();  // 공격 받았을 때
     void StanceHitEnd(); // 공격 받았을 때
+    
+    void CoverToStanceEnd();  // 스탠스자세로 이동하는 애니메이션이 끝 났을 때
+    void StanceToCoverEnd(); // 커버자세로 이동하는 애니메이션이 끝 났을 때
 
     void ReloadingEnd();
-
+    
+    
+    std::string DebugState();
 private:
     void StateChange(EPlayerState State);
     void PostureChange(EPostureState State);
