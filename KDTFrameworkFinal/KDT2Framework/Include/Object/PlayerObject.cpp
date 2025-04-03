@@ -224,6 +224,7 @@ void CPlayerObject::Update(float DeltaTime)
 
     // 왼쪽클릭 누르는 중이고 탄창이 차있으면
     if (mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton) &&
+        mPlayerState == EPlayerState::Idle &&
         mAmmo > 0)
     {
         ChangeState(EPlayerState::CoverToStance);
@@ -582,7 +583,7 @@ void CPlayerObject::AttackNotify()
 /// </summary>
 void CPlayerObject::CoverHitEnd()
 {
-    ChangeState(mAmmo == 0 ? EPlayerState::Reloading : EPlayerState::Idle);
+    ChangeState(mAmmo <= 0 ? EPlayerState::Reloading : EPlayerState::Idle);
 
     //// 왼쪽클릭 안하고 있다면 대기상태로
     //if(!mScene->GetInput()->GetMouseHold(EMouseButtonType::LButton))
@@ -630,7 +631,6 @@ void CPlayerObject::CoverToStanceEnd()
     // 만약 마우스가 올라가있는 상태면 다시 대기 애니메이션으로 설정
     else
     {
-        //mAttackState = false;
         ChangeState(EPlayerState::StanceToCover);
     }
 
