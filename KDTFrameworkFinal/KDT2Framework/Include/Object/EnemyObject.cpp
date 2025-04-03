@@ -233,6 +233,8 @@ void CEnemyObject::MovePointLoop(float DeltaTime)
     {
         Direct.x *= -1;
         ReflectX = true;
+
+        mAnimation->SetAnimationReverseX(Direct.x > 0);
     }
     if (CurrentPos.y < ScreenMinY || CurrentPos.y > ScreenMaxY)
     {
