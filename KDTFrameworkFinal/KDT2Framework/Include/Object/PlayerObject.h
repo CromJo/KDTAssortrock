@@ -13,20 +13,6 @@ enum class EPlayerState
     StanceHit,
 };
 
-enum class EPostureState
-{
-    Cover,          // 커버 중일 때
-    Stance,         // 공격 중일 때
-    End
-};
-
-enum class EReloadingState
-{
-    Check,      // 장전 조건
-    Animation,  // 애니메이션 불러오기
-    Complete    // 완료 후 값 세팅 
-};
-
 class CPlayerObject :
     public CSceneObject
 {
@@ -60,18 +46,15 @@ protected:
 
     int             mAmmoMax = 60;      // 최대 60발
     int             mAmmo = mAmmoMax;   // 초기 60발
-    bool            isReloading = false;// 재장전중인가?
-    EReloadingState mReloadingState = EReloadingState::Check;
-
+    
     EPlayerState mPlayerState = EPlayerState::Idle;
     EPlayerState mPlayerStatePrev = mPlayerState;
-    EPostureState mPostureState = EPostureState::Cover;
-
+    
 private:
     UCHAR mAttackKey = VK_LBUTTON;            // 왼쪽 마우스버튼 할당
     UCHAR mReloadingKey = 'R';            // 왼쪽 마우스버튼 할당
     bool mReloadState = false;
-
+    
 public:
     bool KeyInput();
     virtual bool Init();
@@ -117,4 +100,3 @@ public:
     
     std::string DebugState();
 };
-
