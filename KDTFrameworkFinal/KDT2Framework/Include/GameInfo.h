@@ -68,6 +68,8 @@ public:\
 int Clamp(int Value, int Min, int Max);
 float Clamp(float Value, float Min, float Max);
 
+int RandomRange(int Min, int Max);
+float RandomRange(float Min, float Max);
 
 namespace EShaderBufferType
 {

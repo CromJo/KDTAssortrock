@@ -63,6 +63,8 @@ bool CSceneMain::InitObject()
     // 플레이어 오브젝트 생성
     CPlayerObject* Player = CreateObj<CPlayerObject>("Player");
 
+    return true;
+
     CObjectSpawnPoint* EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy1");
 
@@ -71,7 +73,13 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(Width + 50.f, 330.f);
+#ifdef _DEBUG
+    EnemyPoint->SetWorldPos(0.f, 330.f);
+#endif
+#ifdef _RELEASE
+    EnemyPoint->SetWorldPos(Width + 30.f, 330.f);
+#endif
+
 
     EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy2");
@@ -81,8 +89,12 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(Width + 50.f, 300.f);
-
+#ifdef _DEBUG
+    EnemyPoint->SetWorldPos(0.f, 300.f);
+#endif
+#ifdef _RELEASE
+    EnemyPoint->SetWorldPos(Width - 30.f, 300.f);
+#endif
     EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy3");
 
@@ -91,8 +103,12 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
+#ifdef _DEBUG
+    EnemyPoint->SetWorldPos(0.f, 270.f);
+#endif
+#ifdef _RELEASE
     EnemyPoint->SetWorldPos(Width + 50.f, 270.f);
-
+#endif
     EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy4");
 
@@ -101,8 +117,12 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(Width + 50.f, 220.f);
-
+#ifdef _DEBUG
+    EnemyPoint->SetWorldPos(0.f, 220.f);
+#endif
+#ifdef _RELEASE
+    EnemyPoint->SetWorldPos(Width + 40.f, 220.f);
+#endif
     EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy5");
 
@@ -111,7 +131,13 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(-Width - 50.f, 180.f);
+#ifdef _DEBUG
+    EnemyPoint->SetWorldPos(0.f, 180.f);
+#endif
+#ifdef _RELEASE
+    EnemyPoint->SetWorldPos(Width - 50.f, 180.f);
+#endif
+
     EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy6");
 
@@ -120,8 +146,12 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(-Width - 50.f, 150.f);
-
+#ifdef _DEBUG
+    EnemyPoint->SetWorldPos(0.f, 150.f);
+#endif
+#ifdef _RELEASE
+    EnemyPoint->SetWorldPos(Width - 50.f, 150.f);
+#endif
     EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy7");
 
@@ -130,7 +160,13 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(Width + 50.f, 110.f);
+#ifdef _DEBUG
+    EnemyPoint->SetWorldPos(0.f, 110.f);
+#endif
+#ifdef _RELEASE
+    EnemyPoint->SetWorldPos(Width + 60.f, 110.f);
+#endif
+    
     EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy8");
 
@@ -138,8 +174,14 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnLoopType(EObjectSpawnLoopType::Once);
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     EnemyPoint->SetSpawnTime(3.f);
-    EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(-Width - 50.f, 60.f);
+    EnemyPoint->SetImmediateSpawn(true);    
+#ifdef _DEBUG
+    EnemyPoint->SetWorldPos(0.f, 60.f);
+#endif
+#ifdef _RELEASE
+    EnemyPoint->SetWorldPos(Width - 70.f, 60.f);
+#endif
+
     EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy9");
 
@@ -148,8 +190,12 @@ bool CSceneMain::InitObject()
     EnemyPoint->SetSpawnCountType(EObjectSpawnCountType::Loop);
     EnemyPoint->SetSpawnTime(3.f);
     EnemyPoint->SetImmediateSpawn(true);
-    EnemyPoint->SetWorldPos(-Width - 50.f, 10.f);
-
+    #ifdef _DEBUG
+    EnemyPoint->SetWorldPos(0.f, 10.f);
+#endif
+#ifdef _RELEASE
+    EnemyPoint->SetWorldPos(Width - 80.f, 10.f);
+#endif
     /*EnemyPoint =
         CreateObj<CObjectSpawnPoint>("Enemy2");
 
